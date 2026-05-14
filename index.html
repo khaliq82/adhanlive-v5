@@ -1650,17 +1650,9 @@ window.addEventListener('orientationchange', function(){
 // ── LANDSCAPE PANEL SYNC ─────────────────────────────────────
 function syncLandscapePanel(){
   try{
-    // Force renderer to resize for landscape
+    // Force renderer to correct landscape size
+    if(typeof applyCanvasSize === 'function') applyCanvasSize();
     window.dispatchEvent(new Event('resize'));
-
-    // Fix globe canvas position for landscape
-    const gc = document.getElementById('globe-canvas');
-    if(gc){
-      gc.style.left = '40%';
-      gc.style.width = '60%';
-      gc.style.top = '56px';
-      gc.style.height = 'calc(100dvh - 56px)';
-    }
 
     const PC={fajr:'#4466ff',dhuhr:'#ffcc00',asr:'#e07a2f',maghrib:'#d94f3d',isha:'#9b59c4'};
     const sc=document.getElementById('s-calling');
@@ -2010,17 +2002,37 @@ function initGlobe(){
     failIfMajorPerformanceCaveat:false
   });
   // On mobile use square canvas so globe is perfectly round
+  // Helper: apply correct canvas dimensions based on orientation
+  function applyCanvasSize(){
+    const isLS = isMobileDevice && window.innerWidth > window.innerHeight && window.innerHeight <= 450;
+    if(isLS){
+      const gw = Math.floor(window.innerWidth * 0.6);
+      const gh = window.innerHeight - 56;
+      renderer.setSize(gw, gh);
+      camera.aspect = gw/gh;
+      camera.updateProjectionMatrix();
+      renderer.domElement.style.width = gw+'px';
+      renderer.domElement.style.height = gh+'px';
+      renderer.domElement.style.position = 'fixed';
+      renderer.domElement.style.top = '56px';
+      renderer.domElement.style.left = '40%';
+    } else if(isMobileDevice){
+      renderer.setSize(W, W);
+      camera.aspect = 1.0;
+      camera.updateProjectionMatrix();
+      renderer.domElement.style.width = W+'px';
+      renderer.domElement.style.height = W+'px';
+      renderer.domElement.style.position = 'fixed';
+      renderer.domElement.style.top = '56px';
+      renderer.domElement.style.left = '0';
+    }
+  }
+
   const renderH = isMobileDevice ? W : H;
   renderer.setSize(W, renderH);
   renderer.setPixelRatio(Math.min(devicePixelRatio,isMobileDevice?1:2));
   if(isMobileDevice){
-    camera.aspect = 1.0; // square = perfect circle
-    camera.updateProjectionMatrix();
-    renderer.domElement.style.height = W + 'px';
-    renderer.domElement.style.width = W + 'px';
-    renderer.domElement.style.position = 'fixed';
-    renderer.domElement.style.top = '56px';
-    renderer.domElement.style.left = '0';
+    applyCanvasSize();
   }
 
   if(!window._earthTex) window._earthTex=new THREE.TextureLoader().load('earth.jpg');
@@ -2142,26 +2154,7 @@ function initGlobe(){
   window.addEventListener('resize',()=>{
     const W2=window.innerWidth,H2=window.innerHeight-56;
     if(isMobileDevice){
-      // In landscape mobile — globe takes right 60%
-      const isLandscape = window.innerWidth > window.innerHeight && window.innerHeight <= 450;
-      if(isLandscape){
-        const gw = Math.floor(W2 * 0.6);
-        const gh = window.innerHeight - 56;
-        camera.aspect = gw/gh;
-        camera.updateProjectionMatrix();
-        renderer.setSize(gw, gh);
-        renderer.domElement.style.left = '40%';
-        renderer.domElement.style.width = gw+'px';
-        renderer.domElement.style.height = gh+'px';
-        renderer.domElement.style.top = '56px';
-      } else {
-        camera.aspect=1.0;
-        camera.updateProjectionMatrix();
-        renderer.setSize(W2,W2);
-        renderer.domElement.style.left = '';
-        renderer.domElement.style.width = '';
-        renderer.domElement.style.height = '';
-      }
+      applyCanvasSize();
     } else {
       camera.aspect=W2/H2;
       camera.updateProjectionMatrix();
