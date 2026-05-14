@@ -1164,6 +1164,7 @@ footer{
     height:calc(100dvh - 56px) !important;
     pointer-events:auto !important;
   }
+  body #globe-canvas{left:40% !important;width:60% !important;height:calc(100dvh - 56px) !important;}
   #flat-canvas{left:40% !important;width:60% !important;}
 
   body.map-active #landscape-panel{
@@ -1638,7 +1639,10 @@ window.addEventListener('orientationchange', function(){
   setTimeout(function(){
     if(window.innerWidth > window.innerHeight){
       dismissRotateOverlay();
-      if(document.body.classList.contains('map-active')) syncLandscapePanel();
+      if(document.body.classList.contains('map-active')){
+        syncLandscapePanel();
+        setTimeout(syncLandscapePanel, 500); // second call after renderer settles
+      }
     }
   }, 350);
 });
@@ -1646,6 +1650,15 @@ window.addEventListener('orientationchange', function(){
 // ── LANDSCAPE PANEL SYNC ─────────────────────────────────────
 function syncLandscapePanel(){
   try{
+    // Fix globe canvas position for landscape
+    const gc = document.getElementById('globe-canvas');
+    if(gc){
+      gc.style.left = '40%';
+      gc.style.width = '60%';
+      gc.style.top = '56px';
+      gc.style.height = 'calc(100dvh - 56px)';
+    }
+
     const PC={fajr:'#4466ff',dhuhr:'#ffcc00',asr:'#e07a2f',maghrib:'#d94f3d',isha:'#9b59c4'};
     const sc=document.getElementById('s-calling');
     if(sc) document.getElementById('ls-calling').textContent=sc.textContent;
