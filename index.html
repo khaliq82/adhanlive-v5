@@ -132,7 +132,7 @@ nav{
   font-size:11px;letter-spacing:0.08em;color:#ffffff;font-weight:700;
   text-decoration:none;cursor:pointer;transition:color 0.2s;
 }
-.nav-links{display:flex;gap:32px;align-items:center;}
+.nav-links{display:flex;gap:48px;align-items:center;}
 .nav-links a:hover,.nav-links a.active{color:var(--text);}
 .nav-links a.active{color:var(--gold);}
 .nav-utc{
@@ -538,14 +538,133 @@ nav{
   pointer-events:none;
 }
 
+/* History Section */
+#history{
+  min-height:100vh;
+  background:var(--bg);
+  padding:100px 0;
+  border-top:1px solid var(--border);
+  position:relative;
+  z-index:600;
+  box-shadow:0 -8px 40px rgba(0,0,0,0.8);
+  pointer-events:all; /* re-enable for history content */
+}
 
+/* Contact Section */
+#contact{
+  min-height:100vh;
+  background:#000000;
+  padding:100px 0;
+  border-top:1px solid var(--border);
+  position:relative;
+  z-index:600;
+  pointer-events:all;
+}
 
-
+footer{
+  padding:24px 32px;
+  border-top:1px solid var(--border);
+  display:flex;align-items:center;justify-content:space-between;
+  background:#000000;
+  position:relative;z-index:600;
+  pointer-events:all;
+}
+/* ── HISTORY & CONTACT TWO-PANEL LAYOUT ── */
+.history-wrap{width:100%;padding:80px 120px;}
+.history-header{margin-bottom:60px;}
+.history-panels{display:flex;flex-direction:column;gap:60px;}
+.history-left{width:100%;}
+.history-right{width:100%;padding-left:0;border-top:1px solid var(--border);padding-top:60px;}
 
 /* Adhan cards */
-/* contact forms moved to contact.html */
+.adhan-cards{display:flex;flex-direction:column;gap:12px;margin-top:24px;max-width:680px;margin-left:auto;margin-right:auto;}
+.adhan-card{
+  padding:20px 28px;
+  border:1px solid var(--border);
+  border-radius:8px;
+  background:rgba(255,255,255,0.02);
+  transition:background 0.2s,border-color 0.2s;
+  display:grid;
+  grid-template-columns:1fr auto;
+  grid-template-rows:auto auto;
+  gap:4px 16px;
+  align-items:center;
+}
+.adhan-card:hover{background:rgba(0,212,255,0.04);border-color:rgba(0,212,255,0.2);}
+.adhan-arabic{
+  font-family:'Cormorant Garamond',serif;
+  font-size:clamp(20px,2.2vw,28px);
+  color:#fff;direction:rtl;
+  grid-column:1/-1;margin-bottom:6px;
+}
+.adhan-trans{font-size:12px;color:var(--gold);letter-spacing:0.05em;grid-column:1;}
+.adhan-meaning{font-size:13px;color:rgba(255,255,255,0.45);font-family:'Cormorant Garamond',serif;font-style:italic;grid-column:1;}
+.adhan-repeat{
+  display:inline-flex;align-items:center;justify-content:center;
+  font-size:11px;font-weight:700;
+  color:rgba(0,212,255,0.7);
+  background:rgba(0,212,255,0.08);
+  border:1px solid rgba(0,212,255,0.15);
+  padding:4px 12px;border-radius:20px;
+  grid-column:2;grid-row:2/4;
+  white-space:nowrap;align-self:center;
+}
 
-
+/* Contact forms */
+.contact-form{display:flex;flex-direction:column;gap:16px;margin-top:24px;}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+.form-group{display:flex;flex-direction:column;gap:6px;}
+.form-label{font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:rgba(255,255,255,0.4);}
+.form-input{
+  background:rgba(255,255,255,0.04);
+  border:1px solid var(--border);
+  border-radius:6px;
+  padding:12px 14px;
+  color:#fff;
+  font-size:13px;
+  font-family:'Geist',sans-serif;
+  outline:none;
+  transition:border-color 0.2s,background 0.2s;
+  width:100%;
+}
+.form-input:focus{border-color:rgba(0,212,255,0.5);background:rgba(0,212,255,0.04);}
+.form-input::placeholder{color:rgba(255,255,255,0.2);}
+.form-textarea{min-height:120px;resize:vertical;}
+.form-file{padding:10px 14px;cursor:pointer;}
+.form-btn{
+  display:inline-flex;align-items:center;justify-content:center;
+  padding:14px 32px;
+  background:var(--gold);
+  color:#000;
+  border:none;border-radius:6px;
+  font-family:'Geist',sans-serif;font-weight:700;
+  font-size:13px;letter-spacing:0.08em;text-transform:uppercase;
+  cursor:pointer;
+  transition:opacity 0.2s,transform 0.15s;
+  align-self:flex-start;
+}
+.form-btn:hover{opacity:0.85;transform:translateY(-1px);}
+.form-success{
+  display:none;padding:12px 16px;
+  background:rgba(0,212,255,0.1);
+  border:1px solid rgba(0,212,255,0.3);
+  border-radius:6px;
+  color:var(--gold);font-size:12px;
+}
+.block-body-text{
+  font-family:'Cormorant Garamond',serif;font-weight:300;
+  font-size:clamp(15px,1.8vw,18px);line-height:1.8;
+  color:rgba(255,255,255,0.5);margin-top:8px;
+}
+.contact-two-col{display:grid;grid-template-columns:1fr 1px 1fr;gap:60px;align-items:start;}
+.contact-col{width:100%;}
+.contact-col-divider{background:var(--border);align-self:stretch;}
+  margin-top:60px;padding-top:24px;
+  border-top:1px solid var(--border);
+  font-size:11px;color:rgba(255,255,255,0.2);
+}
+.contact-credits-bottom a{color:rgba(255,255,255,0.35);text-decoration:none;}
+.contact-credits-bottom a:hover{color:#fff;}
 .section-eyebrow{font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--gold);margin-bottom:16px;}
 .section-heading{
   font-family:'Geist',sans-serif;font-weight:800;
@@ -559,11 +678,90 @@ nav{
   margin-bottom:60px;
 }
 
+.history-block{
+  margin-bottom:60px;padding-bottom:60px;
+  border-bottom:1px solid var(--border);
+  opacity:0;transform:translateY(30px);
+  transition:opacity 1s ease,transform 1s ease;
+}
+.history-block:last-child{border-bottom:none;margin-bottom:0;}
+.history-block.visible{opacity:1;transform:translateY(0);}
+.block-num{font-size:10px;letter-spacing:0.2em;color:var(--text3);margin-bottom:8px;}
+.block-title{
+  font-family:'Geist',sans-serif;font-weight:700;
+  font-size:clamp(20px,2.8vw,28px);color:var(--text);
+  margin-bottom:20px;display:flex;align-items:center;gap:12px;
+}
+.block-title::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,rgba(0,212,255,0.3),transparent);}
+.block-body{
+  font-family:'Cormorant Garamond',serif;font-weight:300;
+  font-size:clamp(15px,1.9vw,19px);line-height:1.9;color:var(--text2);
+}
+.block-body p{margin-bottom:18px;}
+.block-body p:last-child{margin-bottom:0;}
+.block-body strong{color:var(--text);font-weight:400;}
 
+/* Read More */
+.read-more-btn{
+  display:inline-flex;align-items:center;gap:8px;margin-top:18px;
+  font-size:10px;letter-spacing:0.12em;text-transform:uppercase;
+  color:var(--gold);cursor:pointer;background:none;border:none;padding:0;
+  font-family:'Geist',sans-serif;transition:opacity 0.2s;
+}
+.read-more-btn:hover{opacity:0.7;}
+.read-more-btn svg{width:12px;height:12px;stroke:var(--gold);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;transition:transform 0.3s;}
+.read-more-btn.open svg{transform:rotate(180deg);}
+.read-more-content{max-height:0;overflow:hidden;transition:max-height 0.6s ease;}
+.read-more-content.open{max-height:800px;}
+.read-more-inner{
+  margin-top:20px;padding:20px 20px 20px 24px;
+  border-left:2px solid rgba(0,212,255,0.3);
+  background:rgba(0,212,255,0.03);border-radius:0 8px 8px 0;
+}
+.read-more-inner p{
+  font-family:'Cormorant Garamond',serif;font-weight:300;
+  font-size:clamp(14px,1.7vw,17px);line-height:2;color:var(--text2);margin-bottom:14px;
+}
+.read-more-inner p:last-child{margin-bottom:0;}
+.read-more-inner em{font-style:italic;color:var(--text);}
 
+/* Adhan words table */
+.adhan-table{width:100%;border-collapse:collapse;margin-top:8px;}
+.adhan-table tr{border-bottom:1px solid var(--border);transition:background 0.15s;}
+.adhan-table tr:hover{background:rgba(255,255,255,0.02);}
+.adhan-table tr:last-child{border-bottom:none;}
+.adhan-table td{padding:14px 8px;font-size:clamp(12px,1.4vw,14px);vertical-align:middle;}
+.td-arabic{font-size:clamp(16px,2.2vw,22px);text-align:right;color:var(--text);font-family:'Cormorant Garamond',serif;direction:rtl;width:38%;padding-right:20px;}
+.td-trans{color:var(--text2);font-family:'Geist',sans-serif;font-size:11px;width:32%;letter-spacing:-0.02em;}
+.td-meaning{color:var(--text2);font-family:'Cormorant Garamond',serif;font-style:italic;width:30%;}
+.td-meaning span{font-size:10px;color:var(--text3);font-style:normal;display:block;margin-top:2px;}
 
+/* Significance list */
+.sig-list{list-style:none;display:flex;flex-direction:column;gap:14px;margin-top:8px;}
+.sig-list li{display:flex;align-items:flex-start;gap:14px;font-family:'Cormorant Garamond',serif;font-weight:300;font-size:clamp(15px,1.9vw,19px);line-height:1.7;color:var(--text2);}
+.sig-list li::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--gold);flex-shrink:0;margin-top:9px;}
+.sig-list li strong{color:var(--text);font-weight:400;}
 
+/* Hadith */
+.hadith-block{padding:24px 24px 24px 28px;border-left:2px solid var(--gold);background:rgba(0,212,255,0.04);border-radius:0 8px 8px 0;margin-top:8px;}
+.hadith-text{font-family:'Cormorant Garamond',serif;font-style:italic;font-weight:300;font-size:clamp(17px,2.2vw,22px);line-height:1.8;color:var(--text);margin-bottom:14px;}
+.hadith-source{font-size:10px;letter-spacing:0.12em;color:var(--gold);text-transform:uppercase;}
 
+/* Contact Section */
+.contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:80px;margin-top:48px;}
+@media(max-width:640px){.contact-grid{grid-template-columns:1fr;}}
+.contact-block-title{font-family:'Geist',sans-serif;font-weight:700;font-size:14px;letter-spacing:0.08em;text-transform:uppercase;color:var(--gold);margin-bottom:16px;}
+.contact-block-body{font-family:'Cormorant Garamond',serif;font-weight:300;font-size:clamp(15px,1.9vw,18px);line-height:1.9;color:var(--text2);}
+.contact-block-body a{color:var(--gold);text-decoration:none;}
+.contact-block-body a:hover{text-decoration:underline;}
+.contact-link{display:inline-flex;align-items:center;gap:8px;margin-top:10px;padding:10px 20px;border:1px solid rgba(0,212,255,0.3);border-radius:4px;color:var(--gold);font-size:12px;letter-spacing:0.1em;text-transform:uppercase;text-decoration:none;font-family:'Geist',sans-serif;transition:background 0.2s,border-color 0.2s;}
+.contact-link:hover{background:rgba(0,212,255,0.08);border-color:rgba(0,212,255,0.6);}
+.contact-divider{grid-column:1/-1;height:1px;background:var(--border);}
+.contact-credits{grid-column:1/-1;font-size:11px;color:var(--text3);line-height:1.8;font-family:'Geist',sans-serif;}
+.contact-credits a{color:var(--text2);text-decoration:none;}
+.footer-logo{font-family:'Geist',sans-serif;font-weight:800;font-size:14px;color:var(--text2);}
+.footer-logo span{color:var(--gold);}
+.footer-copy{font-size:10px;color:var(--text3);letter-spacing:0.05em;}
 /* ── MOBILE LIVE BADGE ── */
 #mobile-live-badge{
   display:none !important; /* replaced by globe card on mobile */
@@ -625,7 +823,7 @@ nav{
   }
   /* Scroll sections start from top of viewport on mobile */
   #scroll-sections{
-    padding-top:12px; /* tight gap under globe card */
+    padding-top:12px;
   }
   /* Hide scrollable content on mobile until map is entered */
   #scroll-sections{display:none;}
@@ -671,8 +869,6 @@ nav{
   }
   .hamburger{display:flex;}
   .nav-utc{display:none !important;}
-  .nav-links{display:none !important;}
-  .nav-links.mobile-open{display:flex !important;}
 
   /* Globe fits mobile screen */
   #globe-canvas{
@@ -695,51 +891,15 @@ nav{
   body.map-active #mobile-stats{display:block;}
   body.map-active #mobile-globe-card{display:block !important;}
   body.map-active #mobile-globe-card{display:block !important;}
-
-  /* Dot legend */
-  #mobile-dot-legend{
-    display:flex;
-    align-items:center;justify-content:center;
-    flex-wrap:wrap;gap:4px 8px;
-    padding:10px 16px;
-    width:calc(100% - 32px);
-    margin:8px auto 8px;
-    background:rgba(255,255,255,0.03);
-    border:1px solid rgba(255,255,255,0.07);
-    border-radius:10px;
-  }
-  .mdl-item{
-    display:inline-flex;align-items:center;gap:5px;
-    font-size:10px;letter-spacing:0.06em;
-    color:rgba(255,255,255,0.5);
-    font-family:'Geist',sans-serif;
-    text-transform:uppercase;
-  }
-  .mdl-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;}
-  .mdl-sep{font-size:10px;color:rgba(255,255,255,0.2);}
   /* Badge and touch hint hidden by default — shown via JS after ENTER */
   #mobile-touch-hint{display:none !important;}
   #mobile-touch-hint{display:none;}
 
-  /* Nav — mobile: logo left, hamburger right only */
+  /* Nav */
   nav{padding:0 16px;}
-  .nav-links{display:none;}
-  .nav-links.mobile-open{
-    display:flex;
-    flex-direction:column;gap:0;
-    position:fixed;top:56px;left:0;right:0;
-    z-index:499;
-    background:rgba(0,0,0,0.97);
-    backdrop-filter:blur(24px);
-    border-bottom:1px solid var(--border);
-  }
-  .nav-links a{
-    padding:16px 24px;
-    font-size:14px;letter-spacing:0.06em;
-    border-bottom:1px solid var(--border);
-    width:100%;
-  }
-  .nav-utc{display:none;}
+  .nav-links{display:none !important;}
+  .nav-links.mobile-open{display:flex !important;}
+  .nav-utc{display:none !important;}
   .hamburger{display:flex;}
 
   /* Home overlay */
@@ -826,6 +986,19 @@ nav{
     background:rgba(255,255,255,0.02);text-align:center;margin-bottom:20px;
   }
 
+  /* History */
+  .history-wrap{padding:40px 20px;}
+  .history-panels{gap:40px;}
+  .history-left{border-right:none;padding-right:0;}
+  #history{padding:40px 0;border-top:none;min-height:unset;}
+  #contact{padding:40px 0;border-top:none;min-height:unset;}
+  .adhan-cards{max-width:100%;}
+  .section-heading{font-size:clamp(28px,8vw,48px);}
+
+  /* Contact */
+  .contact-two-col{grid-template-columns:1fr;gap:40px;}
+  .contact-col-divider{display:none;}
+  .form-row{grid-template-columns:1fr;}
 
   /* Coverage bar */
   .cov-lon-labels span{font-size:7px;}
@@ -920,20 +1093,31 @@ nav{
     border-top:none;
   }
 }
-    padding-top:4px;
-    border-top:none;
+
+/* Dot legend */
+@media(max-width:768px){
+  #mobile-dot-legend{
+    display:flex;
+    align-items:center;justify-content:center;
+    flex-wrap:wrap;gap:4px 8px;
+    padding:10px 16px;
+    width:calc(100% - 32px);
+    margin:8px auto 8px;
+    background:rgba(255,255,255,0.03);
+    border:1px solid rgba(255,255,255,0.07);
+    border-radius:10px;
   }
+  .mdl-item{display:inline-flex;align-items:center;gap:5px;font-size:10px;letter-spacing:0.06em;color:rgba(255,255,255,0.5);font-family:'Geist',sans-serif;text-transform:uppercase;}
+  .mdl-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;}
+  .mdl-sep{font-size:10px;color:rgba(255,255,255,0.2);}
 }
-
-}
-
 </style>
   <link rel="preload" href="earth.jpg" as="image">
 </head>
 <body>
 
 
-
+<!-- Mobile Touch Hints -->
 <div id="mobile-touch-hint">
   <span class="mobile-touch-text">Drag to rotate &nbsp;·&nbsp; Pinch to zoom &nbsp;·&nbsp; Scroll for live stats</span>
 </div>
@@ -962,6 +1146,8 @@ nav{
   <div class="nav-links" id="nav-links">
     <a id="nav-about" class="active" onclick="goHome();closeMobileMenu()">About</a>
     <a id="nav-map" onclick="enterMap();closeMobileMenu()">Live Map</a>
+    <a id="nav-about" class="active" onclick="goHome();closeMobileMenu()">About</a>
+    <a id="nav-map" onclick="enterMap();closeMobileMenu()">Live Map</a>
     <a href="adhan-clock.html" onclick="closeMobileMenu()">Adhan Clock</a>
     <a href="prayer-arcs.html" onclick="closeMobileMenu()">Arc Explorer</a>
     <a href="ask-adhanlive.html" onclick="closeMobileMenu()">Ask AdhanLive</a>
@@ -977,36 +1163,6 @@ nav{
 
 <!-- Mobile Menu Overlay -->
 <div id="mobile-menu-overlay" onclick="closeMobileMenu()"></div>
-
-    <div class="ls-calling-lbl">Calling Now</div>
-  </div>
-  <div class="ls-rule"></div>
-  <div class="ls-sect">
-    <div class="ls-title">Prayer Breakdown</div>
-    <div id="ls-prayer-bars"></div>
-  </div>
-  <div class="ls-rule"></div>
-  <div class="ls-sect">
-    <div class="ls-title">Countries Calling Now</div>
-    <div id="ls-countries"></div>
-  </div>
-  <div class="ls-rule"></div>
-  <div class="ls-sect">
-    <div class="ls-title">Today's Adhan Journey</div>
-    <div class="ls-journey-val" id="ls-total">—</div>
-    <div class="ls-bar-wrap"><div class="ls-bar-fill" id="ls-bar"></div></div>
-    <div class="ls-three">
-      <div class="ls-tstat"><div class="ls-tv adhan-done" id="ls-done">—</div><div class="ls-tl">✅ Done</div></div>
-      <div class="ls-tstat"><div class="ls-tv adhan-live" id="ls-live">—</div><div class="ls-tl">🔴 Live</div></div>
-      <div class="ls-tstat"><div class="ls-tv adhan-upcoming" id="ls-coming">—</div><div class="ls-tl">⏳ Coming</div></div>
-    </div>
-  </div>
-  <div class="ls-rule"></div>
-  <div class="ls-sect ls-makkah-row">
-    <span class="ls-makkah-lbl">Makkah</span>
-    <span class="ls-makkah-time" id="ls-makkah">--:--:-- --</span>
-  </div>
-</div>
 
 <!-- HOME OVERLAY -->
 <div id="home-overlay">
@@ -1179,12 +1335,11 @@ nav{
   <p>AdhanLive is free, works on all devices including iPhone and Android, and requires no app download. Visit adhanlive.com to watch the Adhan live.</p>
 </div>
 
-
 <div id="scroll-sections">
-  <!-- Live Map placeholder — full viewport height -->
+  <!-- Live Map placeholder — 100vh so history starts below -->
   <div id="live-map-section"></div>
 
-  <!-- Dot legend — explains prayer colors to mobile users -->
+  <!-- Dot Legend -->
   <div id="mobile-dot-legend">
     <span class="mdl-item"><span class="mdl-dot" style="background:#4466ff"></span>Fajr</span>
     <span class="mdl-sep">·</span>
@@ -1260,8 +1415,12 @@ nav{
     </div>
   </div>
 
-</div>
 
+
+
+
+
+</div>
 
 <script>
 // Preload earth texture immediately so it's browser-cached when Three.js requests it
@@ -1292,8 +1451,8 @@ function closeMobileMenu(){
   document.getElementById('mobile-menu-overlay').classList.remove('visible');
 }
 
-
-
+// ── FORM SUBMISSION ──────────────────────────────────────────
+async function submitForm(e, formId, successId){
   e.preventDefault();
   const form = document.getElementById(formId);
   const btn = form.querySelector('.form-btn');
@@ -1335,6 +1494,7 @@ let _adhanCompleted=0, _adhanRemaining=0, _adhanTotal=0, _adhanLastCalc=0;
 function enterMap(){
   if(mapMode) return;
   mapMode = true;
+
   // Trigger intro spin on first visit only
   if(!_introFired){
     _introFired=true;
