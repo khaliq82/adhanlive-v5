@@ -44,6 +44,7 @@ nav{
   width:calc(100% - 32px);
   margin:16px auto 0;
   aspect-ratio:1/1;
+  min-height:260px;
   border-radius:20px;
   border:1px solid rgba(0,212,255,0.25);
   box-shadow:0 0 24px rgba(0,212,255,0.12);
@@ -210,15 +211,25 @@ nav{
     width:60%;height:100%;
     background:radial-gradient(ellipse at 40% 40%, #0a2040 0%, #061020 50%, #000 100%);
     display:flex;align-items:center;justify-content:center;
-    position:relative;
+    position:relative;overflow:hidden;
   }
   .ls-globe-inner{
-    width:80%;aspect-ratio:1/1;border-radius:50%;
+    /* Constrain by height so globe never clips */
+    height:90%;aspect-ratio:1/1;
+    max-width:90%;
+    border-radius:50%;
     background:radial-gradient(ellipse at 35% 35%, #1a4060 0%, #0d2840 40%, #061828 100%);
     box-shadow:inset -20px -20px 40px rgba(0,0,0,0.8),0 0 40px rgba(0,100,200,0.15);
     display:flex;align-items:center;justify-content:center;
   }
 }
+
+/* Country rows portrait */
+.country-list{display:flex;flex-direction:column;}
+.c-row{display:flex;align-items:center;gap:8px;padding:7px 0;border-bottom:1px solid rgba(255,255,255,0.05);font-size:12px;color:rgba(255,255,255,0.7);}
+.c-num{font-size:10px;color:rgba(255,255,255,0.25);width:14px;}
+.c-name{flex:1;}
+.c-count{color:var(--gold);font-variant-numeric:tabular-nums;font-size:12px;font-weight:600;}
 
 /* ── DEBUG PANEL (desktop only) ── */
 #debug{
@@ -306,6 +317,20 @@ nav{
     <div class="p-row"><span class="p-name" style="color:#e07a2f">Asr</span><div class="p-track"><div class="p-fill" style="background:#e07a2f;width:20%"></div></div><span class="p-count">913</span></div>
     <div class="p-row"><span class="p-name" style="color:#d94f3d">Maghrib</span><div class="p-track"><div class="p-fill" style="background:#d94f3d;width:14%"></div></div><span class="p-count">651</span></div>
     <div class="p-row"><span class="p-name" style="color:#9b59c4">Isha</span><div class="p-track"><div class="p-fill" style="background:#9b59c4;width:100%"></div></div><span class="p-count">3,149</span></div>
+  </div>
+
+  <!-- Countries -->
+  <div class="prayer-section">
+    <div class="section-title">Countries Calling Now</div>
+    <div class="country-list">
+      <div class="c-row"><span class="c-num">1</span><span>🇧🇩</span><span class="c-name">Bangladesh</span><span class="c-count">2,976</span></div>
+      <div class="c-row"><span class="c-num">2</span><span>🇹🇷</span><span class="c-name">Turkey</span><span class="c-count">885</span></div>
+      <div class="c-row"><span class="c-num">3</span><span>🇵🇰</span><span class="c-name">Pakistan</span><span class="c-count">425</span></div>
+      <div class="c-row"><span class="c-num">4</span><span>🇮🇳</span><span class="c-name">India</span><span class="c-count">242</span></div>
+      <div class="c-row"><span class="c-num">5</span><span>🇱🇰</span><span class="c-name">Sri Lanka</span><span class="c-count">130</span></div>
+      <div class="c-row"><span class="c-num">6</span><span>🇰🇿</span><span class="c-name">Kazakhstan</span><span class="c-count">17</span></div>
+      <div class="c-row"><span class="c-num">7</span><span>🇱🇾</span><span class="c-name">Libya</span><span class="c-count">10</span></div>
+    </div>
   </div>
 
 </div>
