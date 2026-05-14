@@ -716,14 +716,13 @@ footer{
   body.map-active footer{display:block;}
 
   /* Dot legend */
-  #mobile-dot-legend{display:none;}
-  body.map-active #mobile-dot-legend{
+  #mobile-dot-legend{
     display:flex;
     align-items:center;justify-content:center;
     flex-wrap:wrap;gap:4px 8px;
     padding:10px 16px;
     width:calc(100% - 32px);
-    margin:10px auto 0;
+    margin:12px auto 12px;
     background:rgba(255,255,255,0.03);
     border:1px solid rgba(255,255,255,0.07);
     border-radius:10px;
@@ -743,7 +742,8 @@ footer{
 
   /* Nav */
   nav{padding:0 16px;}
-  .nav-links{gap:16px;}
+  .nav-links{display:none;gap:16px;}
+  .nav-links.mobile-open{display:flex;}
   .nav-links a{font-size:10px;}
   .nav-utc{font-size:9px;padding:4px 8px;}
 
@@ -1147,22 +1147,23 @@ footer{
   <p>AdhanLive is free, works on all devices including iPhone and Android, and requires no app download. Visit adhanlive.com to watch the Adhan live.</p>
 </div>
 
-<!-- Mobile dot legend — shown after entering map -->
-<div id="mobile-dot-legend">
-  <span class="mdl-item"><span class="mdl-dot" style="background:#4466ff"></span>Fajr</span>
-  <span class="mdl-sep">·</span>
-  <span class="mdl-item"><span class="mdl-dot" style="background:#ffcc00"></span>Dhuhr</span>
-  <span class="mdl-sep">·</span>
-  <span class="mdl-item"><span class="mdl-dot" style="background:#e07a2f"></span>Asr</span>
-  <span class="mdl-sep">·</span>
-  <span class="mdl-item"><span class="mdl-dot" style="background:#d94f3d"></span>Maghrib</span>
-  <span class="mdl-sep">·</span>
-  <span class="mdl-item"><span class="mdl-dot" style="background:#9b59c4"></span>Isha</span>
-</div>
 
 <div id="scroll-sections">
   <!-- Live Map placeholder — full viewport height -->
   <div id="live-map-section"></div>
+
+  <!-- Dot legend — explains prayer colors to mobile users -->
+  <div id="mobile-dot-legend">
+    <span class="mdl-item"><span class="mdl-dot" style="background:#4466ff"></span>Fajr</span>
+    <span class="mdl-sep">·</span>
+    <span class="mdl-item"><span class="mdl-dot" style="background:#ffcc00"></span>Dhuhr</span>
+    <span class="mdl-sep">·</span>
+    <span class="mdl-item"><span class="mdl-dot" style="background:#e07a2f"></span>Asr</span>
+    <span class="mdl-sep">·</span>
+    <span class="mdl-item"><span class="mdl-dot" style="background:#d94f3d"></span>Maghrib</span>
+    <span class="mdl-sep">·</span>
+    <span class="mdl-item"><span class="mdl-dot" style="background:#9b59c4"></span>Isha</span>
+  </div>
 
   <!-- Mobile Stats Section -->
   <div id="mobile-stats">
