@@ -1110,6 +1110,116 @@ footer{
   .mdl-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;}
   .mdl-sep{font-size:10px;color:rgba(255,255,255,0.2);}
 }
+
+/* ══ ROTATE OVERLAY ══════════════════════════════════════════ */
+#rotate-overlay{display:none;}
+#landscape-panel{display:none;}
+
+@media(max-width:768px) and (orientation:portrait){
+  #rotate-overlay.visible{
+    display:flex;
+    position:fixed;inset:0;z-index:900;
+    align-items:center;justify-content:center;
+    background:rgba(0,0,0,0.75);
+    backdrop-filter:blur(10px);
+    -webkit-backdrop-filter:blur(10px);
+  }
+  .rot-box{
+    background:rgba(8,8,20,0.98);
+    border:1px solid rgba(0,212,255,0.2);
+    border-radius:20px;padding:32px 24px 28px;
+    max-width:260px;width:82%;text-align:center;
+  }
+  .rot-icon{
+    width:44px;height:44px;color:var(--gold);
+    display:block;margin:0 auto 18px;
+    animation:rotPhone 2.4s ease-in-out infinite;
+  }
+  @keyframes rotPhone{
+    0%,15%{transform:rotate(0deg);}
+    55%,85%{transform:rotate(-90deg);}
+    100%{transform:rotate(-90deg);}
+  }
+  .rot-title{font-size:17px;font-weight:700;color:#fff;margin-bottom:8px;letter-spacing:-0.02em;}
+  .rot-body{font-size:12px;color:rgba(255,255,255,0.45);line-height:1.7;margin-bottom:20px;}
+  .rot-btn{
+    background:none;border:1px solid rgba(255,255,255,0.12);
+    border-radius:8px;padding:10px 20px;width:100%;
+    color:rgba(255,255,255,0.4);font-size:11px;
+    font-family:'Geist',sans-serif;letter-spacing:0.06em;cursor:pointer;
+  }
+}
+
+/* ══ MOBILE LANDSCAPE LAYOUT ════════════════════════════════ */
+@media(max-width:768px) and (max-height:450px) and (orientation:landscape){
+  #mobile-globe-card{display:none !important;}
+  #scroll-sections{display:none !important;}
+  #rotate-overlay{display:none !important;}
+
+  #globe-canvas{
+    display:block !important;
+    position:fixed !important;
+    top:56px !important;left:40% !important;
+    width:60% !important;
+    height:calc(100dvh - 56px) !important;
+    pointer-events:auto !important;
+  }
+  #flat-canvas{left:40% !important;width:60% !important;}
+
+  body.map-active #landscape-panel{
+    display:flex !important;
+    flex-direction:column;
+    position:fixed;
+    top:56px;left:0;
+    width:40%;height:calc(100dvh - 56px);
+    background:rgba(0,0,0,0.95);
+    border-right:1px solid rgba(255,255,255,0.07);
+    overflow-y:scroll;overflow-x:hidden;
+    -webkit-overflow-scrolling:touch;
+    z-index:50;
+    scrollbar-width:thin;
+    scrollbar-color:rgba(0,212,255,0.35) transparent;
+  }
+  body.map-active #landscape-panel::-webkit-scrollbar{width:3px;}
+  body.map-active #landscape-panel::-webkit-scrollbar-track{background:transparent;}
+  body.map-active #landscape-panel::-webkit-scrollbar-thumb{background:rgba(0,212,255,0.35);border-radius:2px;}
+
+  .ls-sect{padding:8px 12px;}
+  .ls-rule{height:1px;background:rgba(255,255,255,0.06);margin:0 12px;}
+  .ls-calling{font-size:24px;font-weight:800;color:var(--gold);font-variant-numeric:tabular-nums;}
+  .ls-calling-lbl{font-size:8px;letter-spacing:0.12em;text-transform:uppercase;color:rgba(255,255,255,0.3);margin-top:2px;}
+  .ls-title{font-size:8px;letter-spacing:0.1em;text-transform:uppercase;color:rgba(255,255,255,0.3);margin-bottom:6px;}
+  .ls-makkah-row{display:flex;align-items:center;gap:8px;}
+  .ls-makkah-lbl{font-size:8px;letter-spacing:0.08em;text-transform:uppercase;color:rgba(255,255,255,0.3);flex:1;}
+  .ls-makkah-time{font-size:12px;font-weight:700;color:var(--gold);font-variant-numeric:tabular-nums;}
+  .ls-pbar-row{display:flex;align-items:center;gap:5px;margin-bottom:4px;}
+  .ls-pbar-name{font-size:8px;width:36px;text-transform:capitalize;}
+  .ls-pbar-track{flex:1;height:3px;background:rgba(255,255,255,0.08);border-radius:2px;overflow:hidden;}
+  .ls-pbar-fill{height:100%;border-radius:2px;}
+  .ls-pbar-count{font-size:8px;color:rgba(255,255,255,0.4);width:26px;text-align:right;font-variant-numeric:tabular-nums;}
+  .ls-country-row{display:flex;align-items:center;gap:5px;padding:3px 0;border-bottom:1px solid rgba(255,255,255,0.04);font-size:9px;color:rgba(255,255,255,0.65);}
+  .ls-c-num{width:12px;font-size:7px;color:rgba(255,255,255,0.25);}
+  .ls-c-count{margin-left:auto;color:var(--gold);font-variant-numeric:tabular-nums;font-size:8px;}
+  .ls-journey-val{font-size:13px;font-weight:700;color:var(--gold);margin-bottom:5px;font-variant-numeric:tabular-nums;}
+  .ls-bar-wrap{height:3px;background:rgba(255,255,255,0.08);border-radius:2px;margin-bottom:6px;overflow:hidden;}
+  .ls-bar-fill{height:100%;background:linear-gradient(90deg,#00d4ff,#00ff88);border-radius:2px;transition:width 1s;}
+  .ls-three{display:flex;gap:4px;}
+  .ls-tstat{flex:1;text-align:center;}
+  .ls-tv{font-size:11px;font-weight:700;font-variant-numeric:tabular-nums;}
+  .ls-done{color:#fff !important;}
+  .ls-live{color:#fff !important;}
+  .ls-coming{color:#fff !important;}
+  .ls-tl{font-size:8px;color:rgba(255,255,255,0.4);margin-top:2px;}
+  .ls-scroll-hint{
+    position:sticky;bottom:0;
+    text-align:center;padding:10px 0 6px;
+    background:linear-gradient(to bottom,transparent,rgba(0,0,0,0.9));
+    font-size:8px;letter-spacing:0.12em;text-transform:uppercase;
+    color:rgba(255,255,255,0.3);pointer-events:none;
+    transition:opacity 0.4s;
+  }
+  .ls-scroll-hint.hidden{opacity:0;}
+}
 </style>
   <link rel="preload" href="earth.jpg" as="image">
 </head>
@@ -1160,6 +1270,59 @@ footer{
 
 <!-- Mobile Menu Overlay -->
 <div id="mobile-menu-overlay" onclick="closeMobileMenu()"></div>
+<!-- Rotate to Landscape Overlay (mobile only, once per session) -->
+<div id="rotate-overlay" aria-hidden="true">
+  <div class="rot-box">
+    <svg class="rot-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <rect x="5" y="2" width="14" height="20" rx="2"/>
+      <circle cx="12" cy="17" r="1" fill="currentColor" stroke="none"/>
+    </svg>
+    <div class="rot-title">Rotate for full experience</div>
+    <div class="rot-body">Turn your phone sideways to see the globe with a live stats panel.</div>
+    <button class="rot-btn" id="rot-dismiss">Continue in portrait</button>
+  </div>
+</div>
+
+<!-- Landscape Stats Panel (mobile landscape only) -->
+<div id="landscape-panel" aria-hidden="true">
+  <div class="ls-sect">
+    <div class="ls-calling" id="ls-calling">—</div>
+    <div class="ls-calling-lbl">Calling Now</div>
+  </div>
+  <div class="ls-rule"></div>
+  <div class="ls-sect">
+    <div class="ls-title">Prayer Breakdown</div>
+    <div id="ls-prayer-bars"></div>
+  </div>
+  <div class="ls-rule"></div>
+  <div class="ls-sect ls-makkah-row">
+    <div class="kaaba-wrap"><div class="kaaba-scene"><div class="kaaba">
+      <div class="kf kf-front"></div><div class="kf kf-back"></div>
+      <div class="kf kf-left"></div><div class="kf kf-right"></div>
+      <div class="kf kf-top"></div><div class="kf kf-bottom"></div>
+    </div><div class="kaaba-ground"></div></div></div>
+    <span class="ls-makkah-lbl">Makkah</span>
+    <span class="ls-makkah-time" id="ls-makkah">--:--:-- --</span>
+  </div>
+  <div class="ls-rule"></div>
+  <div class="ls-sect">
+    <div class="ls-title">Countries Calling Now</div>
+    <div id="ls-countries"></div>
+  </div>
+  <div class="ls-rule"></div>
+  <div class="ls-sect">
+    <div class="ls-title">Today's Adhan Journey</div>
+    <div class="ls-journey-val" id="ls-total">—</div>
+    <div class="ls-bar-wrap"><div class="ls-bar-fill" id="ls-bar"></div></div>
+    <div class="ls-three">
+      <div class="ls-tstat"><div class="ls-tv ls-done" id="ls-done">—</div><div class="ls-tl">✅ Done</div></div>
+      <div class="ls-tstat"><div class="ls-tv ls-live" id="ls-live">—</div><div class="ls-tl">🔴 Live</div></div>
+      <div class="ls-tstat"><div class="ls-tv ls-coming" id="ls-coming">—</div><div class="ls-tl">⏳ Coming</div></div>
+    </div>
+  </div>
+  <div class="ls-scroll-hint" id="ls-scroll-hint">▼ scroll for more</div>
+</div>
+
 
 <!-- HOME OVERLAY -->
 <div id="home-overlay">
@@ -1448,6 +1611,87 @@ function closeMobileMenu(){
   document.getElementById('mobile-menu-overlay').classList.remove('visible');
 }
 
+// ── ROTATE OVERLAY ───────────────────────────────────────────
+let _rotShown = false;
+function showRotateOverlay(){
+  if(_rotShown) return;
+  if(window.innerWidth > 768) return;
+  if(window.innerWidth > window.innerHeight) return;
+  _rotShown = true;
+  document.getElementById('rotate-overlay').classList.add('visible');
+}
+function dismissRotateOverlay(){
+  document.getElementById('rotate-overlay').classList.remove('visible');
+}
+document.addEventListener('DOMContentLoaded', function(){
+  const btn = document.getElementById('rot-dismiss');
+  if(btn) btn.addEventListener('click', dismissRotateOverlay);
+  const panel = document.getElementById('landscape-panel');
+  const hint = document.getElementById('ls-scroll-hint');
+  if(panel && hint){
+    panel.addEventListener('scroll', function(){
+      if(panel.scrollTop > 20) hint.classList.add('hidden');
+    }, {passive:true});
+  }
+});
+window.addEventListener('orientationchange', function(){
+  setTimeout(function(){
+    if(window.innerWidth > window.innerHeight){
+      dismissRotateOverlay();
+      if(document.body.classList.contains('map-active')) syncLandscapePanel();
+    }
+  }, 350);
+});
+
+// ── LANDSCAPE PANEL SYNC ─────────────────────────────────────
+function syncLandscapePanel(){
+  try{
+    const PC={fajr:'#4466ff',dhuhr:'#ffcc00',asr:'#e07a2f',maghrib:'#d94f3d',isha:'#9b59c4'};
+    const sc=document.getElementById('s-calling');
+    if(sc) document.getElementById('ls-calling').textContent=sc.textContent;
+    const mt=document.getElementById('m-makkah-time');
+    if(mt) document.getElementById('ls-makkah').textContent=mt.textContent;
+    const at=document.getElementById('adhan-total');
+    if(at) document.getElementById('ls-total').textContent=at.textContent;
+    const ab=document.getElementById('adhan-bar');
+    if(ab) document.getElementById('ls-bar').style.width=ab.style.width;
+    const ac=document.getElementById('adhan-completed');
+    if(ac) document.getElementById('ls-done').textContent=ac.textContent;
+    const aa=document.getElementById('adhan-active');
+    if(aa) document.getElementById('ls-live').textContent=aa.textContent;
+    const ar=document.getElementById('adhan-remaining');
+    if(ar) document.getElementById('ls-coming').textContent=ar.textContent;
+    if(window._lastPrayerCounts){
+      const pC=window._lastPrayerCounts,mx=Math.max(...Object.values(pC),1);
+      document.getElementById('ls-prayer-bars').innerHTML=Object.entries(pC).map(([p,v])=>`
+        <div class="ls-pbar-row">
+          <div class="ls-pbar-name" style="color:${PC[p]}">${p}</div>
+          <div class="ls-pbar-track"><div class="ls-pbar-fill" style="background:${PC[p]};width:${v/mx*100}%"></div></div>
+          <div class="ls-pbar-count">${v.toLocaleString()}</div>
+        </div>`).join('');
+    }
+    const csrc=document.getElementById('m-country-track');
+    const cdst=document.getElementById('ls-countries');
+    if(csrc&&cdst){
+      const rows=csrc.querySelectorAll('.mobile-country-row');
+      cdst.innerHTML=Array.from(rows).slice(0,8).map((r,i)=>{
+        const name=r.querySelector('.mobile-country-name')?.textContent||'';
+        const count=r.querySelector('.mobile-country-count')?.textContent||'';
+        const flag=r.querySelector('.mobile-country-badge')?.textContent||'';
+        return `<div class="ls-country-row"><span class="ls-c-num">${i+1}</span><span>${flag}</span><span>${name}</span><span class="ls-c-count">${count}</span></div>`;
+      }).join('');
+    }
+  }catch(e){}
+}
+setInterval(function(){
+  if(document.body.classList.contains('map-active')&&
+     window.innerWidth>window.innerHeight&&
+     window.innerWidth<=768&&window.innerHeight<=450)
+    syncLandscapePanel();
+},2000);
+
+
+
 // ── FORM SUBMISSION ──────────────────────────────────────────
 async function submitForm(e, formId, successId){
   e.preventDefault();
@@ -1491,6 +1735,7 @@ let _adhanCompleted=0, _adhanRemaining=0, _adhanTotal=0, _adhanLastCalc=0;
 function enterMap(){
   if(mapMode) return;
   mapMode = true;
+  setTimeout(showRotateOverlay, 900);
 
   // Trigger intro spin on first visit only
   if(!_introFired){
