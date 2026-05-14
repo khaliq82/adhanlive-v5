@@ -19,32 +19,22 @@ html,body{
 
 /* ── NAV ── */
 nav{
-  position:fixed;top:0;left:0;right:0;height:56px;z-index:200;
+  position:fixed;top:0;left:0;right:0;height:40px;z-index:200;
   display:flex;align-items:center;justify-content:space-between;
-  padding:0 20px;
+  padding:0 16px;
   background:rgba(0,0,0,0.9);
   border-bottom:1px solid var(--border);
 }
-@media(max-width:768px){
-  nav{height:44px;}
-  #portrait-view{top:44px !important;}
-}
-@media(max-width:768px) and (max-height:450px) and (orientation:landscape){
-  nav{height:44px;}
-  #landscape-view{top:44px !important;}
-  .ls-panel{top:44px !important;height:calc(100vh - 44px) !important;}
-  .ls-globe{height:calc(100vh - 44px) !important;}
-}
 .logo{display:flex;align-items:center;gap:8px;}
-.logo-dot{width:8px;height:8px;border-radius:50%;background:var(--gold);}
-.logo-text{font-size:14px;font-weight:800;}
+.logo-dot{width:7px;height:7px;border-radius:50%;background:var(--gold);}
+.logo-text{font-size:13px;font-weight:800;}
 .logo-text span{color:var(--gold);}
-.test-badge{font-size:9px;letter-spacing:0.1em;text-transform:uppercase;color:rgba(255,165,0,0.7);border:1px solid rgba(255,165,0,0.3);border-radius:4px;padding:2px 6px;}
+.test-badge{font-size:8px;letter-spacing:0.1em;text-transform:uppercase;color:rgba(255,165,0,0.7);border:1px solid rgba(255,165,0,0.3);border-radius:4px;padding:2px 6px;}
 
 /* ── PORTRAIT VIEW ── */
 #portrait-view{
   display:flex;flex-direction:column;
-  position:fixed;top:56px;left:0;right:0;bottom:0;
+  position:fixed;top:40px;left:0;right:0;bottom:0;
   overflow-y:auto;
   -webkit-overflow-scrolling:touch;
 }
@@ -180,17 +170,60 @@ nav{
   /* Show landscape view */
   #landscape-view{
     display:flex !important;
-    position:fixed;top:44px;left:0;right:0;bottom:0;
+    position:fixed;top:40px;left:0;right:0;
+    height:calc(100dvh - 40px);
   }
 
-  /* Left panel — 40% */
+  /* Left panel — 40% with visible scrollbar + scroll hint */
   .ls-panel{
-    width:40%;height:100%;
+    width:40%;
+    height:100%;
     background:rgba(0,0,0,0.95);
     border-right:1px solid rgba(255,255,255,0.07);
-    overflow-y:auto;overflow-x:hidden;
+    overflow-y:scroll;
+    overflow-x:hidden;
     -webkit-overflow-scrolling:touch;
     display:flex;flex-direction:column;
+    position:relative;
+    scrollbar-width:thin;
+    scrollbar-color:rgba(0,212,255,0.35) transparent;
+  }
+  .ls-panel::-webkit-scrollbar{width:3px;}
+  .ls-panel::-webkit-scrollbar-track{background:transparent;}
+  .ls-panel::-webkit-scrollbar-thumb{background:rgba(0,212,255,0.35);border-radius:2px;}
+
+  /* Scroll hint overlay at bottom of panel */
+  .ls-scroll-hint{
+    position:sticky;bottom:0;left:0;right:0;
+    text-align:center;
+    padding:12px 0 8px;
+    background:linear-gradient(to bottom, transparent, rgba(0,0,0,0.9));
+    font-size:8px;letter-spacing:0.12em;text-transform:uppercase;
+    color:rgba(255,255,255,0.3);
+    pointer-events:none;
+    transition:opacity 0.4s;
+  }
+  .ls-scroll-hint.hidden{opacity:0;}
+
+  /* Right — globe fills exactly remaining space */
+  .ls-globe{
+    width:60%;
+    height:100%;
+    background:radial-gradient(ellipse at 40% 40%, #0a2040 0%, #061020 50%, #000 100%);
+    display:flex;align-items:center;justify-content:center;
+    overflow:hidden;
+    padding:8px;
+  }
+  .ls-globe-inner{
+    /* Size purely by height — landscape is always height-constrained */
+    height:100%;
+    width:auto;
+    aspect-ratio:1/1;
+    max-width:100%;
+    border-radius:50%;
+    background:radial-gradient(ellipse at 35% 35%, #1a4060 0%, #0d2840 40%, #061828 100%);
+    box-shadow:inset -20px -20px 40px rgba(0,0,0,0.8),0 0 40px rgba(0,100,200,0.15);
+    display:flex;align-items:center;justify-content:center;
   }
   .ls-sect{padding:8px 12px;}
   .ls-rule{height:1px;background:rgba(255,255,255,0.06);margin:0 12px;}
@@ -397,6 +430,10 @@ nav{
       <span class="ls-makkah-lbl">Makkah</span>
       <span class="ls-makkah-time">05:04:36 PM</span>
     </div>
+
+    <!-- Scroll hint -->
+    <div class="ls-scroll-hint" id="ls-scroll-hint">▼ scroll for more</div>
+
   </div>
 
   <!-- Right — Fake Globe -->
@@ -412,6 +449,19 @@ nav{
 <div id="debug">Open this page on your phone to test the rotate overlay and landscape layout</div>
 
 <script>
+// ── Scroll hint — hide when panel scrolled ──
+document.addEventListener('DOMContentLoaded', function(){
+  const panel = document.querySelector('.ls-panel');
+  const hint = document.getElementById('ls-scroll-hint');
+  if(panel && hint){
+    panel.addEventListener('scroll', function(){
+      if(panel.scrollTop > 20){
+        hint.classList.add('hidden');
+      }
+    }, {passive:true});
+  }
+});
+
 // ── State ──
 let _rotShown = false;
 
