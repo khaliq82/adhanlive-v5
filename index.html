@@ -740,12 +740,26 @@ footer{
   #mobile-touch-hint{display:none !important;}
   #mobile-touch-hint{display:none;}
 
-  /* Nav */
+  /* Nav — mobile: logo left, hamburger right only */
   nav{padding:0 16px;}
-  .nav-links{display:none;gap:16px;}
-  .nav-links.mobile-open{display:flex;}
-  .nav-links a{font-size:10px;}
-  .nav-utc{font-size:9px;padding:4px 8px;}
+  .nav-links{display:none;}
+  .nav-links.mobile-open{
+    display:flex;
+    flex-direction:column;gap:0;
+    position:fixed;top:56px;left:0;right:0;
+    z-index:499;
+    background:rgba(0,0,0,0.97);
+    backdrop-filter:blur(24px);
+    border-bottom:1px solid var(--border);
+  }
+  .nav-links a{
+    padding:16px 24px;
+    font-size:14px;letter-spacing:0.06em;
+    border-bottom:1px solid var(--border);
+    width:100%;
+  }
+  .nav-utc{display:none;}
+  .hamburger{display:flex;}
 
   /* Home overlay */
   #home-overlay{padding:24px 20px;}
