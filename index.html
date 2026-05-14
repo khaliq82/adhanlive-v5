@@ -537,30 +537,8 @@ nav{
   pointer-events:none;
 }
 
-footer{
-  border-top:1px solid var(--border);
-  background:#000000;
-  position:relative;z-index:600;
-  pointer-events:all;
-  display:none; /* hidden on desktop — fullscreen map needs no footer */
-}
-.footer-inner{
-  max-width:1200px;margin:0 auto;
-  padding:32px 40px;
-  display:flex;flex-wrap:wrap;align-items:center;gap:24px;
-}
-.footer-left{display:flex;flex-direction:column;gap:4px;margin-right:auto;}
-.footer-tagline{font-size:11px;color:rgba(255,255,255,0.25);letter-spacing:0.03em;margin-top:2px;max-width:320px;line-height:1.5;}
-.footer-nav{display:flex;align-items:center;gap:24px;flex-wrap:wrap;}
-.footer-nav a{font-size:11px;letter-spacing:0.08em;text-transform:uppercase;color:rgba(255,255,255,0.35);text-decoration:none;transition:color 0.2s;}
-.footer-nav a:hover{color:rgba(0,212,255,0.8);}
-@media(max-width:768px){
-  footer{display:none !important;}
-  body.map-active footer{display:block !important;}
-  .footer-inner{padding:24px 20px;flex-direction:column;align-items:flex-start;gap:16px;}
-  .footer-nav{gap:16px;}
-  .footer-left{margin-right:0;}
-}
+
+
 
 
 /* Adhan cards */
@@ -583,9 +561,8 @@ footer{
 
 
 
-.footer-logo{font-family:'Geist',sans-serif;font-weight:800;font-size:14px;color:var(--text2);}
-.footer-logo span{color:var(--gold);}
-.footer-copy{font-size:10px;color:var(--text3);letter-spacing:0.05em;}
+
+
 /* ── MOBILE LIVE BADGE ── */
 #mobile-live-badge{
   display:none !important; /* replaced by globe card on mobile */
@@ -717,7 +694,6 @@ footer{
   body.map-active #mobile-stats{display:block;}
   body.map-active #mobile-globe-card{display:block !important;}
   body.map-active #mobile-globe-card{display:block !important;}
-  body.map-active footer{display:block;}
 
   /* Dot legend */
   #mobile-dot-legend{
@@ -1248,21 +1224,6 @@ footer{
 
 </div>
 
-<footer>
-  <div class="footer-inner">
-    <div class="footer-left">
-      <div class="footer-logo">Adhan<span>Live</span></div>
-      <div class="footer-tagline">The Islamic call to prayer, visualized live across the Earth.</div>
-    </div>
-    <nav class="footer-nav" aria-label="Footer navigation">
-      <a href="contact.html">Contact</a>
-      <a href="makkah.html">Makkah</a>
-      <a href="jakarta.html">Jakarta</a>
-      <a href="kuala-lumpur.html">Kuala Lumpur</a>
-    </nav>
-    <div class="footer-copy">Mosque data © <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> contributors · © 2026 AdhanLive</div>
-  </div>
-</footer>
 
 <script>
 // Preload earth texture immediately so it's browser-cached when Three.js requests it
