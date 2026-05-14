@@ -919,13 +919,204 @@ nav{
     border-top:none;
   }
 }
-</style>
+    padding-top:4px;
+    border-top:none;
+  }
+}
+
+/* ── ROTATE OVERLAY ─────────────────────────────────────────── */
+#rotate-overlay{
+  display:none;
+  position:fixed;inset:0;z-index:900;
+  background:rgba(0,0,0,0.7);
+  backdrop-filter:blur(8px);
+  -webkit-backdrop-filter:blur(8px);
+  align-items:center;justify-content:center;
+}
+#rotate-overlay.visible{display:flex;}
+.rot-box{
+  background:rgba(10,10,20,0.95);
+  border:1px solid rgba(0,212,255,0.25);
+  border-radius:20px;
+  padding:36px 28px;
+  max-width:280px;width:85%;
+  text-align:center;
+  box-shadow:0 0 40px rgba(0,212,255,0.1);
+}
+.rot-phone-wrap{
+  display:flex;align-items:center;justify-content:center;gap:8px;
+  margin-bottom:24px;
+}
+.rot-phone{
+  width:36px;height:36px;color:var(--gold);
+  animation:rotatePhone 1.8s ease-in-out infinite;
+  transform-origin:center;
+}
+@keyframes rotatePhone{
+  0%{transform:rotate(0deg);}
+  40%{transform:rotate(-90deg);}
+  60%{transform:rotate(-90deg);}
+  100%{transform:rotate(-90deg);}
+}
+.rot-arrow{width:24px;height:24px;color:rgba(0,212,255,0.5);}
+.rot-title{
+  font-family:'Geist',sans-serif;font-weight:700;
+  font-size:18px;color:#fff;margin-bottom:10px;
+  letter-spacing:-0.02em;
+}
+.rot-body{
+  font-size:13px;color:rgba(255,255,255,0.5);
+  line-height:1.6;margin-bottom:24px;
+}
+.rot-continue{
+  background:none;border:1px solid rgba(255,255,255,0.15);
+  border-radius:8px;padding:10px 20px;
+  color:rgba(255,255,255,0.45);font-size:12px;
+  font-family:'Geist',sans-serif;letter-spacing:0.05em;
+  cursor:pointer;transition:border-color 0.2s,color 0.2s;
+}
+.rot-continue:hover{border-color:rgba(255,255,255,0.3);color:rgba(255,255,255,0.7);}
+
+/* ── LANDSCAPE PANEL ─────────────────────────────────────────── */
+#landscape-panel{display:none;}
+
+@media(max-width:768px) and (orientation:landscape){
+  /* Hide portrait-only elements */
+  #mobile-globe-card{display:none !important;}
+  #scroll-sections{display:none !important;}
+  #rotate-overlay{display:none !important;}
+
+  /* Show landscape panel */
+  body.map-active #landscape-panel{
+    display:flex;
+    flex-direction:column;
+    position:fixed;
+    top:56px;left:0;
+    width:40%;height:calc(100vh - 56px);
+    background:rgba(0,0,0,0.92);
+    backdrop-filter:blur(12px);
+    border-right:1px solid rgba(255,255,255,0.08);
+    overflow-y:auto;
+    overflow-x:hidden;
+    z-index:50;
+    -webkit-overflow-scrolling:touch;
+    padding:12px 0 20px;
+  }
+
+  /* Globe fills right 60% */
+  #globe-canvas{
+    display:block !important;
+    position:fixed;
+    top:56px;left:40%;
+    width:60% !important;
+    height:calc(100vh - 56px) !important;
+  }
+  #flat-canvas{left:40%;width:60% !important;}
+
+  /* Landscape panel styles */
+  .ls-section{padding:12px 14px;}
+  .ls-divider{height:1px;background:rgba(255,255,255,0.07);margin:0 14px;}
+  .ls-calling-val{
+    font-size:clamp(28px,6vw,40px);font-weight:800;
+    color:var(--gold);letter-spacing:-0.02em;
+    font-variant-numeric:tabular-nums;
+  }
+  .ls-calling-lbl{font-size:9px;letter-spacing:0.12em;text-transform:uppercase;color:rgba(255,255,255,0.4);margin-top:2px;}
+  .ls-section-title{font-size:9px;letter-spacing:0.12em;text-transform:uppercase;color:rgba(255,255,255,0.35);margin-bottom:8px;}
+  .ls-journey-total{font-size:16px;font-weight:700;color:var(--gold);margin-bottom:6px;font-variant-numeric:tabular-nums;}
+  .ls-bar-wrap{height:4px;background:rgba(255,255,255,0.08);border-radius:2px;margin-bottom:8px;overflow:hidden;}
+  .ls-bar-fill{height:100%;background:linear-gradient(90deg,#00d4ff,#00ff88);border-radius:2px;transition:width 1s ease;}
+  .ls-journey-stats{display:flex;gap:6px;}
+  .ls-jstat{flex:1;text-align:center;}
+  .ls-jval{font-size:11px;font-weight:700;font-variant-numeric:tabular-nums;}
+  .ls-jlbl{font-size:8px;color:rgba(255,255,255,0.3);margin-top:1px;}
+  .ls-makkah-row{display:flex;align-items:center;justify-content:space-between;}
+  .ls-makkah-lbl{font-size:9px;letter-spacing:0.08em;text-transform:uppercase;color:rgba(255,255,255,0.35);}
+  .ls-makkah-time{font-size:13px;font-weight:700;color:var(--gold);font-variant-numeric:tabular-nums;}
+
+  /* Country rows in landscape */
+  #ls-country-track .mobile-country-row{
+    display:flex;align-items:center;gap:6px;
+    padding:5px 0;border-bottom:1px solid rgba(255,255,255,0.05);
+    font-size:11px;
+  }
+  /* Prayer bars in landscape */
+  #ls-prayer-bars .p-bar-row{
+    display:flex;align-items:center;gap:6px;margin-bottom:5px;
+  }
+  #ls-prayer-bars .p-bar-name{font-size:9px;width:40px;text-transform:capitalize;}
+  #ls-prayer-bars .p-bar-track{flex:1;height:3px;background:rgba(255,255,255,0.08);border-radius:2px;overflow:hidden;}
+  #ls-prayer-bars .p-bar-fill{height:100%;border-radius:2px;}
+  #ls-prayer-bars .p-bar-count{font-size:9px;color:rgba(255,255,255,0.5);width:28px;text-align:right;font-variant-numeric:tabular-nums;}
+}
+
+/* Portrait: rotate overlay shown when map-active, once per session */
+@media(max-width:768px) and (orientation:portrait){
+  #landscape-panel{display:none !important;}
+}
+
   <link rel="preload" href="earth.jpg" as="image">
 </head>
 <body>
 
 
-<!-- Mobile Touch Hints -->
+<!-- Rotate Overlay — shown once per session on mobile when entering map -->
+<div id="rotate-overlay">
+  <div class="rot-box">
+    <div class="rot-phone-wrap">
+      <div class="rot-phone" id="rot-phone-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="5" y="2" width="14" height="20" rx="2"/>
+          <circle cx="12" cy="17" r="1" fill="currentColor" stroke="none"/>
+        </svg>
+      </div>
+      <div class="rot-arrow">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M4 12a8 8 0 0 1 8-8"/><polyline points="9 4 13 4 13 8"/>
+        </svg>
+      </div>
+    </div>
+    <div class="rot-title">Rotate for full experience</div>
+    <div class="rot-body">Turn your phone sideways to see the globe with live stats panel.</div>
+    <button class="rot-continue" onclick="dismissRotateOverlay()">Continue in portrait</button>
+  </div>
+</div>
+
+<!-- Landscape Panel — left side in landscape mode -->
+<div id="landscape-panel">
+  <div class="ls-section">
+    <div class="ls-calling-val" id="ls-calling">—</div>
+    <div class="ls-calling-lbl">Calling Now</div>
+  </div>
+  <div class="ls-divider"></div>
+  <div class="ls-section">
+    <div class="ls-section-title">Prayer Breakdown</div>
+    <div id="ls-prayer-bars"></div>
+  </div>
+  <div class="ls-divider"></div>
+  <div class="ls-section">
+    <div class="ls-section-title">Countries Calling Now</div>
+    <div id="ls-country-track"></div>
+  </div>
+  <div class="ls-divider"></div>
+  <div class="ls-section">
+    <div class="ls-section-title">Today's Adhan Journey</div>
+    <div class="ls-journey-total" id="ls-adhan-total">—</div>
+    <div class="ls-bar-wrap"><div class="ls-bar-fill" id="ls-adhan-bar"></div></div>
+    <div class="ls-journey-stats">
+      <div class="ls-jstat"><div class="ls-jval adhan-done" id="ls-completed">—</div><div class="ls-jlbl">✅ Done</div></div>
+      <div class="ls-jstat"><div class="ls-jval adhan-live" id="ls-active">—</div><div class="ls-jlbl">🔴 Live</div></div>
+      <div class="ls-jstat"><div class="ls-jval adhan-upcoming" id="ls-remaining">—</div><div class="ls-jlbl">⏳ To come</div></div>
+    </div>
+  </div>
+  <div class="ls-divider"></div>
+  <div class="ls-section ls-makkah-row">
+    <div class="ls-makkah-lbl">Makkah Time</div>
+    <div class="ls-makkah-time" id="ls-makkah-time">--:--:-- --</div>
+  </div>
+</div>
+
+
 <div id="mobile-touch-hint">
   <span class="mobile-touch-text">Drag to rotate &nbsp;·&nbsp; Pinch to zoom &nbsp;·&nbsp; Scroll for live stats</span>
 </div>
@@ -1254,7 +1445,85 @@ function closeMobileMenu(){
   document.getElementById('mobile-menu-overlay').classList.remove('visible');
 }
 
-// ── FORM SUBMISSION ──────────────────────────────────────────
+// ── ROTATE OVERLAY ───────────────────────────────────────────
+let _rotateOverlayShown = false;
+
+function showRotateOverlay(){
+  if(_rotateOverlayShown) return;
+  if(window.innerWidth > 768) return; // desktop only
+  if(window.innerHeight < window.innerWidth) return; // already landscape
+  _rotateOverlayShown = true;
+  document.getElementById('rotate-overlay').classList.add('visible');
+}
+
+function dismissRotateOverlay(){
+  document.getElementById('rotate-overlay').classList.remove('visible');
+}
+
+// Auto-dismiss when user rotates to landscape
+window.addEventListener('orientationchange', ()=>{
+  setTimeout(()=>{
+    if(window.innerWidth > window.innerHeight){
+      dismissRotateOverlay();
+      if(document.body.classList.contains('map-active')) syncLandscapePanel();
+    }
+  }, 300);
+});
+
+// ── LANDSCAPE PANEL SYNC ─────────────────────────────────────
+function syncLandscapePanel(){
+  // Calling now
+  const calling = document.getElementById('s-calling');
+  const lsCalling = document.getElementById('ls-calling');
+  if(calling && lsCalling) lsCalling.textContent = calling.textContent;
+
+  // Makkah time
+  const makkah = document.getElementById('m-makkah-time');
+  const lsMakkah = document.getElementById('ls-makkah-time');
+  if(makkah && lsMakkah) lsMakkah.textContent = makkah.textContent;
+
+  // Adhan journey
+  const total = document.getElementById('adhan-total');
+  const lsTotal = document.getElementById('ls-adhan-total');
+  if(total && lsTotal) lsTotal.textContent = total.textContent;
+
+  const bar = document.getElementById('adhan-bar');
+  const lsBar = document.getElementById('ls-adhan-bar');
+  if(bar && lsBar) lsBar.style.width = bar.style.width;
+
+  const comp = document.getElementById('adhan-completed');
+  const lsComp = document.getElementById('ls-completed');
+  if(comp && lsComp) lsComp.textContent = comp.textContent;
+
+  const act = document.getElementById('adhan-active');
+  const lsAct = document.getElementById('ls-active');
+  if(act && lsAct) lsAct.textContent = act.textContent;
+
+  const rem = document.getElementById('adhan-remaining');
+  const lsRem = document.getElementById('ls-remaining');
+  if(rem && lsRem) lsRem.textContent = rem.textContent;
+
+  // Prayer bars — clone from mobile
+  const src = document.getElementById('mobile-prayer-bars-inner');
+  const dst = document.getElementById('ls-prayer-bars');
+  if(src && dst) dst.innerHTML = src.innerHTML;
+
+  // Countries — clone from mobile
+  const csrc = document.getElementById('m-country-track');
+  const cdst = document.getElementById('ls-country-track');
+  if(csrc && cdst) cdst.innerHTML = csrc.innerHTML;
+}
+
+// Sync landscape panel every 2s when in landscape
+setInterval(()=>{
+  if(document.body.classList.contains('map-active') &&
+     window.innerWidth > window.innerHeight &&
+     window.innerWidth <= 768){
+    syncLandscapePanel();
+  }
+}, 2000);
+
+
 async function submitForm(e, formId, successId){
   e.preventDefault();
   const form = document.getElementById(formId);
@@ -1297,6 +1566,9 @@ let _adhanCompleted=0, _adhanRemaining=0, _adhanTotal=0, _adhanLastCalc=0;
 function enterMap(){
   if(mapMode) return;
   mapMode = true;
+
+  // Show rotate overlay on mobile (once per session)
+  setTimeout(showRotateOverlay, 800);
 
   // Trigger intro spin on first visit only
   if(!_introFired){
