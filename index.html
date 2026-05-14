@@ -927,106 +927,6 @@ nav{
 
 }
 
-/* ── ROTATE OVERLAY + LANDSCAPE PANEL: hidden everywhere by default ── */
-#rotate-overlay{display:none;}
-#landscape-panel{display:none;}
-
-/* ── MOBILE PORTRAIT: rotate overlay shown when triggered ── */
-@media(max-width:768px) and (orientation:portrait){
-  #rotate-overlay.visible{
-    display:flex;
-    position:fixed;inset:0;z-index:900;
-    align-items:center;justify-content:center;
-    background:rgba(0,0,0,0.72);
-    backdrop-filter:blur(8px);
-    -webkit-backdrop-filter:blur(8px);
-  }
-  .rot-box{
-    background:rgba(8,8,18,0.97);
-    border:1px solid rgba(0,212,255,0.2);
-    border-radius:20px;padding:32px 24px;
-    max-width:260px;width:82%;text-align:center;
-  }
-  .rot-icon-wrap{margin-bottom:20px;}
-  .rot-phone-svg{
-    width:40px;height:40px;color:var(--gold);
-    display:inline-block;
-    animation:rotPhone 2s ease-in-out infinite;
-  }
-  @keyframes rotPhone{
-    0%,20%{transform:rotate(0deg);}
-    60%,100%{transform:rotate(-90deg);}
-  }
-  .rot-title{font-size:17px;font-weight:700;color:#fff;margin-bottom:8px;letter-spacing:-0.02em;}
-  .rot-body{font-size:12px;color:rgba(255,255,255,0.45);line-height:1.6;margin-bottom:20px;}
-  .rot-btn{
-    background:none;border:1px solid rgba(255,255,255,0.12);
-    border-radius:8px;padding:9px 18px;
-    color:rgba(255,255,255,0.4);font-size:11px;
-    font-family:'Geist',sans-serif;letter-spacing:0.05em;cursor:pointer;
-  }
-}
-
-/* ── MOBILE LANDSCAPE: globe right 60%, panel left 40% ── */
-@media(max-width:768px) and (max-height:500px) and (orientation:landscape){
-  /* Kill portrait mobile elements */
-  #mobile-globe-card{display:none !important;}
-  #scroll-sections{display:none !important;}
-
-  /* Show globe on correct area */
-  #globe-canvas{
-    display:block !important;
-    position:fixed !important;
-    top:56px !important;left:40% !important;
-    width:60% !important;
-    height:calc(100vh - 56px) !important;
-    pointer-events:auto !important;
-  }
-  #flat-canvas{
-    left:40% !important;
-    width:60% !important;
-  }
-
-  /* Landscape panel */
-  body.map-active #landscape-panel{
-    display:flex !important;
-    flex-direction:column;
-    position:fixed;
-    top:56px;left:0;
-    width:40%;height:calc(100vh - 56px);
-    background:rgba(0,0,0,0.94);
-    border-right:1px solid rgba(255,255,255,0.07);
-    overflow-y:auto;overflow-x:hidden;
-    -webkit-overflow-scrolling:touch;
-    z-index:50;
-    padding:10px 0 16px;
-  }
-  .ls-sect{padding:10px 12px;}
-  .ls-rule{height:1px;background:rgba(255,255,255,0.06);margin:0 12px;}
-  .ls-calling{font-size:28px;font-weight:800;color:var(--gold);font-variant-numeric:tabular-nums;letter-spacing:-0.02em;}
-  .ls-calling-lbl{font-size:8px;letter-spacing:0.12em;text-transform:uppercase;color:rgba(255,255,255,0.35);margin-top:2px;}
-  .ls-title{font-size:8px;letter-spacing:0.12em;text-transform:uppercase;color:rgba(255,255,255,0.3);margin-bottom:7px;}
-  .ls-journey-val{font-size:14px;font-weight:700;color:var(--gold);margin-bottom:5px;font-variant-numeric:tabular-nums;}
-  .ls-bar-wrap{height:3px;background:rgba(255,255,255,0.08);border-radius:2px;margin-bottom:7px;overflow:hidden;}
-  .ls-bar-fill{height:100%;background:linear-gradient(90deg,#00d4ff,#00ff88);border-radius:2px;transition:width 1s;}
-  .ls-three{display:flex;gap:4px;}
-  .ls-tstat{flex:1;text-align:center;}
-  .ls-tv{font-size:10px;font-weight:700;font-variant-numeric:tabular-nums;}
-  .ls-tl{font-size:7px;color:rgba(255,255,255,0.3);margin-top:1px;}
-  .ls-makkah-row{display:flex;align-items:center;justify-content:space-between;}
-  .ls-makkah-lbl{font-size:8px;letter-spacing:0.1em;text-transform:uppercase;color:rgba(255,255,255,0.3);}
-  .ls-makkah-time{font-size:12px;font-weight:700;color:var(--gold);font-variant-numeric:tabular-nums;}
-  /* Prayer bars */
-  .ls-pbar-row{display:flex;align-items:center;gap:5px;margin-bottom:4px;}
-  .ls-pbar-name{font-size:8px;width:36px;text-transform:capitalize;color:rgba(255,255,255,0.5);}
-  .ls-pbar-track{flex:1;height:3px;background:rgba(255,255,255,0.08);border-radius:2px;overflow:hidden;}
-  .ls-pbar-fill{height:100%;border-radius:2px;}
-  .ls-pbar-count{font-size:8px;color:rgba(255,255,255,0.4);width:26px;text-align:right;font-variant-numeric:tabular-nums;}
-  /* Country rows */
-  .ls-country-row{display:flex;align-items:center;gap:5px;padding:3px 0;border-bottom:1px solid rgba(255,255,255,0.04);font-size:9px;color:rgba(255,255,255,0.6);}
-  .ls-country-num{width:12px;color:rgba(255,255,255,0.25);font-size:8px;}
-  .ls-country-count{margin-left:auto;color:var(--gold);font-variant-numeric:tabular-nums;}
-}
 </style>
   <link rel="preload" href="earth.jpg" as="image">
 </head>
@@ -1078,25 +978,6 @@ nav{
 <!-- Mobile Menu Overlay -->
 <div id="mobile-menu-overlay" onclick="closeMobileMenu()"></div>
 
-<!-- Rotate to Landscape Overlay (mobile only, once per session) -->
-<div id="rotate-overlay" aria-hidden="true">
-  <div class="rot-box">
-    <div class="rot-icon-wrap">
-      <svg class="rot-phone-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-        <rect x="5" y="2" width="14" height="20" rx="2"/>
-        <circle cx="12" cy="17" r="1" fill="currentColor" stroke="none"/>
-      </svg>
-    </div>
-    <div class="rot-title">Rotate for full experience</div>
-    <div class="rot-body">Turn your phone sideways to see the globe with a live stats panel.</div>
-    <button class="rot-btn" onclick="dismissRotateOverlay()">Continue in portrait</button>
-  </div>
-</div>
-
-<!-- Landscape Stats Panel (mobile landscape only) -->
-<div id="landscape-panel" aria-hidden="true">
-  <div class="ls-sect">
-    <div class="ls-calling" id="ls-calling">—</div>
     <div class="ls-calling-lbl">Calling Now</div>
   </div>
   <div class="ls-rule"></div>
@@ -1411,71 +1292,6 @@ function closeMobileMenu(){
   document.getElementById('mobile-menu-overlay').classList.remove('visible');
 }
 
-// ── ROTATE OVERLAY ───────────────────────────────────────────
-let _rotShown = false;
-function showRotateOverlay(){
-  if(_rotShown) return;
-  if(window.innerWidth > 768) return;
-  if(window.innerWidth > window.innerHeight) return; // already landscape
-  _rotShown = true;
-  document.getElementById('rotate-overlay').classList.add('visible');
-}
-function dismissRotateOverlay(){
-  document.getElementById('rotate-overlay').classList.remove('visible');
-}
-window.addEventListener('orientationchange', ()=>{
-  setTimeout(()=>{
-    if(window.innerWidth > window.innerHeight){
-      dismissRotateOverlay();
-      if(document.body.classList.contains('map-active')) syncLandscapePanel();
-    }
-  }, 350);
-});
-
-// ── LANDSCAPE PANEL SYNC ─────────────────────────────────────
-function syncLandscapePanel(){
-  try{
-    const PC = {fajr:'#4466ff',dhuhr:'#ffcc00',asr:'#e07a2f',maghrib:'#d94f3d',isha:'#9b59c4'};
-    const sc=document.getElementById('s-calling');
-    if(sc) document.getElementById('ls-calling').textContent=sc.textContent;
-    const mt=document.getElementById('m-makkah-time');
-    if(mt) document.getElementById('ls-makkah').textContent=mt.textContent;
-    const at=document.getElementById('adhan-total');
-    if(at) document.getElementById('ls-total').textContent=at.textContent;
-    const ab=document.getElementById('adhan-bar');
-    if(ab) document.getElementById('ls-bar').style.width=ab.style.width;
-    const ac=document.getElementById('adhan-completed');
-    if(ac) document.getElementById('ls-done').textContent=ac.textContent;
-    const aa=document.getElementById('adhan-active');
-    if(aa) document.getElementById('ls-live').textContent=aa.textContent;
-    const ar=document.getElementById('adhan-remaining');
-    if(ar) document.getElementById('ls-coming').textContent=ar.textContent;
-    if(window._lastPrayerCounts){
-      const pC=window._lastPrayerCounts, mx=Math.max(...Object.values(pC),1);
-      document.getElementById('ls-prayer-bars').innerHTML=Object.entries(pC).map(([p,v])=>`
-        <div class="ls-pbar-row">
-          <div class="ls-pbar-name" style="color:${PC[p]}">${p}</div>
-          <div class="ls-pbar-track"><div class="ls-pbar-fill" style="background:${PC[p]};width:${v/mx*100}%"></div></div>
-          <div class="ls-pbar-count">${v.toLocaleString()}</div>
-        </div>`).join('');
-    }
-    const csrc=document.getElementById('m-country-track');
-    const cdst=document.getElementById('ls-countries');
-    if(csrc&&cdst){
-      const rows=csrc.querySelectorAll('.mobile-country-row');
-      cdst.innerHTML=Array.from(rows).slice(0,10).map((r,i)=>{
-        const name=r.querySelector('.mobile-country-name')?.textContent||'';
-        const count=r.querySelector('.mobile-country-count')?.textContent||'';
-        const flag=r.querySelector('.mobile-country-badge')?.textContent||'';
-        return `<div class="ls-country-row"><span class="ls-country-num">${i+1}</span><span>${flag}</span><span>${name}</span><span class="ls-country-count">${count}</span></div>`;
-      }).join('');
-    }
-  }catch(e){}
-}
-setInterval(()=>{
-  if(document.body.classList.contains('map-active')&&window.innerWidth>window.innerHeight&&window.innerWidth<=768&&window.innerHeight<=500)
-    syncLandscapePanel();
-},2000);
 
 
   e.preventDefault();
@@ -1519,8 +1335,6 @@ let _adhanCompleted=0, _adhanRemaining=0, _adhanTotal=0, _adhanLastCalc=0;
 function enterMap(){
   if(mapMode) return;
   mapMode = true;
-  setTimeout(showRotateOverlay, 900);
-
   // Trigger intro spin on first visit only
   if(!_introFired){
     _introFired=true;
