@@ -283,6 +283,33 @@ nav{
 .c-name{flex:1;}
 .c-count{color:var(--gold);font-variant-numeric:tabular-nums;font-size:12px;font-weight:600;}
 
+/* Portrait Makkah row */
+.makkah-row{display:flex;align-items:center;gap:10px;}
+.makkah-lbl{font-size:11px;letter-spacing:0.06em;text-transform:uppercase;color:rgba(255,255,255,0.45);flex:1;}
+.makkah-time{font-size:16px;font-weight:700;color:var(--gold);font-variant-numeric:tabular-nums;}
+
+/* Kaaba cube */
+.kaaba-wrap{width:28px;height:28px;perspective:80px;flex-shrink:0;position:relative;}
+.kaaba-scene{width:100%;height:100%;position:relative;transform-style:preserve-3d;transform:rotateX(-20deg);}
+.kaaba{width:16px;height:16px;position:absolute;top:4px;left:6px;transform-style:preserve-3d;animation:tawaf 10s linear infinite;}
+@keyframes tawaf{from{transform:rotateY(0deg);}to{transform:rotateY(-360deg);}}
+.kf{position:absolute;width:16px;height:16px;}
+.kf-front{background:#0a0805;border:0.5px solid rgba(196,162,74,0.4);transform:translateZ(8px);}
+.kf-back{background:#080603;border:0.5px solid rgba(196,162,74,0.2);transform:rotateY(180deg) translateZ(8px);}
+.kf-left{background:#090704;border:0.5px solid rgba(196,162,74,0.2);transform:rotateY(-90deg) translateZ(8px);}
+.kf-right{background:#090704;border:0.5px solid rgba(196,162,74,0.2);transform:rotateY(90deg) translateZ(8px);}
+.kf-top{background:#111008;border:0.5px solid rgba(196,162,74,0.3);transform:rotateX(90deg) translateZ(8px);}
+.kf-bottom{background:#050403;transform:rotateX(-90deg) translateZ(8px);}
+.kf-front::before,.kf-back::before,.kf-left::before,.kf-right::before{content:"";position:absolute;left:0;right:0;top:4px;height:2px;background:linear-gradient(90deg,transparent,rgba(196,162,74,0.8),transparent);}
+.kf-front::after{content:"";position:absolute;width:4px;height:3px;left:0;bottom:3px;background:radial-gradient(ellipse at 40% 40%,#3a2a1a,#1a0f08,#000);border:0.5px solid rgba(196,162,74,0.6);border-radius:50% 50% 50% 50%/40% 40% 60% 60%;box-shadow:0 0 2px rgba(196,162,74,0.3);}
+.kaaba-ground{position:absolute;bottom:2px;left:0;right:0;width:28px;height:6px;transform:rotateX(90deg) translateZ(-1px);background:radial-gradient(ellipse at center,rgba(196,162,74,0.15) 0%,transparent 70%);border-radius:50%;}
+
+/* Landscape journey stat colors — white text, bigger */
+.ls-done{color:#fff !important;font-size:11px !important;}
+.ls-live{color:#fff !important;font-size:11px !important;}
+.ls-coming{color:#fff !important;font-size:11px !important;}
+.ls-tl{font-size:8px;color:rgba(255,255,255,0.45);margin-top:2px;}
+
 /* ── DEBUG PANEL (desktop only) ── */
 #debug{
   position:fixed;bottom:16px;left:50%;transform:translateX(-50%);
@@ -371,6 +398,19 @@ nav{
     <div class="p-row"><span class="p-name" style="color:#9b59c4">Isha</span><div class="p-track"><div class="p-fill" style="background:#9b59c4;width:100%"></div></div><span class="p-count">3,149</span></div>
   </div>
 
+  <!-- Makkah Time — before countries -->
+  <div class="prayer-section">
+    <div class="makkah-row">
+      <div class="kaaba-wrap"><div class="kaaba-scene"><div class="kaaba">
+        <div class="kf kf-front"></div><div class="kf kf-back"></div>
+        <div class="kf kf-left"></div><div class="kf kf-right"></div>
+        <div class="kf kf-top"></div><div class="kf kf-bottom"></div>
+      </div><div class="kaaba-ground"></div></div></div>
+      <span class="makkah-lbl">Makkah Time</span>
+      <span class="makkah-time">05:04:36 PM</span>
+    </div>
+  </div>
+
   <!-- Countries -->
   <div class="prayer-section">
     <div class="section-title">Countries Calling Now</div>
@@ -406,6 +446,17 @@ nav{
       <div class="ls-p-row"><span class="ls-p-name" style="color:#9b59c4">Isha</span><div class="ls-p-track"><div class="ls-p-fill" style="background:#9b59c4;width:100%"></div></div><span class="ls-p-count">3,149</span></div>
     </div>
     <div class="ls-rule"></div>
+    <!-- Makkah before countries -->
+    <div class="ls-sect ls-makkah-row">
+      <div class="kaaba-wrap"><div class="kaaba-scene"><div class="kaaba">
+        <div class="kf kf-front"></div><div class="kf kf-back"></div>
+        <div class="kf kf-left"></div><div class="kf kf-right"></div>
+        <div class="kf kf-top"></div><div class="kf kf-bottom"></div>
+      </div><div class="kaaba-ground"></div></div></div>
+      <span class="ls-makkah-lbl">Makkah</span>
+      <span class="ls-makkah-time">05:04:36 PM</span>
+    </div>
+    <div class="ls-rule"></div>
     <div class="ls-sect">
       <div class="ls-title">Countries Calling Now</div>
       <div class="ls-country-row"><span class="ls-c-num">1</span><span>🇧🇩</span><span>Bangladesh</span><span class="ls-c-count">2,976</span></div>
@@ -420,15 +471,10 @@ nav{
       <div class="ls-journey-val">1,416,740 calls</div>
       <div class="ls-bar-wrap"><div class="ls-bar-fill" style="width:64%"></div></div>
       <div class="ls-three">
-        <div class="ls-tstat"><div class="ls-tv" style="color:#4ade80">911,112</div><div class="ls-tl">✅ Done</div></div>
-        <div class="ls-tstat"><div class="ls-tv" style="color:#f87171">4,713</div><div class="ls-tl">🔴 Live</div></div>
-        <div class="ls-tstat"><div class="ls-tv" style="color:rgba(255,255,255,0.5)">500,495</div><div class="ls-tl">⏳ Coming</div></div>
+        <div class="ls-tstat"><div class="ls-tv ls-done">911,112</div><div class="ls-tl">✅ Done</div></div>
+        <div class="ls-tstat"><div class="ls-tv ls-live">4,713</div><div class="ls-tl">🔴 Live</div></div>
+        <div class="ls-tstat"><div class="ls-tv ls-coming">500,495</div><div class="ls-tl">⏳ Coming</div></div>
       </div>
-    </div>
-    <div class="ls-rule"></div>
-    <div class="ls-sect ls-makkah-row">
-      <span class="ls-makkah-lbl">Makkah</span>
-      <span class="ls-makkah-time">05:04:36 PM</span>
     </div>
 
     <!-- Scroll hint -->
