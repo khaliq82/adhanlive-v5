@@ -542,6 +542,10 @@ footer{
   background:#000000;
   position:relative;z-index:600;
   pointer-events:all;
+  display:none; /* desktop: hidden — the live map is fullscreen, no footer overlap */
+}
+@media(max-width:768px){
+  footer{display:block;} /* mobile: show after stats section */
 }
 .footer-inner{
   max-width:1200px;margin:0 auto;
