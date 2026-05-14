@@ -131,7 +131,7 @@ nav{
   font-size:11px;letter-spacing:0.08em;color:#ffffff;font-weight:700;
   text-decoration:none;cursor:pointer;transition:color 0.2s;
 }
-.nav-links{display:flex;gap:48px;align-items:center;}
+.nav-links{display:flex;gap:32px;align-items:center;}
 .nav-links a:hover,.nav-links a.active{color:var(--text);}
 .nav-links a.active{color:var(--gold);}
 .nav-utc{
@@ -542,10 +542,7 @@ footer{
   background:#000000;
   position:relative;z-index:600;
   pointer-events:all;
-  display:none; /* desktop: hidden — the live map is fullscreen, no footer overlap */
-}
-@media(max-width:768px){
-  footer{display:block;} /* mobile: show after stats section */
+  display:none; /* hidden on desktop — fullscreen map needs no footer */
 }
 .footer-inner{
   max-width:1200px;margin:0 auto;
@@ -716,6 +713,7 @@ footer{
   body.map-active #mobile-stats{display:block;}
   body.map-active #mobile-globe-card{display:block !important;}
   body.map-active #mobile-globe-card{display:block !important;}
+  body.map-active footer{display:block;} /* show footer only after entering map */
   /* Badge and touch hint hidden by default — shown via JS after ENTER */
   #mobile-touch-hint{display:none !important;}
   #mobile-touch-hint{display:none;}
@@ -939,7 +937,10 @@ footer{
   <div class="nav-links" id="nav-links">
     <a id="nav-about" class="active" onclick="goHome();closeMobileMenu()">About</a>
     <a id="nav-map" onclick="enterMap();closeMobileMenu()">Live Map</a>
-    <a href="contact.html">Contact</a>
+    <a href="adhan-clock.html" onclick="closeMobileMenu()">Adhan Clock</a>
+    <a href="prayer-arcs.html" onclick="closeMobileMenu()">Arc Explorer</a>
+    <a href="ask-adhanlive.html" onclick="closeMobileMenu()">Ask AdhanLive</a>
+    <a href="contact.html" onclick="closeMobileMenu()">Contact</a>
   </div>
   <div class="nav-right">
     <div class="nav-utc" id="utc-clock">UTC 00:00:00</div>
