@@ -224,9 +224,8 @@ nav{
     position:relative;overflow:hidden;
   }
   .ls-globe-inner{
-    /* Constrain by height so globe never clips */
-    height:90%;aspect-ratio:1/1;
-    max-width:90%;
+    width:min(85%, 85vh);
+    height:min(85%, 85vh);
     border-radius:50%;
     background:radial-gradient(ellipse at 35% 35%, #1a4060 0%, #0d2840 40%, #061828 100%);
     box-shadow:inset -20px -20px 40px rgba(0,0,0,0.8),0 0 40px rgba(0,100,200,0.15);
