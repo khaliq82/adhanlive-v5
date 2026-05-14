@@ -25,6 +25,16 @@ nav{
   background:rgba(0,0,0,0.9);
   border-bottom:1px solid var(--border);
 }
+@media(max-width:768px){
+  nav{height:44px;}
+  #portrait-view{top:44px !important;}
+}
+@media(max-width:768px) and (max-height:450px) and (orientation:landscape){
+  nav{height:44px;}
+  #landscape-view{top:44px !important;}
+  .ls-panel{top:44px !important;height:calc(100vh - 44px) !important;}
+  .ls-globe{height:calc(100vh - 44px) !important;}
+}
 .logo{display:flex;align-items:center;gap:8px;}
 .logo-dot{width:8px;height:8px;border-radius:50%;background:var(--gold);}
 .logo-text{font-size:14px;font-weight:800;}
@@ -170,7 +180,7 @@ nav{
   /* Show landscape view */
   #landscape-view{
     display:flex !important;
-    position:fixed;top:56px;left:0;right:0;bottom:0;
+    position:fixed;top:44px;left:0;right:0;bottom:0;
   }
 
   /* Left panel — 40% */
