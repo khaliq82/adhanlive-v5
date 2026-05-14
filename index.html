@@ -1650,6 +1650,9 @@ window.addEventListener('orientationchange', function(){
 // ── LANDSCAPE PANEL SYNC ─────────────────────────────────────
 function syncLandscapePanel(){
   try{
+    // Force renderer to resize for landscape
+    window.dispatchEvent(new Event('resize'));
+
     // Fix globe canvas position for landscape
     const gc = document.getElementById('globe-canvas');
     if(gc){
@@ -2139,9 +2142,26 @@ function initGlobe(){
   window.addEventListener('resize',()=>{
     const W2=window.innerWidth,H2=window.innerHeight-56;
     if(isMobileDevice){
-      camera.aspect=1.0;
-      camera.updateProjectionMatrix();
-      renderer.setSize(W2,W2);
+      // In landscape mobile — globe takes right 60%
+      const isLandscape = window.innerWidth > window.innerHeight && window.innerHeight <= 450;
+      if(isLandscape){
+        const gw = Math.floor(W2 * 0.6);
+        const gh = window.innerHeight - 56;
+        camera.aspect = gw/gh;
+        camera.updateProjectionMatrix();
+        renderer.setSize(gw, gh);
+        renderer.domElement.style.left = '40%';
+        renderer.domElement.style.width = gw+'px';
+        renderer.domElement.style.height = gh+'px';
+        renderer.domElement.style.top = '56px';
+      } else {
+        camera.aspect=1.0;
+        camera.updateProjectionMatrix();
+        renderer.setSize(W2,W2);
+        renderer.domElement.style.left = '';
+        renderer.domElement.style.width = '';
+        renderer.domElement.style.height = '';
+      }
     } else {
       camera.aspect=W2/H2;
       camera.updateProjectionMatrix();
