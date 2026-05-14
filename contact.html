@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Contact — AdhanLive</title>
+
+<!-- SEO -->
+<meta name="description" content="Get in touch with AdhanLive. Report a missing mosque, send us a message, or share feedback about the live Adhan visualization.">
+<meta name="author" content="AdhanLive">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://www.adhanlive.com/contact.html">
+
+<!-- Open Graph -->
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://www.adhanlive.com/contact.html">
+<meta property="og:title" content="Contact — AdhanLive">
+<meta property="og:description" content="Get in touch with AdhanLive. Report a missing mosque or send us a message.">
+<meta property="og:image" content="https://www.adhanlive.com/preview.jpg">
+<meta property="og:site_name" content="AdhanLive">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700;800;900&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet">
+
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#000000;--border:rgba(255,255,255,0.1);--border2:rgba(255,255,255,0.2);
+  --text:#ffffff;--text2:rgba(255,255,255,0.6);--text3:rgba(255,255,255,0.25);
+  --gold:#00d4ff;
+}
+
+html{scroll-behavior:smooth;}
+body{
+  background:var(--bg);color:var(--text);
+  font-family:'Geist',sans-serif;
+  overflow-x:hidden;
+  min-height:100vh;
+  display:flex;flex-direction:column;
+}
+
+/* ── NAV ── */
+nav{
+  position:sticky;top:0;z-index:200;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 32px;height:56px;
+  background:rgba(0,0,0,0.85);
+  backdrop-filter:blur(20px);
+  border-bottom:1px solid var(--border);
+}
+.logo{display:flex;align-items:center;gap:10px;cursor:pointer;text-decoration:none;}
+.logo-dot{width:8px;height:8px;border-radius:50%;background:var(--gold);flex-shrink:0;}
+.logo span{font-size:14px;font-weight:800;letter-spacing:-0.02em;color:#fff;}
+.logo span span{color:var(--gold);}
+.nav-links{display:flex;gap:36px;align-items:center;}
+.nav-links a{
+  font-size:11px;letter-spacing:0.08em;text-transform:uppercase;
+  color:var(--text2);text-decoration:none;
+  transition:color 0.2s;
+}
+.nav-links a:hover,.nav-links a.active{color:var(--text);}
+.nav-links a.active{color:var(--gold);}
+
+/* ── PAGE ── */
+.page-wrap{
+  flex:1;
+  max-width:960px;
+  width:100%;
+  margin:0 auto;
+  padding:80px 40px 60px;
+}
+.page-eyebrow{
+  font-size:10px;letter-spacing:0.2em;text-transform:uppercase;
+  color:var(--gold);margin-bottom:16px;
+}
+.page-heading{
+  font-family:'Geist',sans-serif;font-weight:800;
+  font-size:clamp(36px,6vw,56px);letter-spacing:-0.03em;line-height:1;
+  color:var(--text);margin-bottom:48px;
+}
+.page-heading span{color:var(--gold);}
+
+/* ── TWO COLUMN ── */
+.two-col{
+  display:grid;
+  grid-template-columns:1fr 1px 1fr;
+  gap:60px;
+  align-items:start;
+}
+.col-divider{background:var(--border);align-self:stretch;}
+
+/* ── SECTION TITLES ── */
+.col-num{font-size:10px;letter-spacing:0.2em;color:var(--text3);margin-bottom:8px;}
+.col-title{
+  font-family:'Geist',sans-serif;font-weight:700;
+  font-size:clamp(18px,2.4vw,24px);color:var(--text);
+  margin-bottom:20px;display:flex;align-items:center;gap:12px;
+}
+.col-title::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,rgba(0,212,255,0.3),transparent);}
+.col-title span{color:var(--gold);}
+.col-body{
+  font-family:'Cormorant Garamond',serif;font-weight:300;
+  font-size:clamp(15px,1.8vw,18px);line-height:1.8;
+  color:rgba(255,255,255,0.5);margin-bottom:20px;
+}
+
+/* ── FORMS ── */
+.contact-form{display:flex;flex-direction:column;gap:16px;margin-top:8px;}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+.form-group{display:flex;flex-direction:column;gap:6px;}
+.form-label{font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:rgba(255,255,255,0.4);}
+.form-input{
+  background:rgba(255,255,255,0.04);
+  border:1px solid var(--border);
+  border-radius:6px;
+  padding:12px 14px;
+  color:#fff;
+  font-size:13px;
+  font-family:'Geist',sans-serif;
+  outline:none;
+  transition:border-color 0.2s,background 0.2s;
+  width:100%;
+}
+.form-input:focus{border-color:rgba(0,212,255,0.5);background:rgba(0,212,255,0.04);}
+.form-input::placeholder{color:rgba(255,255,255,0.2);}
+.form-textarea{min-height:120px;resize:vertical;}
+.form-file{padding:10px 14px;cursor:pointer;}
+.form-btn{
+  display:inline-flex;align-items:center;justify-content:center;
+  padding:14px 32px;
+  background:var(--gold);
+  color:#000;
+  border:none;border-radius:6px;
+  font-family:'Geist',sans-serif;font-weight:700;
+  font-size:13px;letter-spacing:0.08em;text-transform:uppercase;
+  cursor:pointer;
+  transition:opacity 0.2s,transform 0.15s;
+  align-self:flex-start;
+}
+.form-btn:hover{opacity:0.85;transform:translateY(-1px);}
+.form-success{
+  display:none;padding:12px 16px;
+  background:rgba(0,212,255,0.1);
+  border:1px solid rgba(0,212,255,0.3);
+  border-radius:6px;
+  color:var(--gold);font-size:12px;
+}
+
+/* ── FOOTER ── */
+footer{
+  border-top:1px solid var(--border);
+  background:#000000;
+}
+.footer-inner{
+  max-width:960px;margin:0 auto;
+  padding:24px 40px;
+  display:flex;flex-wrap:wrap;align-items:center;gap:20px;
+}
+.footer-left{display:flex;flex-direction:column;gap:4px;margin-right:auto;}
+.footer-logo{font-family:'Geist',sans-serif;font-weight:800;font-size:14px;color:var(--text2);}
+.footer-logo span{color:var(--gold);}
+.footer-copy{font-size:10px;color:var(--text3);letter-spacing:0.05em;}
+.footer-copy a{color:var(--text3);text-decoration:none;}
+.footer-copy a:hover{color:var(--text2);}
+.footer-nav{display:flex;align-items:center;gap:20px;flex-wrap:wrap;}
+.footer-nav a{font-size:11px;letter-spacing:0.08em;text-transform:uppercase;color:rgba(255,255,255,0.35);text-decoration:none;transition:color 0.2s;}
+.footer-nav a:hover{color:rgba(0,212,255,0.8);}
+
+/* ── MOBILE ── */
+@media(max-width:768px){
+  nav{padding:0 20px;}
+  .page-wrap{padding:48px 20px 48px;}
+  .two-col{grid-template-columns:1fr;gap:40px;}
+  .col-divider{display:none;}
+  .form-row{grid-template-columns:1fr;}
+  .footer-inner{padding:20px 20px;flex-direction:column;align-items:flex-start;gap:12px;}
+  .footer-left{margin-right:0;}
+}
+</style>
+</head>
+<body>
+
+<!-- Nav -->
+<nav>
+  <a class="logo" href="index.html">
+    <div class="logo-dot"></div>
+    <span>Adhan<span>Live</span></span>
+  </a>
+  <div class="nav-links">
+    <a href="index.html">Live Map</a>
+    <a href="contact.html" class="active">Contact</a>
+  </div>
+</nav>
+
+<!-- Page Content -->
+<div class="page-wrap">
+
+  <div class="page-eyebrow">Get in Touch</div>
+  <h1 class="page-heading">We'd love to <span>hear from you</span></h1>
+
+  <div class="two-col">
+
+    <!-- LEFT — Contact Form -->
+    <div>
+      <div class="col-num">01</div>
+      <h2 class="col-title">Send Us a Message</h2>
+      <form class="contact-form" id="contact-form" onsubmit="submitForm(event,'contact-form','contact-success')">
+        <input type="hidden" name="access_key" value="fe20ffa7-c3a3-4268-8a55-97af16d5bf49">
+        <input type="hidden" name="subject" value="AdhanLive Contact Form">
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Your Name</label>
+            <input class="form-input" type="text" name="name" placeholder="Your name" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Your Email</label>
+            <input class="form-input" type="email" name="email" placeholder="you@example.com" required>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Subject</label>
+          <input class="form-input" type="text" name="subject_field" placeholder="How can we help?" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Message</label>
+          <textarea class="form-input form-textarea" name="message" placeholder="Your message..." required></textarea>
+        </div>
+        <button class="form-btn" type="submit">Send Message</button>
+        <div class="form-success" id="contact-success">Message sent! We'll get back to you soon.</div>
+      </form>
+    </div>
+
+    <!-- Divider -->
+    <div class="col-divider"></div>
+
+    <!-- RIGHT — Missing Mosque -->
+    <div>
+      <div class="col-num">02</div>
+      <h2 class="col-title">Missing a <span>Mosque?</span></h2>
+      <p class="col-body">Help us grow the map. If you know a mosque that's missing from AdhanLive, share its details below and we'll add it in our next update.</p>
+      <form class="contact-form" id="mosque-form" onsubmit="submitForm(event,'mosque-form','mosque-success')">
+        <input type="hidden" name="access_key" value="fe20ffa7-c3a3-4268-8a55-97af16d5bf49">
+        <input type="hidden" name="subject" value="AdhanLive — Missing Mosque Submission">
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Your Name</label>
+            <input class="form-input" type="text" name="name" placeholder="Your name" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Your Email</label>
+            <input class="form-input" type="email" name="email" placeholder="you@example.com" required>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Mosque Name</label>
+          <input class="form-input" type="text" name="mosque_name" placeholder="e.g. Masjid Al-Noor" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Location (Google Maps link)</label>
+          <input class="form-input" type="url" name="location" placeholder="https://maps.google.com/...">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Photo of Mosque <span style="color:rgba(255,255,255,0.3)">(optional)</span></label>
+          <input class="form-input form-file" type="file" name="photo" accept="image/*">
+        </div>
+        <button class="form-btn" type="submit">Submit Mosque</button>
+        <div class="form-success" id="mosque-success">Thank you! We'll review and add it soon.</div>
+      </form>
+    </div>
+
+  </div>
+</div>
+
+<!-- Footer -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-left">
+      <div class="footer-logo">Adhan<span>Live</span></div>
+      <div class="footer-copy">Mosque data © <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> contributors · © 2026 AdhanLive</div>
+    </div>
+    <nav class="footer-nav" aria-label="Footer navigation">
+      <a href="index.html">Live Map</a>
+      <a href="makkah.html">Makkah</a>
+      <a href="jakarta.html">Jakarta</a>
+      <a href="kuala-lumpur.html">Kuala Lumpur</a>
+    </nav>
+  </div>
+</footer>
+
+<script>
+async function submitForm(e, formId, successId){
+  e.preventDefault();
+  const form = document.getElementById(formId);
+  const btn = form.querySelector('.form-btn');
+  const success = document.getElementById(successId);
+  btn.disabled = true;
+  btn.textContent = 'Sending...';
+  try {
+    const data = new FormData(form);
+    const res = await fetch('https://api.web3forms.com/submit', {
+      method:'POST',
+      body: data
+    });
+    const json = await res.json();
+    if(json.success){
+      form.reset();
+      success.style.display = 'block';
+      btn.textContent = 'Sent ✓';
+    } else {
+      btn.disabled = false;
+      btn.textContent = 'Try Again';
+    }
+  } catch(err){
+    btn.disabled = false;
+    btn.textContent = 'Try Again';
+  }
+}
+</script>
+
+</body>
+</html>
