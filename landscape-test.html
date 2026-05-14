@@ -222,15 +222,25 @@ nav{
     background:radial-gradient(ellipse at 40% 40%, #0a2040 0%, #061020 50%, #000 100%);
     display:flex;align-items:center;justify-content:center;
     position:relative;overflow:hidden;
+    padding:10px;
   }
   .ls-globe-inner{
-    width:min(85%, 85vh);
-    height:min(85%, 85vh);
+    /* Size by height only — landscape height is always the constraint */
+    height:calc(100% - 20px);
+    aspect-ratio:1/1;
+    max-width:calc(100% - 20px);
     border-radius:50%;
     background:radial-gradient(ellipse at 35% 35%, #1a4060 0%, #0d2840 40%, #061828 100%);
     box-shadow:inset -20px -20px 40px rgba(0,0,0,0.8),0 0 40px rgba(0,100,200,0.15);
     display:flex;align-items:center;justify-content:center;
+    flex-shrink:0;
   }
+
+  /* Visible scrollbar on panel */
+  .ls-panel::-webkit-scrollbar{width:3px;}
+  .ls-panel::-webkit-scrollbar-track{background:rgba(255,255,255,0.03);}
+  .ls-panel::-webkit-scrollbar-thumb{background:rgba(0,212,255,0.4);border-radius:2px;}
+  .ls-panel{scrollbar-width:thin;scrollbar-color:rgba(0,212,255,0.4) transparent;}
 }
 
 /* Country rows portrait */
