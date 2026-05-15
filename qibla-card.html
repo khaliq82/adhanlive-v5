@@ -136,13 +136,12 @@ html,body{
 .kaaba-marker{
   position:absolute;
   width:28px;height:28px;
-  top:50%;left:50%;
-  transform-origin:0 0;
   display:flex;align-items:center;justify-content:center;
   font-size:20px;
   filter:drop-shadow(0 0 6px rgba(196,162,74,0.6));
   transition:filter 0.3s;
   z-index:5;
+  margin-left:-14px;margin-top:-14px;
 }
 .kaaba-marker.aligned{
   filter:drop-shadow(0 0 16px rgba(196,162,74,1)) drop-shadow(0 0 32px rgba(255,200,50,0.8));
@@ -337,13 +336,13 @@ async function searchCity(){
   }
 }
 
-function getKaabaPosition(qiblaDeg, radiusPct){
-  // Place kaaba on the dial rim at the qibla angle
-  // angle 0 = top (North), clockwise
-  const rad = (qiblaDeg - 90) * D; // -90 to start from top
-  const r = radiusPct; // % of dial radius
-  const x = 50 + r * Math.cos(rad);
-  const y = 50 + r * Math.sin(rad);
+function getKaabaPosition(qiblaDeg){
+  // Place kaaba on the dial rim (82% from center)
+  // 0° = North = top, clockwise
+  const rad = (qiblaDeg - 90) * D;
+  const r = 40; // % from center (50% = edge)
+  const x = 50 + r * Math.cos(rad); // % from left
+  const y = 50 + r * Math.sin(rad); // % from top
   return {x, y};
 }
 
@@ -352,7 +351,7 @@ function renderCompass(bearing, dist, dir){
   const needsPerm=isIOS&&typeof DeviceOrientationEvent!=='undefined'&&typeof DeviceOrientationEvent.requestPermission==='function';
 
   // Kaaba on rim at bearing angle (static initial position)
-  const pos = getKaabaPosition(bearing, 38);
+  const pos = getKaabaPosition(bearing);
 
   document.getElementById('qibla-content').innerHTML=`
     <div class="city-info">
@@ -370,7 +369,7 @@ function renderCompass(bearing, dist, dir){
         <div class="dial-w">W</div>
         <!-- Kaaba on dial rim at Qibla bearing -->
         <div class="kaaba-marker" id="kaaba-marker"
-          style="transform:translate(calc(${pos.x}% - 14px), calc(${pos.y}% - 14px));">
+          style="left:${pos.x}%;top:${pos.y}%;">
           🕋
         </div>
         <div class="align-glow" id="align-glow"></div>
@@ -381,10 +380,12 @@ function renderCompass(bearing, dist, dir){
       <div class="compass-center"></div>
     </div>
 
+    ${needsPerm?`<button class="enable-btn" id="enable-btn" onclick="enableCompass()">🧭 Enable Live Compass</button>`:''}
+
     <div class="guidance" id="guidance">
       <div class="guidance-arrow" id="guidance-arrow">🧭</div>
       <div class="guidance-text" id="guidance-text">
-        ${needsPerm ? 'Tap below to enable live compass' : 'Rotate your phone to face Makkah'}
+        ${needsPerm ? 'Enable compass above for live tracking' : 'Rotate your phone to face Makkah'}
       </div>
       <div class="guidance-deg" id="guidance-deg">Qibla: ${bearing}° ${dir}</div>
     </div>
@@ -394,8 +395,6 @@ function renderCompass(bearing, dist, dir){
       <div class="stat-item"><div class="stat-val">${dir}</div><div class="stat-lbl">Direction</div></div>
       <div class="stat-item"><div class="stat-val">${dist.toLocaleString()}</div><div class="stat-lbl">km to Makkah</div></div>
     </div>
-
-    ${needsPerm?`<button class="enable-btn" id="enable-btn" onclick="enableCompass()">🧭 Enable Live Compass</button>`:''}
   `;
 
   if(!needsPerm) startCompass();
