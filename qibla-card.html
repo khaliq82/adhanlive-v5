@@ -23,8 +23,7 @@ html,body{
 }
 .card-wrap{
   width:100%;max-width:480px;height:100dvh;
-  background:var(--bg);display:flex;flex-direction:column;
-  overflow:hidden;
+  background:var(--bg);display:flex;flex-direction:column;overflow:hidden;
 }
 
 /* ── HEADER ── */
@@ -41,8 +40,7 @@ html,body{
 /* ── BODY ── */
 .card-body{
   flex:1;display:flex;flex-direction:column;align-items:center;
-  justify-content:center;
-  padding:16px 20px 70px;overflow:hidden;gap:16px;
+  justify-content:center;padding:16px 20px 70px;overflow:hidden;gap:16px;
 }
 
 /* ── STATE SCREENS ── */
@@ -50,11 +48,11 @@ html,body{
   display:flex;flex-direction:column;align-items:center;
   gap:16px;text-align:center;padding:0 20px;
 }
-.state-icon{font-size:48px;line-height:1;}
+.state-icon{font-size:52px;line-height:1;}
 .state-title{font-size:20px;font-weight:700;letter-spacing:-0.02em;}
-.state-sub{font-size:13px;color:var(--text3);line-height:1.6;}
+.state-sub{font-size:13px;color:var(--text3);line-height:1.6;max-width:280px;}
 .state-btn{
-  padding:14px 32px;border-radius:10px;border:none;
+  padding:14px 36px;border-radius:10px;border:none;
   background:var(--gold);color:#000;
   font-size:13px;font-weight:700;font-family:'Geist',sans-serif;
   cursor:pointer;letter-spacing:0.04em;margin-top:4px;
@@ -64,142 +62,135 @@ html,body{
 @keyframes spin{to{transform:rotate(360deg);}}
 .spinner-text{font-size:13px;color:var(--text3);}
 
-/* ── COMPASS SCENE ── */
+/* ── COMPASS ── */
 .compass-scene{
-  display:flex;flex-direction:column;align-items:center;gap:12px;width:100%;
+  display:flex;flex-direction:column;align-items:center;gap:14px;width:100%;
 }
-.city-label{font-size:13px;color:var(--text2);letter-spacing:0.02em;text-align:center;}
+.city-label{font-size:13px;color:var(--text2);text-align:center;}
 .city-label span{color:#fff;font-weight:600;}
 
-/* ── COMPASS WRAP ── */
-.compass-outer-wrap{
+.compass-wrap{
   position:relative;
-  width:min(290px,80vw);height:min(290px,80vw);
-  flex-shrink:0;
+  width:min(280px,78vw);height:min(280px,78vw);flex-shrink:0;
 }
-
-/* Turn guidance text */
-.turn-guide{
-  font-size:18px;font-weight:700;color:#fff;
-  letter-spacing:0.06em;text-align:center;
-  animation:guidePulse 0.8s ease-in-out infinite;
-  min-height:28px;
-}
-@keyframes guidePulse{0%,100%{opacity:0.5;}50%{opacity:1;}}
 
 /* Metallic bezel */
 .compass-bezel{
   position:absolute;inset:0;border-radius:50%;
   background:conic-gradient(
     from 0deg,
-    #1a1a1a 0deg,#4a4a4a 15deg,#2a2a2a 30deg,
-    #5a5a5a 45deg,#2a2a2a 60deg,#4a4a4a 75deg,
-    #1a1a1a 90deg,#4a4a4a 105deg,#2a2a2a 120deg,
-    #5a5a5a 135deg,#2a2a2a 150deg,#4a4a4a 165deg,
-    #1a1a1a 180deg,#4a4a4a 195deg,#2a2a2a 210deg,
-    #5a5a5a 225deg,#2a2a2a 240deg,#4a4a4a 255deg,
-    #1a1a1a 270deg,#4a4a4a 285deg,#2a2a2a 300deg,
-    #5a5a5a 315deg,#2a2a2a 330deg,#4a4a4a 345deg,
-    #1a1a1a 360deg
+    #1a1a1a 0deg,#4a4a4a 20deg,#2a2a2a 40deg,#5a5a5a 60deg,
+    #2a2a2a 80deg,#4a4a4a 100deg,#1a1a1a 120deg,#4a4a4a 140deg,
+    #2a2a2a 160deg,#5a5a5a 180deg,#2a2a2a 200deg,#4a4a4a 220deg,
+    #1a1a1a 240deg,#4a4a4a 260deg,#2a2a2a 280deg,#5a5a5a 300deg,
+    #2a2a2a 320deg,#4a4a4a 340deg,#1a1a1a 360deg
   );
-  box-shadow:0 8px 40px rgba(0,0,0,0.9),inset 0 1px 0 rgba(255,255,255,0.15),inset 0 -1px 0 rgba(0,0,0,0.6);
+  box-shadow:
+    0 8px 40px rgba(0,0,0,0.9),
+    inset 0 2px 0 rgba(255,255,255,0.15),
+    inset 0 -2px 0 rgba(0,0,0,0.5);
 }
 
-/* Rotating dial */
-.compass-dial{
+/* Static compass face */
+.compass-face{
   position:absolute;inset:12px;border-radius:50%;
   background:radial-gradient(ellipse at 35% 30%,#12122a 0%,#080818 55%,#030310 100%);
   box-shadow:inset 0 4px 16px rgba(0,0,0,0.9),0 0 0 1px rgba(0,212,255,0.06);
-  transition:transform 0.15s linear;
-  overflow:visible;
+  overflow:hidden;
 }
-.compass-dial::after{
+.compass-face::after{
   content:'';position:absolute;inset:0;border-radius:50%;
-  background:repeating-conic-gradient(rgba(255,255,255,0.06) 0deg 1deg,transparent 1deg 6deg);
+  background:repeating-conic-gradient(rgba(255,255,255,0.05) 0deg 1deg,transparent 1deg 6deg);
   mask:radial-gradient(circle,transparent 86%,black 87%,black 92%,transparent 93%);
   -webkit-mask:radial-gradient(circle,transparent 86%,black 87%,black 92%,transparent 93%);
 }
-.compass-dial::before{
-  content:'';position:absolute;inset:0;
-  background:
-    linear-gradient(to bottom,transparent calc(50% - 0.5px),rgba(255,255,255,0.04) calc(50% - 0.5px),rgba(255,255,255,0.04) calc(50% + 0.5px),transparent calc(50% + 0.5px)),
-    linear-gradient(to right,transparent calc(50% - 0.5px),rgba(255,255,255,0.04) calc(50% - 0.5px),rgba(255,255,255,0.04) calc(50% + 0.5px),transparent calc(50% + 0.5px));
-}
 
-/* Cardinal labels on dial */
-.dial-n,.dial-s,.dial-e,.dial-w{position:absolute;font-size:10px;font-weight:800;letter-spacing:0.06em;pointer-events:none;}
-.dial-n{top:7px;left:50%;transform:translateX(-50%);color:rgba(255,70,70,0.9);}
-.dial-s{bottom:7px;left:50%;transform:translateX(-50%);color:rgba(255,255,255,0.3);}
-.dial-e{right:7px;top:50%;transform:translateY(-50%);color:rgba(255,255,255,0.3);}
-.dial-w{left:7px;top:50%;transform:translateY(-50%);color:rgba(255,255,255,0.3);}
-
-/* Kaaba marker on dial rim */
-.kaaba-marker{
-  position:absolute;width:26px;height:26px;
-  display:flex;align-items:center;justify-content:center;
-  font-size:18px;margin-left:-13px;margin-top:-13px;
-  z-index:5;transition:filter 0.3s;
+/* Cardinal labels — FIXED on face */
+.face-n,.face-s,.face-e,.face-w{
+  position:absolute;font-size:11px;font-weight:800;letter-spacing:0.06em;pointer-events:none;
 }
-.kaaba-marker.aligned{
-  animation:kaabaGlow 0.8s ease-in-out infinite;
-}
-@keyframes kaabaGlow{
-  0%,100%{filter:drop-shadow(0 0 8px rgba(196,162,74,0.9)) drop-shadow(0 0 20px rgba(255,200,50,0.6));}
-  50%{filter:drop-shadow(0 0 20px rgba(196,162,74,1)) drop-shadow(0 0 40px rgba(255,220,80,1));}
-}
+.face-n{top:8px;left:50%;transform:translateX(-50%);color:rgba(255,70,70,0.9);}
+.face-s{bottom:8px;left:50%;transform:translateX(-50%);color:rgba(255,255,255,0.35);}
+.face-e{right:8px;top:50%;transform:translateY(-50%);color:rgba(255,255,255,0.35);}
+.face-w{left:8px;top:50%;transform:translateY(-50%);color:rgba(255,255,255,0.35);}
 
 /* Alignment glow */
 .align-glow{
   position:absolute;inset:0;border-radius:50%;
-  background:radial-gradient(circle,rgba(196,162,74,0.12) 0%,transparent 65%);
+  background:radial-gradient(circle,rgba(196,162,74,0.15) 0%,transparent 65%);
   opacity:0;transition:opacity 0.4s;pointer-events:none;
 }
 .align-glow.active{opacity:1;animation:glowRing 1s ease-in-out infinite;}
 @keyframes glowRing{0%,100%{opacity:0.4;}50%{opacity:1;}}
 
-/* Fixed north needle */
-.north-needle{
-  position:absolute;top:50%;left:50%;
-  width:3px;height:38%;
-  transform:translateX(-50%) translateY(-96%);
-  transform-origin:50% 100%;
-  background:linear-gradient(to bottom,rgba(255,60,60,0.95),rgba(255,60,60,0.2));
-  clip-path:polygon(50% 0%,100% 100%,50% 82%,0% 100%);
-  z-index:6;
+/* NEEDLE — rotates to point at Qibla */
+.needle-wrap{
+  position:absolute;inset:0;
+  display:flex;align-items:center;justify-content:center;
+  z-index:5;
+  /* transition removed for real-time response */
 }
-
-/* Fixed top alignment dot */
-.top-marker{
-  position:absolute;top:13px;left:50%;transform:translateX(-50%);
-  width:4px;height:4px;border-radius:50%;
-  background:var(--gold);box-shadow:0 0 8px rgba(0,212,255,0.8);
-  z-index:20;
+.needle{
+  position:absolute;
+  width:10px;
+  top:14%;bottom:22%;
+  left:50%;transform:translateX(-50%);
+  display:flex;flex-direction:column;
+  transform-origin:50% calc(100% * 0.72 / (0.72+0.28));
 }
-
+/* Gold tip pointing to Qibla */
+.needle-north{
+  flex:0.72;
+  clip-path:polygon(50% 0%,100% 100%,50% 85%,0% 100%);
+  background:linear-gradient(to bottom,#fff8a0 0%,#e8c84a 30%,#c4a22a 65%,#7a5c14 100%);
+  filter:drop-shadow(0 0 8px rgba(196,162,74,0.8));
+}
+/* Dark tail */
+.needle-south{
+  flex:0.28;
+  clip-path:polygon(50% 100%,100% 0%,50% 15%,0% 0%);
+  background:linear-gradient(to top,#111 0%,#444 100%);
+}
+/* Kaaba on needle tip */
+.needle-kaaba{
+  position:absolute;top:-22px;left:50%;transform:translateX(-50%);
+  font-size:16px;line-height:1;
+  filter:drop-shadow(0 0 5px rgba(196,162,74,0.9));
+}
 /* Center jewel */
 .compass-center{
-  position:absolute;width:10px;height:10px;border-radius:50%;
+  position:absolute;width:12px;height:12px;border-radius:50%;
   top:50%;left:50%;transform:translate(-50%,-50%);
   background:radial-gradient(circle,#fff 0%,#aaa 60%,#666 100%);
   box-shadow:0 0 8px rgba(255,255,255,0.5);z-index:8;
 }
 
-/* ── STATS ── */
-.stats-bar{
-  display:flex;width:100%;
-  border:1px solid var(--border);border-radius:10px;overflow:hidden;
+/* ── TURN GUIDANCE ── */
+.turn-guide{
+  font-size:18px;font-weight:700;color:#fff;
+  letter-spacing:0.04em;text-align:center;
+  min-height:28px;
+  animation:guidePulse 0.8s ease-in-out infinite;
 }
-.stat-item{flex:1;padding:12px 8px;text-align:center;}
-.stat-val{font-size:20px;font-weight:800;color:#fff;font-variant-numeric:tabular-nums;line-height:1;}
-.stat-lbl{font-size:10px;letter-spacing:0.06em;text-transform:uppercase;color:rgba(255,255,255,0.4);margin-top:4px;}
+@keyframes guidePulse{0%,100%{opacity:0.5;}50%{opacity:1;}}
 
 /* ── ALIGNED MESSAGE ── */
 .aligned-msg{
-  text-align:center;font-size:16px;font-weight:700;
-  color:#e8c84a;letter-spacing:0.02em;
-  opacity:0;transition:opacity 0.4s;
+  font-size:16px;font-weight:700;color:#e8c84a;
+  text-align:center;letter-spacing:0.02em;
+  opacity:0;transition:opacity 0.4s;min-height:24px;
 }
 .aligned-msg.visible{opacity:1;}
+
+/* ── DISTANCE ── */
+.distance-box{
+  text-align:center;
+  padding:12px 24px;
+  border:1px solid var(--border);border-radius:10px;
+  width:100%;
+}
+.distance-val{font-size:22px;font-weight:800;color:#fff;font-variant-numeric:tabular-nums;}
+.distance-lbl{font-size:10px;letter-spacing:0.08em;text-transform:uppercase;color:rgba(255,255,255,0.35);margin-top:3px;}
 
 /* ── FOOTER ── */
 .card-footer{
@@ -226,11 +217,10 @@ html,body{
 </div>
 
 <div class="card-body" id="card-body">
-  <!-- Initial state -->
-  <div class="state-screen" id="screen-start">
+  <div class="state-screen">
     <div class="state-icon">🕋</div>
     <div class="state-title">Find Your Qibla</div>
-    <div class="state-sub">Point your phone toward Makkah using your device's live compass.</div>
+    <div class="state-sub">Uses your location and compass to point toward Makkah.</div>
     <button class="state-btn" onclick="startFlow()">Find Qibla Direction</button>
   </div>
 </div>
@@ -240,12 +230,11 @@ html,body{
   <span class="footer-text">Powered by <span>AdhanLive.com</span></span>
   <span class="footer-arrow">→</span>
 </a>
-
 </div>
+
 <script>
 const KAABA_LAT=21.4225,KAABA_LNG=39.8262,D=Math.PI/180;
 
-// Hijri
 function toHijri(date){
   const jd=Math.floor((date.getTime()/86400000)+2440587.5);
   let l=jd-1948440+10632;const n=Math.floor((l-1)/10631);l=l-10631*n+354;
@@ -269,180 +258,134 @@ function calcDist(lat,lng){
 }
 function getCity(lat,lng){
   return fetch(`https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lng}&format=json`,{headers:{'Accept-Language':'en'}})
-    .then(r=>r.json())
-    .then(d=>{
-      const a=d.address||{};
-      return a.city||a.town||a.village||a.county||'Your Location';
-    }).catch(()=>'Your Location');
+    .then(r=>r.json()).then(d=>{const a=d.address||{};return a.city||a.town||a.village||'Your Location';})
+    .catch(()=>'Your Location');
 }
 
 let _qibla=0,_dist=0,_cityName='';
+let _compassActive=false,_useWebkit=false,_heading=0;
 
-// ── SHOW TURN GUIDANCE ───────────────────────────────────────
-function showTurnArrow(diff){
-  const guide=document.getElementById('turn-guide');
-  if(!guide) return;
-  const aligned=Math.abs(diff)<5;
-  if(aligned){
-    guide.style.display='none';
-    guide.textContent='';
-  } else if(diff>0){
-    guide.style.display='block';
-    guide.textContent='Turn Right >>>';
-  } else {
-    guide.style.display='block';
-    guide.textContent='<<< Turn Left';
-  }
-}
-
-// ── RENDER COMPASS ────────────────────────────────────────────
 function renderCompass(){
-  const bearing=Math.round(_qibla);
-  const dirs=['N','NE','E','SE','S','SW','W','NW'];
-  const dir=dirs[Math.round(bearing/45)%8];
-
-  // Kaaba on dial rim
-  const rad=(_qibla-90)*D;
-  const r=40;
-  const kx=50+r*Math.cos(rad);
-  const ky=50+r*Math.sin(rad);
-  const kRot=_qibla+180;
-
   document.getElementById('card-body').innerHTML=`
     <div class="compass-scene">
       <div class="city-label">Qibla from <span>${_cityName}</span></div>
-
-      <div class="compass-outer-wrap">
-
-
+      <div class="compass-wrap">
         <div class="compass-bezel"></div>
-
-        <div class="compass-dial" id="compass-dial">
-          <div class="dial-n">N</div><div class="dial-s">S</div>
-          <div class="dial-e">E</div><div class="dial-w">W</div>
-          <div class="kaaba-marker" id="kaaba-marker"
-            style="left:${kx}%;top:${ky}%;transform:rotate(${kRot}deg)">🕋</div>
+        <div class="compass-face">
+          <div class="face-n">N</div><div class="face-s">S</div>
+          <div class="face-e">E</div><div class="face-w">W</div>
           <div class="align-glow" id="align-glow"></div>
+          <div class="needle-wrap" id="needle-wrap">
+            <div class="needle">
+              <div class="needle-kaaba">🕋</div>
+              <div class="needle-north"></div>
+              <div class="needle-south"></div>
+            </div>
+          </div>
+          <div class="compass-center"></div>
         </div>
-
-        <div class="top-marker"></div>
-        <div class="north-needle"></div>
-        <div class="compass-center"></div>
       </div>
-
-      <!-- Turn guidance -->
-      <div class="turn-guide" id="turn-guide" style="display:none;"></div>
-
+      <div class="turn-guide" id="turn-guide"></div>
       <div class="aligned-msg" id="aligned-msg">✅ You are facing Makkah &nbsp; الله أكبر</div>
-
-      <div class="stats-bar">
-        <div class="stat-item"><div class="stat-val">${_dist.toLocaleString()} km</div><div class="stat-lbl">Distance to Makkah</div></div>
+      <div class="distance-box">
+        <div class="distance-val">${_dist.toLocaleString()} km</div>
+        <div class="distance-lbl">Distance to Makkah</div>
       </div>
-    </div>
-  `;
-
+    </div>`;
   startCompass();
 }
 
-// ── COMPASS ───────────────────────────────────────────────────
-let _compassActive=false,_smoothHeading=0,_lastRaw=null,_sourceDecided=false,_useWebkit=false;
+// ── COMPASS ──────────────────────────────────────────────────
+let _rawHeading=null,_smoothH=0;
 
 function startCompass(){
   if(_compassActive) return;
   _compassActive=true;
 
-  window.addEventListener('deviceorientationabsolute', function(e){
-    if(!_sourceDecided){
-      _sourceDecided=true;
-      _useWebkit=false;
-    }
-    if(!_useWebkit) onOrientation(e);
-  }, true);
+  // Detect iOS vs Android and use correct source
+  const isIOS=/iPhone|iPad|iPod/i.test(navigator.userAgent);
 
-  window.addEventListener('deviceorientation', function(e){
-    if(!_sourceDecided && typeof e.webkitCompassHeading==='number' && !isNaN(e.webkitCompassHeading)){
-      _sourceDecided=true;
-      _useWebkit=true;
-    }
-    if(_useWebkit) onOrientation(e);
-  }, true);
+  if(isIOS){
+    // iOS: use deviceorientation with webkitCompassHeading
+    window.addEventListener('deviceorientation', function(e){
+      if(typeof e.webkitCompassHeading==='number' && !isNaN(e.webkitCompassHeading)){
+        updateHeading(e.webkitCompassHeading);
+      }
+    }, true);
+  } else {
+    // Android: use deviceorientationabsolute
+    window.addEventListener('deviceorientationabsolute', function(e){
+      if(typeof e.alpha==='number' && e.alpha!==null){
+        updateHeading((360-e.alpha+360)%360);
+      }
+    }, true);
+    // Fallback if absolute doesn't fire
+    setTimeout(()=>{
+      if(_rawHeading===null){
+        window.addEventListener('deviceorientation', function(e){
+          if(typeof e.alpha==='number'){
+            updateHeading((360-e.alpha+360)%360);
+          }
+        }, true);
+      }
+    }, 1000);
+  }
 }
 
-function onOrientation(e){
-  let h=null;
+function updateHeading(h){
+  // Smooth with shortest path
+  if(_rawHeading===null){_rawHeading=h;_smoothH=h;}
+  let d=h-_rawHeading;
+  if(d>180)d-=360;if(d<-180)d+=360;
+  _rawHeading=h;
+  _smoothH=(_smoothH+d*0.25+360)%360;
 
-  if(_useWebkit){
-    // iOS — webkitCompassHeading is degrees from North, clockwise. Use directly.
-    if(typeof e.webkitCompassHeading==='number' && !isNaN(e.webkitCompassHeading)){
-      h=e.webkitCompassHeading;
-    }
-  } else {
-    // Android absolute — alpha is degrees counterclockwise from North
-    if(e.absolute && typeof e.alpha==='number' && e.alpha!==null){
-      h=(360-e.alpha+360)%360;
-    }
-  }
+  // Needle angle = qibla - device heading
+  // When device faces Makkah, needle points up (0deg = North on compass)
+  const needleAngle=(_qibla-_smoothH+360)%360;
 
-  if(h===null) return;
+  const needle=document.getElementById('needle-wrap');
+  if(needle) needle.style.transform=`rotate(${needleAngle}deg)`;
 
-  // Smooth with shortest-path interpolation to avoid spin
-  if(_lastRaw===null){ _lastRaw=h; _smoothHeading=h; }
-  let delta=h-_lastRaw;
-  if(delta>180) delta-=360;
-  if(delta<-180) delta+=360;
-  _lastRaw=h;
-  _smoothHeading=(_smoothHeading+delta*0.3+360)%360;
-
-  const dial=document.getElementById('compass-dial');
-  if(dial) dial.style.transform=`rotate(${-_smoothHeading}deg)`;
-
-  // Diff = how many degrees to turn to face Makkah
-  let diff=(_qibla-_smoothHeading+360)%360;
-  if(diff>180) diff-=360; // signed: + = turn right, - = turn left
+  // Diff for guidance
+  let diff=needleAngle;
+  if(diff>180) diff-=360; // signed
 
   const aligned=Math.abs(diff)<5;
-
-  // Update turn arrows
-  showTurnArrow(diff);
-
-  // Aligned state
-  const glow=document.getElementById('align-glow');
-  const kaaba=document.getElementById('kaaba-marker');
+  const guide=document.getElementById('turn-guide');
   const msg=document.getElementById('aligned-msg');
-  if(glow) glow.classList.toggle('active',aligned);
-  if(kaaba) kaaba.classList.toggle('aligned',aligned);
-  if(msg) msg.classList.toggle('visible',aligned);
+  const glow=document.getElementById('align-glow');
 
-  // Haptic on alignment
+  if(guide){
+    if(aligned) guide.textContent='';
+    else if(diff>0) guide.textContent='Turn Right >>>';
+    else guide.textContent='<<< Turn Left';
+  }
+  if(msg) msg.classList.toggle('visible',aligned);
+  if(glow) glow.classList.toggle('active',aligned);
   if(aligned && navigator.vibrate) navigator.vibrate([50,30,50]);
 }
 
-// ── MAIN FLOW ─────────────────────────────────────────────────
+// ── FLOW ─────────────────────────────────────────────────────
 async function startFlow(){
-  // Show loading
-  document.getElementById('card-body').innerHTML=`
-    <div class="spinner-wrap">
-      <div class="spinner"></div>
-      <div class="spinner-text">Getting your location...</div>
-    </div>`;
-
+  document.getElementById('card-body').innerHTML=`<div class="spinner-wrap"><div class="spinner"></div><div class="spinner-text">Getting your location...</div></div>`;
   try{
-    const pos=await new Promise((res,rej)=>
-      navigator.geolocation.getCurrentPosition(res,rej,{timeout:8000,enableHighAccuracy:true})
-    );
+    const pos=await new Promise((res,rej)=>navigator.geolocation.getCurrentPosition(res,rej,{timeout:8000,enableHighAccuracy:true}));
     const lat=pos.coords.latitude,lng=pos.coords.longitude;
     _qibla=calcQibla(lat,lng);
     _dist=calcDist(lat,lng);
     _cityName=await getCity(lat,lng);
 
-    // iOS compass permission
-    if(typeof DeviceOrientationEvent!=='undefined'&&typeof DeviceOrientationEvent.requestPermission==='function'){
+    // iOS needs compass permission
+    if(/iPhone|iPad|iPod/i.test(navigator.userAgent) &&
+       typeof DeviceOrientationEvent!=='undefined' &&
+       typeof DeviceOrientationEvent.requestPermission==='function'){
       document.getElementById('card-body').innerHTML=`
         <div class="state-screen">
           <div class="state-icon">🧭</div>
           <div class="state-title">Enable Compass</div>
-          <div class="state-sub">Allow compass access to show live Qibla direction.</div>
-          <button class="state-btn" onclick="requestCompassPermission()">Enable Compass</button>
+          <div class="state-sub">Tap below to allow compass access.</div>
+          <button class="state-btn" onclick="requestCompass()">Enable Compass</button>
         </div>`;
     } else {
       renderCompass();
@@ -452,13 +395,13 @@ async function startFlow(){
       <div class="state-screen">
         <div class="state-icon">📍</div>
         <div class="state-title">Location Required</div>
-        <div class="state-sub">Please allow location access and try again. Your location is never stored.</div>
+        <div class="state-sub">Please allow location access and try again.</div>
         <button class="state-btn" onclick="startFlow()">Try Again</button>
       </div>`;
   }
 }
 
-async function requestCompassPermission(){
+async function requestCompass(){
   try{
     const p=await DeviceOrientationEvent.requestPermission();
     if(p==='granted') renderCompass();
@@ -466,8 +409,8 @@ async function requestCompassPermission(){
       document.getElementById('card-body').innerHTML=`
         <div class="state-screen">
           <div class="state-icon">🧭</div>
-          <div class="state-title">Compass Access Denied</div>
-          <div class="state-sub">Please allow compass access in your browser settings and reload.</div>
+          <div class="state-title">Compass Denied</div>
+          <div class="state-sub">Please allow compass in browser settings and reload.</div>
           <button class="state-btn" onclick="location.reload()">Reload</button>
         </div>`;
     }
