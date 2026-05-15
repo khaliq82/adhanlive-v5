@@ -135,9 +135,23 @@ nav{
 .nav-links a:hover,.nav-links a.active{color:var(--text);}
 .nav-links a.active{color:var(--gold);}
 .nav-utc{
-  font-size:11px;letter-spacing:0.04em;color:var(--gold);
-  padding:5px 14px;border:1px solid rgba(0,212,255,0.25);border-radius:4px;
+  display:flex;align-items:stretch;
+  padding:0;border:1px solid rgba(0,212,255,0.25);border-radius:4px;
   font-variant-numeric:tabular-nums;white-space:nowrap;
+  overflow:hidden;
+}
+.nav-utc-dates{
+  display:flex;flex-direction:column;justify-content:center;
+  gap:2px;padding:5px 12px;
+}
+.nav-utc-greg{font-size:10px;letter-spacing:0.04em;color:var(--gold);}
+.nav-utc-hijri{font-size:9px;letter-spacing:0.03em;color:rgba(0,212,255,0.6);}
+.nav-utc-divider{width:1px;background:rgba(0,212,255,0.2);align-self:stretch;}
+.nav-utc-time{
+  display:flex;align-items:center;justify-content:center;
+  padding:5px 12px;
+  font-size:12px;font-weight:600;
+  letter-spacing:0.04em;color:var(--gold);
 }
 
 /* ── GLOBE CANVAS ── */
@@ -1191,7 +1205,14 @@ footer{
     <a href="contact.html" onclick="closeMobileMenu()">Contact</a>
   </div>
   <div class="nav-right">
-    <div class="nav-utc" id="utc-clock">UTC 00:00:00</div>
+    <div class="nav-utc" id="utc-clock">
+      <div class="nav-utc-dates">
+        <div class="nav-utc-greg" id="utc-greg">Fri, 15 May 2026</div>
+        <div class="nav-utc-hijri" id="utc-hijri">28 Dhul Qa'dah 1447</div>
+      </div>
+      <div class="nav-utc-divider"></div>
+      <div class="nav-utc-time" id="utc-time">08:39:09 AM</div>
+    </div>
     <button class="hamburger" id="hamburger" onclick="toggleMobileMenu()" aria-label="Menu">
       <span></span><span></span><span></span>
     </button>
@@ -2456,7 +2477,9 @@ function updateRightPanel(activeMosques){
 
 // ── HIJRI DATE CONVERTER ─────────────────────────────────────
 function toHijri(date){
-  const jd = Math.floor((date.getTime() / 86400000) + 2440587.5);
+  // Add 1 day correction for known offset
+  const d = new Date(date.getTime() + 86400000);
+  const jd = Math.floor((d.getTime() / 86400000) + 2440587.5);
   let l = jd - 1948440 + 10632;
   const n = Math.floor((l-1)/10631);
   l = l - 10631*n + 354;
@@ -2465,7 +2488,7 @@ function toHijri(date){
   const month = Math.floor((24*l)/709);
   const day = l - Math.floor((709*month)/24);
   const year = 30*n + j - 30;
-  const hMonths=['Muharram','Safar','Rabi al-Awwal','Rabi al-Thani','Jumada al-Awwal','Jumada al-Thani','Rajab',"Sha'ban",'Ramadan','Shawwal','Dhu al-Qi\'dah','Dhu al-Hijjah'];
+  const hMonths=['Muharram','Safar','Rabi ul-Awwal','Rabi ul-Thani','Jumadal Awwal','Jumadal Thani','Rajab',"Sha'ban",'Ramadan','Shawwal',"Dhul Qa'dah",'Dhul Hijjah'];
   return `${day} ${hMonths[month-1]} ${year}`;
 }
 
@@ -2481,7 +2504,12 @@ function tickClock(){
   const ap=lh<12?'AM':'PM',hh=lh%12||12;
   const timeStr=`${String(hh).padStart(2,'0')}:${String(lm).padStart(2,'0')}:${String(ls).padStart(2,'0')} ${ap}`;
   const hijri=toHijri(n);
-  document.getElementById('utc-clock').textContent=`${dayName}, ${date} ${month} ${year} · ${hijri} · ${timeStr}`;
+  const gregEl=document.getElementById('utc-greg');
+  const hijriEl=document.getElementById('utc-hijri');
+  const timeEl=document.getElementById('utc-time');
+  if(gregEl) gregEl.textContent=`${dayName}, ${date} ${month} ${year}`;
+  if(hijriEl) hijriEl.textContent=hijri;
+  if(timeEl) timeEl.textContent=timeStr;
   const mh=(n.getUTCHours()+3)%24,mm=n.getUTCMinutes(),ms=n.getUTCSeconds();
   const map=mh<12?'AM':'PM',mhh=mh%12||12;
   const el=document.getElementById('makkah-time');
