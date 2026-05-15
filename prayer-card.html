@@ -327,13 +327,36 @@ function calcPrayerTimes(lat,lng,date,method,tzOffset,asrMethod){
     ishaH=prayerAngle(m_cfg.isha,dec,lat);
   }
 
+  // ── HIGH LATITUDE FALLBACK (middle of night method) ──
+  // If Fajr or Isha can't be calculated (polar regions/summer),
+  // split the night between sunset and next sunrise proportionally
+  let fajrFinal, ishaFinal;
+  const sunriseLocal = transit - (sunriseH||0)/15;
+  const maghribLocal = maghribH ? transit + maghribH/15 : null;
+
+  if(!fajrH || !ishaH){
+    if(maghribLocal){
+      // Night duration = from maghrib to next sunrise (add 24h to sunrise)
+      const nightDuration = (sunriseLocal + 24) - maghribLocal;
+      // Middle of night method: Isha = maghrib + 1/2 night, Fajr = sunrise - 1/2 night
+      const halfNight = nightDuration / 2;
+      ishaFinal  = {time:toTime(maghribLocal + halfNight), mins:toMins(maghribLocal + halfNight)};
+      fajrFinal  = {time:toTime(sunriseLocal - halfNight), mins:toMins(sunriseLocal - halfNight)};
+    }
+  } else {
+    fajrFinal  = {time:toTime(transit-fajrH/15),   mins:toMins(transit-fajrH/15)};
+    ishaFinal  = m_cfg.isha==='90min'
+      ? {time:toTime(ishaH), mins:toMins(ishaH)}
+      : {time:toTime(transit+ishaH/15), mins:toMins(transit+ishaH/15)};
+  }
+
   return {
-    fajr:   fajrH   ? {time:toTime(transit-fajrH/15),   mins:toMins(transit-fajrH/15)}   : null,
+    fajr:   fajrFinal,
     sunrise:{time:toTime(transit-sunriseH/15), mins:toMins(transit-sunriseH/15)},
     dhuhr:  {time:toTime(transit),             mins:toMins(transit)},
     asr:    asrH    ? {time:toTime(transit+asrH/15),     mins:toMins(transit+asrH/15)}     : null,
     maghrib:maghribH? {time:toTime(transit+maghribH/15), mins:toMins(transit+maghribH/15)} : null,
-    isha:   ishaH   ? (m_cfg.isha==='90min'?{time:toTime(ishaH),mins:toMins(ishaH)}:{time:toTime(transit+ishaH/15),mins:toMins(transit+ishaH/15)}) : null,
+    isha:   ishaFinal,
   };
 }
 
