@@ -54,6 +54,7 @@ html,body{
   flex:1;display:flex;flex-direction:column;
   padding:16px 20px;gap:14px;
   overflow-y:auto;
+  min-height:0;
 }
 
 /* ── CITY SEARCH ── */
@@ -164,20 +165,21 @@ html,body{
 
 /* ── FOOTER CTA ── */
 .card-footer{
-  display:flex;align-items:center;justify-content:center;gap:8px;
-  padding:12px 20px;
-  background:rgba(0,212,255,0.04);
-  border-top:1px solid rgba(0,212,255,0.1);
+  display:flex;align-items:center;justify-content:center;gap:10px;
+  padding:14px 20px;
+  background:linear-gradient(135deg,rgba(0,212,255,0.12),rgba(0,212,255,0.05));
+  border-top:1px solid rgba(0,212,255,0.25);
   text-decoration:none;
   transition:background 0.2s;
   flex-shrink:0;
   position:sticky;bottom:0;
+  box-shadow:0 -4px 24px rgba(0,0,0,0.6);
 }
-.card-footer:hover{background:rgba(0,212,255,0.08);}
-.footer-globe{font-size:14px;}
-.footer-text{font-size:11px;color:rgba(255,255,255,0.5);letter-spacing:0.04em;}
-.footer-text span{color:var(--gold);font-weight:600;}
-.footer-arrow{font-size:11px;color:var(--gold);}
+.card-footer:hover{background:linear-gradient(135deg,rgba(0,212,255,0.2),rgba(0,212,255,0.08));}
+.footer-globe{font-size:16px;}
+.footer-text{font-size:12px;color:rgba(255,255,255,0.7);letter-spacing:0.02em;}
+.footer-text span{color:var(--gold);font-weight:700;}
+.footer-arrow{font-size:14px;color:var(--gold);font-weight:700;}
 
 /* ── MOBILE ── */
 @media(max-width:400px){
@@ -234,7 +236,7 @@ html,body{
 <!-- Footer CTA -->
 <a class="card-footer" href="index.html">
   <span class="footer-globe">🌍</span>
-  <span class="footer-text">Watch the Adhan sweep the Earth live on <span>AdhanLive</span></span>
+  <span class="footer-text">Watch the Adhan wave sweep the Earth live on <span>AdhanLive</span></span>
   <span class="footer-arrow">→</span>
 </a>
 
