@@ -19,16 +19,16 @@
   --fajr:#4466ff;--dhuhr:#ffcc00;--asr:#e07a2f;--maghrib:#d94f3d;--isha:#9b59c4;
 }
 html,body{
-  min-height:100vh;background:#111;color:var(--text);
+  height:100dvh;background:#111;color:var(--text);
   font-family:'Geist',sans-serif;
   display:flex;justify-content:center;align-items:flex-start;
-  overflow-x:hidden;
+  overflow:hidden;
 }
 .card-wrap{
-  width:100%;max-width:480px;min-height:100vh;
+  width:100%;max-width:480px;height:100dvh;
   background:var(--bg);display:flex;flex-direction:column;
   box-shadow:0 0 60px rgba(0,0,0,0.8);
-  overflow-x:hidden;
+  overflow:hidden;
 }
 
 /* ── HEADER ── */
@@ -52,7 +52,7 @@ html,body{
 /* ── MAIN CARD ── */
 .card-body{
   flex:1;display:flex;flex-direction:column;
-  padding:16px 20px;gap:14px;
+  padding:16px 20px 60px 20px;gap:14px;
   overflow-y:auto;
   min-height:0;
 }
@@ -165,21 +165,22 @@ html,body{
 
 /* ── FOOTER CTA ── */
 .card-footer{
-  display:flex;align-items:center;justify-content:center;gap:10px;
-  padding:14px 20px;
-  background:linear-gradient(135deg,rgba(0,212,255,0.12),rgba(0,212,255,0.05));
-  border-top:1px solid rgba(0,212,255,0.25);
+  display:flex;align-items:center;justify-content:center;gap:8px;
+  padding:12px 20px;
+  background:rgba(0,0,0,0.95);
+  border-top:1px solid rgba(0,212,255,0.3);
   text-decoration:none;
-  transition:background 0.2s;
   flex-shrink:0;
-  position:sticky;bottom:0;
-  box-shadow:0 -4px 24px rgba(0,0,0,0.6);
+  position:fixed;bottom:0;left:0;right:0;
+  max-width:480px;margin:0 auto;
+  box-shadow:0 -4px 20px rgba(0,0,0,0.8);
+  z-index:100;
 }
-.card-footer:hover{background:linear-gradient(135deg,rgba(0,212,255,0.2),rgba(0,212,255,0.08));}
-.footer-globe{font-size:16px;}
-.footer-text{font-size:12px;color:rgba(255,255,255,0.7);letter-spacing:0.02em;}
-.footer-text span{color:var(--gold);font-weight:700;}
-.footer-arrow{font-size:14px;color:var(--gold);font-weight:700;}
+.card-footer:hover{background:rgba(0,212,255,0.06);}
+.footer-globe{font-size:14px;}
+.footer-text{font-size:12px;color:rgba(255,255,255,0.5);letter-spacing:0.02em;}
+.footer-text span{color:var(--gold);font-weight:700;font-size:13px;}
+.footer-arrow{font-size:13px;color:var(--gold);font-weight:700;}
 
 /* ── MOBILE ── */
 @media(max-width:400px){
@@ -234,9 +235,9 @@ html,body{
 </div>
 
 <!-- Footer CTA -->
-<a class="card-footer" href="index.html">
+<a class="card-footer" href="https://www.adhanlive.com">
   <span class="footer-globe">🌍</span>
-  <span class="footer-text">Watch the Adhan wave sweep the Earth live on <span>AdhanLive</span></span>
+  <span class="footer-text">Powered by <span>AdhanLive.com</span></span>
   <span class="footer-arrow">→</span>
 </a>
 
