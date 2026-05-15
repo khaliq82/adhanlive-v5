@@ -2142,14 +2142,29 @@ function precalcPrayerTimes(){
   const date = new Date();
   const cache = new Float32Array(allMosques.length * 5);
   const prayers = ['fajr','dhuhr','asr','maghrib','isha'];
-  allMosques.forEach((m, i) => {
-    const times = calcPrayers(m.lat, m.lon, m.tz, date, m.country);
-    prayers.forEach((p, j) => {
-      cache[i*5+j] = isNaN(times[p]) ? -1 : ((times[p]%24)+24)%24;
-    });
-  });
-  _prayerCache = cache;
-  console.log('Prayer times pre-calculated for', allMosques.length, 'mosques');
+  const CHUNK = 5000; // process 5000 mosques per frame
+  let loaded = 0;
+
+  function processChunk(){
+    const end = Math.min(loaded + CHUNK, allMosques.length);
+    for(let i = loaded; i < end; i++){
+      const times = calcPrayers(allMosques[i].lat, allMosques[i].lon, allMosques[i].tz, date, allMosques[i].country);
+      prayers.forEach((p, j) => {
+        cache[i*5+j] = isNaN(times[p]) ? -1 : ((times[p]%24)+24)%24;
+      });
+    }
+    loaded = end;
+    if(loaded < allMosques.length){
+      // Yield to browser between chunks — keeps globe smooth
+      setTimeout(processChunk, 0);
+    } else {
+      _prayerCache = cache;
+      console.log('Prayer times pre-calculated for', allMosques.length, 'mosques');
+    }
+  }
+
+  // Start after a short delay so globe gets first few frames to render
+  setTimeout(processChunk, 500);
 }
 
 function getActivePrayerFast(mosqueIdx, localH){
