@@ -345,29 +345,48 @@ function renderCompass(){
 }
 
 // ── COMPASS ───────────────────────────────────────────────────
-let _compassActive=false,_smoothHeading=0,_lastRaw=null;
+let _compassActive=false,_smoothHeading=0,_lastRaw=null,_sourceDecided=false,_useWebkit=false;
 
 function startCompass(){
   if(_compassActive) return;
   _compassActive=true;
-  window.addEventListener('deviceorientationabsolute', onOrientation, true);
-  window.addEventListener('deviceorientation', onOrientation, true);
+
+  window.addEventListener('deviceorientationabsolute', function(e){
+    if(!_sourceDecided){
+      _sourceDecided=true;
+      _useWebkit=false;
+    }
+    if(!_useWebkit) onOrientation(e);
+  }, true);
+
+  window.addEventListener('deviceorientation', function(e){
+    if(!_sourceDecided && typeof e.webkitCompassHeading==='number' && !isNaN(e.webkitCompassHeading)){
+      _sourceDecided=true;
+      _useWebkit=true;
+    }
+    if(_useWebkit) onOrientation(e);
+  }, true);
 }
 
 function onOrientation(e){
-  // Get heading from whichever source is available
   let h=null;
-  if(typeof e.webkitCompassHeading==='number' && !isNaN(e.webkitCompassHeading)){
-    h=e.webkitCompassHeading; // iOS
-  } else if(e.absolute && typeof e.alpha==='number'){
-    h=(360-e.alpha+360)%360; // Android absolute
-  } else if(typeof e.alpha==='number'){
-    h=(360-e.alpha+360)%360; // fallback
+
+  if(_useWebkit){
+    // iOS — webkitCompassHeading is degrees from North, clockwise. Use directly.
+    if(typeof e.webkitCompassHeading==='number' && !isNaN(e.webkitCompassHeading)){
+      h=e.webkitCompassHeading;
+    }
+  } else {
+    // Android absolute — alpha is degrees counterclockwise from North
+    if(e.absolute && typeof e.alpha==='number' && e.alpha!==null){
+      h=(360-e.alpha+360)%360;
+    }
   }
+
   if(h===null) return;
 
-  // Smooth with shortest-path interpolation
-  if(_lastRaw===null) _lastRaw=h;
+  // Smooth with shortest-path interpolation to avoid spin
+  if(_lastRaw===null){ _lastRaw=h; _smoothHeading=h; }
   let delta=h-_lastRaw;
   if(delta>180) delta-=360;
   if(delta<-180) delta+=360;
