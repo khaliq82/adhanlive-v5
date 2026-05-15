@@ -1050,8 +1050,18 @@ footer{
   display:none;
 }
 @media(max-width:768px){
-  /* Hide fixed globe canvas on mobile */
-  #globe-canvas{display:none !important;}
+  /* Show globe canvas on hero, hide only in map mode */
+  #globe-canvas{
+    display:block !important;
+    position:fixed;
+    top:56px;left:0;
+    width:100vw !important;
+    height:calc(100vh - 56px) !important;
+    z-index:0;
+    pointer-events:none;
+  }
+  /* In map mode, hide desktop globe (mobile uses mobile-globe-card) */
+  body.map-active #globe-canvas{display:none !important;}
 
   /* Hide the 100vh desktop spacer on mobile */
   #live-map-section{display:none !important;}
@@ -1824,13 +1834,14 @@ function initGlobe(){
   renderer.setSize(W, renderH);
   renderer.setPixelRatio(Math.min(devicePixelRatio,isMobileDevice?1:2));
   if(isMobileDevice){
-    camera.aspect = 1.0; // square = perfect circle
+    camera.aspect = 1.0;
     camera.updateProjectionMatrix();
-    renderer.domElement.style.height = W + 'px';
-    renderer.domElement.style.width = W + 'px';
     renderer.domElement.style.position = 'fixed';
     renderer.domElement.style.top = '56px';
     renderer.domElement.style.left = '0';
+    renderer.domElement.style.width = '100vw';
+    renderer.domElement.style.height = 'calc(100vh - 56px)';
+    renderer.domElement.style.objectFit = 'cover';
   }
 
   if(!window._earthTex) window._earthTex=new THREE.TextureLoader().load('earth.jpg');
