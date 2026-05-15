@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Prayer Times — AdhanLive</title>
+<meta name="description" content="Live prayer times for your city. Powered by AdhanLive.">
+<meta property="og:title" content="Prayer Times — AdhanLive">
+<meta property="og:description" content="Live prayer times, countdown to next prayer. Powered by AdhanLive.">
+<meta property="og:image" content="https://www.adhanlive.com/preview.jpg">
+<meta property="og:url" content="https://www.adhanlive.com/prayer-card.html">
+<meta name="twitter:card" content="summary_large_image">
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --bg:#000;--bg2:#0a0a0f;--border:rgba(255,255,255,0.08);
+  --gold:#00d4ff;--text:#fff;--text2:rgba(255,255,255,0.55);--text3:rgba(255,255,255,0.25);
+  --fajr:#4466ff;--dhuhr:#ffcc00;--asr:#e07a2f;--maghrib:#d94f3d;--isha:#9b59c4;
+}
+html,body{
+  min-height:100vh;background:#111;color:var(--text);
+  font-family:'Geist',sans-serif;
+  display:flex;justify-content:center;align-items:flex-start;
+  overflow-x:hidden;
+}
+.card-wrap{
+  width:100%;max-width:480px;min-height:100vh;
+  background:var(--bg);display:flex;flex-direction:column;
+  box-shadow:0 0 60px rgba(0,0,0,0.8);
+  overflow-x:hidden;
+}
+
+/* ── HEADER ── */
+.card-header{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:16px 20px 14px;
+  border-bottom:1px solid var(--border);
+  flex-shrink:0;
+  position:sticky;top:0;background:var(--bg);z-index:10;
+}
+.logo{display:flex;align-items:center;gap:8px;text-decoration:none;}
+.logo-dot{width:7px;height:7px;border-radius:50%;background:var(--gold);flex-shrink:0;}
+.logo-text{font-size:13px;font-weight:800;color:#fff;letter-spacing:-0.02em;}
+.logo-text span{color:var(--gold);}
+.hijri-badge{
+  font-size:9px;letter-spacing:0.05em;
+  color:rgba(0,212,255,0.6);
+  text-align:right;line-height:1.4;
+}
+
+/* ── MAIN CARD ── */
+.card-body{
+  flex:1;display:flex;flex-direction:column;
+  padding:16px 20px;gap:14px;
+  overflow-y:auto;
+}
+
+/* ── CITY SEARCH ── */
+.search-row{display:flex;gap:8px;width:100%;}
+.city-input{
+  flex:1;min-width:0;background:rgba(255,255,255,0.05);
+  border:1px solid var(--border);border-radius:8px;
+  padding:0 14px;height:42px;color:#fff;font-size:13px;
+  font-family:'Geist',sans-serif;outline:none;
+  transition:border-color 0.2s;
+}
+.city-input:focus{border-color:rgba(0,212,255,0.4);}
+.city-input::placeholder{color:var(--text3);}
+.method-select{
+  background:#1a1a2e;
+  border:1px solid var(--border);border-radius:8px;
+  padding:0 8px;height:42px;color:var(--text2);font-size:11px;
+  font-family:'Geist',sans-serif;outline:none;cursor:pointer;
+  transition:border-color 0.2s;flex-shrink:0;max-width:130px;
+  color-scheme:dark;
+}
+.method-select:focus{border-color:rgba(0,212,255,0.4);}
+.method-select option{background:#1a1a2e;color:#fff;}
+.search-btn{
+  background:var(--gold);color:#000;border:none;border-radius:8px;
+  padding:0 16px;height:42px;font-size:12px;font-weight:700;
+  font-family:'Geist',sans-serif;cursor:pointer;
+  transition:opacity 0.2s;white-space:nowrap;letter-spacing:0.04em;
+  flex-shrink:0;
+}
+.search-btn:hover{opacity:0.85;}
+
+/* ── CITY TITLE ── */
+.city-title{
+  text-align:center;
+}
+.city-name{
+  font-size:22px;font-weight:800;letter-spacing:-0.02em;
+  color:#fff;line-height:1;
+}
+.city-name span{color:var(--gold);}
+.city-date{font-size:10px;color:var(--text3);letter-spacing:0.06em;margin-top:4px;}
+
+/* ── NEXT PRAYER COUNTDOWN ── */
+.next-prayer{
+  background:rgba(255,255,255,0.03);
+  border:1px solid rgba(0,212,255,0.15);
+  border-radius:12px;padding:14px 16px;
+  display:flex;align-items:center;justify-content:space-between;
+}
+.next-label{font-size:9px;letter-spacing:0.12em;text-transform:uppercase;color:var(--text3);margin-bottom:3px;}
+.next-name{font-size:16px;font-weight:700;color:var(--gold);}
+.next-countdown{
+  font-size:24px;font-weight:800;color:#fff;
+  font-variant-numeric:tabular-nums;letter-spacing:-0.02em;
+  text-align:right;
+}
+.next-countdown-lbl{font-size:8px;color:var(--text3);letter-spacing:0.08em;text-align:right;margin-top:2px;}
+
+/* ── PRAYER CARDS ── */
+.prayers-grid{display:flex;flex-direction:column;gap:6px;flex:1;}
+.prayer-row{
+  display:flex;align-items:center;
+  padding:10px 14px;border-radius:10px;
+  background:rgba(255,255,255,0.02);
+  border:1px solid transparent;
+  transition:border-color 0.3s,background 0.3s;
+  position:relative;overflow:hidden;
+}
+.prayer-row.active{
+  background:rgba(255,255,255,0.05);
+  border-color:rgba(255,255,255,0.1);
+}
+.prayer-row.passed{opacity:0.45;}
+.prayer-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;margin-right:12px;}
+.prayer-name{font-size:12px;font-weight:600;letter-spacing:0.04em;flex:1;text-transform:uppercase;}
+.prayer-arabic{font-size:14px;color:var(--text2);margin-right:12px;font-family:'Geist',sans-serif;}
+.prayer-time-val{
+  font-size:16px;font-weight:700;color:#fff;
+  font-variant-numeric:tabular-nums;letter-spacing:-0.01em;
+}
+.prayer-row.active .prayer-time-val{color:var(--gold);}
+.active-badge{
+  font-size:7px;letter-spacing:0.1em;text-transform:uppercase;
+  color:#000;background:var(--gold);
+  padding:2px 6px;border-radius:3px;margin-left:8px;font-weight:700;
+}
+.active-bar{
+  position:absolute;left:0;top:0;bottom:0;width:2px;
+  border-radius:0 2px 2px 0;
+}
+
+/* ── LOADING / ERROR STATE ── */
+.state-msg{
+  text-align:center;padding:32px 20px;
+  color:var(--text3);font-size:13px;line-height:1.6;
+}
+.state-msg .spinner{
+  width:20px;height:20px;border:2px solid rgba(0,212,255,0.2);
+  border-top-color:var(--gold);border-radius:50%;
+  animation:spin 0.8s linear infinite;
+  margin:0 auto 12px;
+}
+@keyframes spin{to{transform:rotate(360deg);}}
+
+/* ── FOOTER CTA ── */
+.card-footer{
+  display:flex;align-items:center;justify-content:center;gap:8px;
+  padding:12px 20px;
+  background:rgba(0,212,255,0.04);
+  border-top:1px solid rgba(0,212,255,0.1);
+  text-decoration:none;
+  transition:background 0.2s;
+  flex-shrink:0;
+  position:sticky;bottom:0;
+}
+.card-footer:hover{background:rgba(0,212,255,0.08);}
+.footer-globe{font-size:14px;}
+.footer-text{font-size:11px;color:rgba(255,255,255,0.5);letter-spacing:0.04em;}
+.footer-text span{color:var(--gold);font-weight:600;}
+.footer-arrow{font-size:11px;color:var(--gold);}
+
+/* ── MOBILE ── */
+@media(max-width:400px){
+  .city-input{font-size:12px;}
+  .method-select{font-size:10px;padding:10px 6px;}
+  .next-countdown{font-size:20px;}
+  .prayer-arabic{display:none;}
+}
+</style>
+</head>
+<body>
+<div class="card-wrap">
+
+<!-- Header -->
+<div class="card-header">
+  <a class="logo" href="index.html">
+    <div class="logo-dot"></div>
+    <div class="logo-text">Adhan<span>Live</span></div>
+  </a>
+  <div class="hijri-badge" id="hijri-badge">— Hijri —</div>
+</div>
+
+<!-- Body -->
+<div class="card-body">
+
+  <!-- Search -->
+  <div class="search-row">
+    <input class="city-input" id="city-input" type="text" placeholder="Enter city name..." autocomplete="off">
+    <select class="method-select" id="method-select">
+      <option value="4">Umm al-Qura</option>
+      <option value="2">Muslim World League</option>
+      <option value="1">ISNA (N. America)</option>
+      <option value="5">Egyptian Authority</option>
+      <option value="3">Karachi / Hanafi</option>
+    </select>
+    <select class="method-select" id="asr-select" title="Asr calculation method">
+      <option value="1">Asr: Shafi</option>
+      <option value="2">Asr: Hanafi</option>
+    </select>
+    <button class="search-btn" onclick="searchCity()">Get Times</button>
+  </div>
+
+  <!-- Dynamic content -->
+  <div id="card-content">
+    <div class="state-msg">Enter a city name above to get prayer times.</div>
+  </div>
+
+</div>
+
+<!-- Footer CTA -->
+<a class="card-footer" href="index.html">
+  <span class="footer-globe">🌍</span>
+  <span class="footer-text">Watch the Adhan sweep the Earth live on <span>AdhanLive</span></span>
+  <span class="footer-arrow">→</span>
+</a>
+
+<script>
+// ── HIJRI DATE ──────────────────────────────────────────────
+function toHijri(date){
+  const jd=Math.floor((date.getTime()/86400000)+2440587.5);
+  let l=jd-1948440+10632;
+  const n=Math.floor((l-1)/10631);
+  l=l-10631*n+354;
+  const j=Math.floor((10985-l)/5316)*Math.floor((50*l)/17719)+Math.floor(l/5670)*Math.floor((43*l)/15238);
+  l=l-Math.floor((30-j)/15)*Math.floor((17719*j)/50)-Math.floor(j/16)*Math.floor((15238*j)/43)+29;
+  const month=Math.floor((24*l)/709);
+  const day=l-Math.floor((709*month)/24);
+  const year=30*n+j-30;
+  const hm=["Muharram","Safar","Rabi ul-Awwal","Rabi ul-Thani","Jumadal Awwal","Jumadal Thani","Rajab","Sha'ban","Ramadan","Shawwal","Dhul Qa'dah","Dhul Hijjah"];
+  return `${day} ${hm[month-1]} ${year} AH`;
+}
+
+// ── PRAYER TIME CALCULATION ─────────────────────────────────
+const DEG=Math.PI/180;
+function jdn(y,m,d){
+  const a=Math.floor((14-m)/12),yr=y+4800-a,mo=m+12*a-3;
+  return d+Math.floor((153*mo+2)/5)+yr*365+Math.floor(yr/4)-Math.floor(yr/100)+Math.floor(yr/400)-32045;
+}
+function sunDeclination(jd){
+  const n=jd-2451545;
+  const L=(280.46+0.9856474*n)%360;
+  const g=(357.528+0.9856003*n)*DEG;
+  const lam=(L+1.915*Math.sin(g)+0.020*Math.sin(2*g))*DEG;
+  return Math.asin(Math.sin(23.439*DEG)*Math.sin(lam))/DEG;
+}
+function equationOfTime(jd){
+  const n=jd-2451545;
+  const L=(280.46+0.9856474*n)*DEG;
+  const g=(357.528+0.9856003*n)*DEG;
+  const lam=L+(1.915*Math.sin(g)+0.020*Math.sin(2*g))*DEG;
+  const y=Math.tan(23.439*DEG/2)**2;
+  return 4*(y*Math.sin(2*L)-2*0.0167*Math.sin(g)+4*0.0167*y*Math.sin(g)*Math.cos(2*L)-0.5*y*y*Math.sin(4*L)-1.25*0.0167*0.0167*Math.sin(2*g))/DEG;
+}
+function prayerAngle(angle,dec,lat){
+  const cos=(-Math.sin(angle*DEG)-Math.sin(dec*DEG)*Math.sin(lat*DEG))/(Math.cos(dec*DEG)*Math.cos(lat*DEG));
+  if(Math.abs(cos)>1) return null;
+  return Math.acos(cos)/DEG;
+}
+function asrAngle(shadow,dec,lat){
+  const angle=Math.atan(1/(shadow+Math.tan(Math.abs(lat-dec)*DEG)))/DEG;
+  return prayerAngle(-angle,dec,lat);
+}
+
+const METHODS={
+  '1':{fajr:15,isha:15},   // ISNA
+  '2':{fajr:18,isha:17},   // MWL
+  '3':{fajr:18,isha:18},   // Karachi
+  '4':{fajr:18.5,isha:'90min'}, // Umm al-Qura
+  '5':{fajr:19.5,isha:17.5},   // Egyptian
+};
+
+function calcPrayerTimes(lat,lng,date,method,tzOffset,asrMethod){
+  const y=date.getFullYear(),m=date.getMonth()+1,d=date.getDate();
+  const jd=jdn(y,m,d)+0.5-lng/360;
+  const dec=sunDeclination(jd);
+  const eot=equationOfTime(jd);
+  const transit=12+(-lng/15)+(-eot/60);
+  const tz=tzOffset!==undefined?tzOffset:date.getTimezoneOffset()/-60;
+  const m_cfg=METHODS[method]||METHODS['4'];
+
+  function toTime(h){
+    const total=((h+tz)%24+24)%24;
+    const hh=Math.floor(total),mm=Math.round((total-hh)*60);
+    const hh2=mm===60?hh+1:hh,mm2=mm===60?0:mm;
+    const ap=hh2%24<12?'AM':'PM',h12=hh2%12||12;
+    return `${String(h12).padStart(2,'0')}:${String(mm2).padStart(2,'0')} ${ap}`;
+  }
+  function toMins(h){
+    const total=((h+tz)%24+24)%24;
+    return Math.floor(total*60);
+  }
+
+  const fajrH=prayerAngle(m_cfg.fajr,dec,lat);
+  const sunriseH=prayerAngle(0.833,dec,lat);
+  const asrShadow=asrMethod||1;
+  const asrH=asrAngle(asrShadow,dec,lat);
+  const maghribH=prayerAngle(0.833,dec,lat);
+
+  let ishaH;
+  if(m_cfg.isha==='90min'){
+    ishaH=maghribH?transit+maghribH/15+1.5:null;
+  } else {
+    ishaH=prayerAngle(m_cfg.isha,dec,lat);
+  }
+
+  return {
+    fajr:   fajrH   ? {time:toTime(transit-fajrH/15),   mins:toMins(transit-fajrH/15)}   : null,
+    sunrise:{time:toTime(transit-sunriseH/15), mins:toMins(transit-sunriseH/15)},
+    dhuhr:  {time:toTime(transit),             mins:toMins(transit)},
+    asr:    asrH    ? {time:toTime(transit+asrH/15),     mins:toMins(transit+asrH/15)}     : null,
+    maghrib:maghribH? {time:toTime(transit+maghribH/15), mins:toMins(transit+maghribH/15)} : null,
+    isha:   ishaH   ? (m_cfg.isha==='90min'?{time:toTime(ishaH),mins:toMins(ishaH)}:{time:toTime(transit+ishaH/15),mins:toMins(transit+ishaH/15)}) : null,
+  };
+}
+
+// ── GEOCODING ────────────────────────────────────────────────
+async function geocodeCity(city){
+  const url=`https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(city)}&format=json&limit=1`;
+  const res=await fetch(url,{headers:{'Accept-Language':'en'}});
+  const data=await res.json();
+  if(!data||!data.length) return null;
+  const lat=parseFloat(data[0].lat), lng=parseFloat(data[0].lon);
+  // Get timezone offset for city coordinates
+  let tzOffset=0;
+  try{
+    const tzRes=await fetch(`https://timeapi.io/api/timezone/coordinate?latitude=${lat}&longitude=${lng}`);
+    const tzData=await tzRes.json();
+    if(tzData&&tzData.currentUtcOffset){
+      // Parse offset like "+05:30" or "-04:00"
+      const off=tzData.currentUtcOffset.seconds/3600;
+      tzOffset=off;
+    }
+  }catch(e){
+    // Fallback: estimate from longitude
+    tzOffset=Math.round(lng/15*2)/2;
+  }
+  const parts = data[0].display_name.split(',');
+  return {
+    lat,lng,tzOffset,
+    name: parts[0].trim(),
+    country: parts[parts.length-1].trim()
+  };
+}
+
+// ── STATE ────────────────────────────────────────────────────
+let _times=null, _cityName='', _cityCountry='', _countdownInterval=null;
+
+// ── PRAYER COLORS & ARABIC ───────────────────────────────────
+const PC={fajr:'#4466ff',dhuhr:'#ffcc00',asr:'#e07a2f',maghrib:'#d94f3d',isha:'#9b59c4'};
+const PA={fajr:'الفجر',dhuhr:'الظهر',asr:'العصر',maghrib:'المغرب',isha:'العشاء'};
+const PN={fajr:'Fajr',dhuhr:'Dhuhr',asr:'Asr',maghrib:'Maghrib',isha:'Isha'};
+
+// ── RENDER ───────────────────────────────────────────────────
+function render(){
+  if(!_times) return;
+  const now=new Date();
+  const nowMins=now.getHours()*60+now.getMinutes();
+  const prayers=['fajr','dhuhr','asr','maghrib','isha'];
+
+  // Find active and next prayer
+  let activeIdx=-1, nextIdx=-1;
+  for(let i=0;i<prayers.length;i++){
+    const t=_times[prayers[i]];
+    if(!t) continue;
+    if(t.mins<=nowMins) activeIdx=i;
+  }
+  nextIdx=activeIdx+1<prayers.length?activeIdx+1:0;
+  // Find next valid
+  while(nextIdx<prayers.length && !_times[prayers[nextIdx]]) nextIdx++;
+  if(nextIdx>=prayers.length) nextIdx=0;
+
+  const nextPrayer=prayers[nextIdx];
+  const nextTime=_times[nextPrayer];
+
+  // Countdown
+  let diffMins=nextTime.mins-nowMins;
+  if(diffMins<0) diffMins+=24*60;
+  const ch=Math.floor(diffMins/60),cm=diffMins%60;
+  const countdownStr=`${String(ch).padStart(2,'0')}h ${String(cm).padStart(2,'0')}m`;
+
+  // Date line
+  const days=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+  const months=['January','February','March','April','May','June','July','August','September','October','November','December'];
+  const dateStr=`${days[now.getDay()]}, ${now.getDate()} ${months[now.getMonth()]} ${now.getFullYear()}`;
+
+  // Build HTML
+  let html=`
+    <div class="city-title">
+      <div class="city-name">${_cityName}</div>
+      <div class="city-date">${_cityCountry} · ${dateStr}</div>
+    </div>
+    <div class="next-prayer">
+      <div>
+        <div class="next-label">Next Prayer</div>
+        <div class="next-name" style="color:${PC[nextPrayer]}">${PN[nextPrayer]}</div>
+      </div>
+      <div>
+        <div class="next-countdown">${countdownStr}</div>
+        <div class="next-countdown-lbl">remaining</div>
+      </div>
+    </div>
+    <div class="prayers-grid">
+  `;
+
+  prayers.forEach((p,i)=>{
+    const t=_times[p];
+    if(!t) return;
+    const isActive=i===activeIdx;
+    const isPassed=i<activeIdx;
+    html+=`
+      <div class="prayer-row ${isActive?'active':''} ${isPassed?'passed':''}">
+        ${isActive?`<div class="active-bar" style="background:${PC[p]}"></div>`:''}
+        <div class="prayer-dot" style="background:${PC[p]}"></div>
+        <div class="prayer-name">${PN[p]}</div>
+        <div class="prayer-arabic">${PA[p]}</div>
+        <div class="prayer-time-val">${t.time}</div>
+        ${isActive?'<div class="active-badge">NOW</div>':''}
+      </div>`;
+  });
+
+  html+='</div>';
+  document.getElementById('card-content').innerHTML=html;
+}
+
+// ── SEARCH ───────────────────────────────────────────────────
+async function searchCity(){
+  const city=document.getElementById('city-input').value.trim();
+  if(!city) return;
+  const method=document.getElementById('method-select').value;
+
+  document.getElementById('card-content').innerHTML=`
+    <div class="state-msg"><div class="spinner"></div>Finding prayer times for ${city}...</div>`;
+
+  try{
+    const geo=await geocodeCity(city);
+    if(!geo){
+      document.getElementById('card-content').innerHTML=
+        `<div class="state-msg">City not found. Try a different spelling.</div>`;
+      return;
+    }
+    _cityName=geo.name;
+    _cityCountry=geo.country;
+    const asrMethod=parseInt(document.getElementById('asr-select').value);
+    _times=calcPrayerTimes(geo.lat,geo.lng,new Date(),method,geo.tzOffset,asrMethod);
+    render();
+
+    // Refresh countdown every minute
+    if(_countdownInterval) clearInterval(_countdownInterval);
+    _countdownInterval=setInterval(render,60000);
+
+  }catch(e){
+    document.getElementById('card-content').innerHTML=
+      `<div class="state-msg">Something went wrong. Please try again.</div>`;
+  }
+}
+
+// ── ENTER KEY ────────────────────────────────────────────────
+document.getElementById('city-input').addEventListener('keydown',function(e){
+  if(e.key==='Enter') searchCity();
+});
+
+// ── HIJRI BADGE ──────────────────────────────────────────────
+document.getElementById('hijri-badge').textContent=toHijri(new Date());
+
+// ── CHECK URL PARAMS (pre-fill city) ─────────────────────────
+const params=new URLSearchParams(window.location.search);
+if(params.get('city')){
+  document.getElementById('city-input').value=params.get('city');
+  if(params.get('asr')) document.getElementById('asr-select').value=params.get('asr');
+  searchCity();
+}
+</script>
+</div>
+</body>
+</html>
