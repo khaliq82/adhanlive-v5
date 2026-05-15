@@ -1111,28 +1111,6 @@ footer{
   .mdl-sep{font-size:10px;color:rgba(255,255,255,0.2);}
 }
 
-/* ── HERO LOADING STATE ── */
-#site-loader{
-  position:fixed;inset:0;z-index:9999;
-  background:#000;
-  display:flex;align-items:center;justify-content:center;
-  flex-direction:column;gap:16px;
-  transition:opacity 0.6s ease;
-}
-#site-loader.fade-out{opacity:0;pointer-events:none;}
-.loader-logo{
-  font-family:'Geist',sans-serif;font-weight:800;
-  font-size:28px;letter-spacing:-0.03em;color:#fff;
-  animation:loaderPulse 1.5s ease-in-out infinite;
-}
-.loader-logo span{color:#00d4ff;}
-.loader-dot{
-  width:6px;height:6px;border-radius:50%;
-  background:#00d4ff;opacity:0.6;
-  animation:loaderBounce 1.2s ease-in-out infinite;
-}
-@keyframes loaderPulse{0%,100%{opacity:0.5;}50%{opacity:1;}}
-@keyframes loaderBounce{0%,100%{transform:scale(0.8);opacity:0.4;}50%{transform:scale(1.2);opacity:1;}}
 
 /* Missing mosque strip */
 .missing-mosque-strip{
@@ -1174,7 +1152,6 @@ footer{
   <link rel="preload" href="earth.jpg" as="image">
 </head>
 <body>
-<div id="site-loader"><div class="loader-logo">Adhan<span>Live</span></div><div class="loader-dot"></div></div>
 
 
 <!-- Mobile Touch Hints -->
@@ -1495,20 +1472,6 @@ footer{
 </div>
 
 
-// ── HIDE LOADER ──
-function hideLoader(){
-  const loader = document.getElementById('site-loader');
-  if(loader){
-    loader.classList.add('fade-out');
-    setTimeout(function(){ loader.style.display='none'; }, 650);
-  }
-}
-// Hide after DOM ready — don't wait for full window.load
-document.addEventListener('DOMContentLoaded', function(){
-  setTimeout(hideLoader, 600);
-});
-// Fallback — always hide after 2s no matter what
-setTimeout(hideLoader, 2000);
 
 <script>
 // Preload earth texture immediately so it's browser-cached when Three.js requests it
