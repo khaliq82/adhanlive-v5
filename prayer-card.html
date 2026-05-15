@@ -57,7 +57,9 @@ html,body{
 }
 
 /* ── CITY SEARCH ── */
-.search-row{display:flex;gap:8px;width:100%;}
+.search-row{display:flex;flex-direction:column;gap:8px;width:100%;}
+.search-row-top{display:flex;gap:8px;width:100%;}
+.search-row-bottom{display:flex;gap:8px;width:100%;}
 .city-input{
   flex:1;min-width:0;background:rgba(255,255,255,0.05);
   border:1px solid var(--border);border-radius:8px;
@@ -68,18 +70,19 @@ html,body{
 .city-input:focus{border-color:rgba(0,212,255,0.4);}
 .city-input::placeholder{color:var(--text3);}
 .method-select{
+  flex:1;min-width:0;
   background:#1a1a2e;
   border:1px solid var(--border);border-radius:8px;
   padding:0 8px;height:42px;color:var(--text2);font-size:11px;
   font-family:'Geist',sans-serif;outline:none;cursor:pointer;
-  transition:border-color 0.2s;flex-shrink:0;max-width:130px;
+  transition:border-color 0.2s;
   color-scheme:dark;
 }
 .method-select:focus{border-color:rgba(0,212,255,0.4);}
 .method-select option{background:#1a1a2e;color:#fff;}
 .search-btn{
   background:var(--gold);color:#000;border:none;border-radius:8px;
-  padding:0 16px;height:42px;font-size:12px;font-weight:700;
+  padding:0 20px;height:42px;font-size:12px;font-weight:700;
   font-family:'Geist',sans-serif;cursor:pointer;
   transition:opacity 0.2s;white-space:nowrap;letter-spacing:0.04em;
   flex-shrink:0;
@@ -114,10 +117,10 @@ html,body{
 .next-countdown-lbl{font-size:8px;color:var(--text3);letter-spacing:0.08em;text-align:right;margin-top:2px;}
 
 /* ── PRAYER CARDS ── */
-.prayers-grid{display:flex;flex-direction:column;gap:6px;flex:1;}
+.prayers-grid{display:flex;flex-direction:column;gap:6px;}
 .prayer-row{
   display:flex;align-items:center;
-  padding:10px 14px;border-radius:10px;
+  padding:12px 14px;border-radius:10px;
   background:rgba(255,255,255,0.02);
   border:1px solid transparent;
   transition:border-color 0.3s,background 0.3s;
@@ -130,7 +133,7 @@ html,body{
 .prayer-row.passed{opacity:0.45;}
 .prayer-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;margin-right:12px;}
 .prayer-name{font-size:12px;font-weight:600;letter-spacing:0.04em;flex:1;text-transform:uppercase;}
-.prayer-arabic{font-size:14px;color:var(--text2);margin-right:12px;font-family:'Geist',sans-serif;}
+.prayer-arabic{font-size:13px;color:var(--text2);margin-right:10px;direction:rtl;}
 .prayer-time-val{
   font-size:16px;font-weight:700;color:#fff;
   font-variant-numeric:tabular-nums;letter-spacing:-0.01em;
@@ -202,19 +205,23 @@ html,body{
 
   <!-- Search -->
   <div class="search-row">
-    <input class="city-input" id="city-input" type="text" placeholder="Enter city name..." autocomplete="off">
-    <select class="method-select" id="method-select">
-      <option value="4">Umm al-Qura</option>
-      <option value="2">Muslim World League</option>
-      <option value="1">ISNA (N. America)</option>
-      <option value="5">Egyptian Authority</option>
-      <option value="3">Karachi / Hanafi</option>
-    </select>
-    <select class="method-select" id="asr-select" title="Asr calculation method">
-      <option value="1">Asr: Shafi</option>
-      <option value="2">Asr: Hanafi</option>
-    </select>
-    <button class="search-btn" onclick="searchCity()">Get Times</button>
+    <div class="search-row-top">
+      <input class="city-input" id="city-input" type="text" placeholder="Enter city name..." autocomplete="off">
+      <button class="search-btn" onclick="searchCity()">Get Times</button>
+    </div>
+    <div class="search-row-bottom">
+      <select class="method-select" id="method-select">
+        <option value="4">Umm al-Qura</option>
+        <option value="2">Muslim World League</option>
+        <option value="1">ISNA (N. America)</option>
+        <option value="5">Egyptian Authority</option>
+        <option value="3">Karachi / Hanafi</option>
+      </select>
+      <select class="method-select" id="asr-select">
+        <option value="1">Asr: Shafi</option>
+        <option value="2">Asr: Hanafi</option>
+      </select>
+    </div>
   </div>
 
   <!-- Dynamic content -->
