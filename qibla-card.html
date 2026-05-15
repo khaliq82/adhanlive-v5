@@ -233,7 +233,7 @@ html,body{
   <div class="state-screen">
     <div class="state-icon">🕋</div>
     <div class="state-title">Find Your Qibla</div>
-    <div class="state-sub">Uses your location and compass to point toward Makkah.</div>
+    <div class="state-sub">Uses your GPS location to show the exact Qibla direction.</div>
     <button class="state-btn" onclick="startFlow()">Find Qibla Direction</button>
   </div>
 </div>
@@ -276,21 +276,23 @@ function getCity(lat,lng){
 }
 
 let _qibla=0,_dist=0,_cityName='';
-let _compassActive=false,_useWebkit=false,_heading=0;
 
+// ── RENDER ────────────────────────────────────────────────────
 function renderCompass(){
+  const bearing=Math.round(_qibla);
+  const dirs=['N','NE','E','SE','S','SW','W','NW'];
+  const dir=dirs[Math.round(bearing/45)%8];
+
   document.getElementById('card-body').innerHTML=`
     <div class="compass-scene">
       <div class="city-label">Qibla from <span>${_cityName}</span></div>
-      <div class="compass-wrap" id="compass-wrap">
+      <div class="compass-wrap">
         <div class="compass-bezel"></div>
         <div class="compass-face">
           <div class="face-n">N</div><div class="face-s">S</div>
           <div class="face-e">E</div><div class="face-w">W</div>
-          <div class="align-glow" id="align-glow"></div>
-          <!-- Kaaba on rim — positioned by JS after render -->
           <div class="kaaba-rim" id="kaaba-rim">🕋</div>
-          <div class="needle-wrap" id="needle-wrap">
+          <div class="needle-wrap" id="needle-wrap" style="transform:rotate(${bearing}deg)">
             <div class="needle">
               <div class="needle-north"></div>
               <div class="needle-south"></div>
@@ -299,130 +301,37 @@ function renderCompass(){
           <div class="compass-center"></div>
         </div>
       </div>
-      <div class="turn-guide" id="turn-guide"></div>
-      <div class="aligned-msg" id="aligned-msg">✅ You are facing Makkah &nbsp; الله أكبر</div>
+      <div class="turn-guide">Face <strong>${bearing}°&nbsp;${dir}</strong> to face Makkah</div>
       <div class="distance-box">
         <div class="distance-val"><span style="color:#00d4ff;font-weight:800;">${_dist.toLocaleString()} km</span></div>
         <div class="distance-lbl">Distance to Makkah</div>
       </div>
     </div>`;
-  startCompass();
-  // Position Kaaba on rim at Qibla bearing
-  positionKaabaOnRim();
+
+  // Position Kaaba on rim
+  requestAnimationFrame(()=>{
+    const kaaba=document.getElementById('kaaba-rim');
+    if(!kaaba) return;
+    const r=41;
+    const rad=(_qibla-90)*D;
+    kaaba.style.left=(50+r*Math.cos(rad))+'%';
+    kaaba.style.top=(50+r*Math.sin(rad))+'%';
+    kaaba.style.transform=`rotate(${_qibla+180}deg)`;
+  });
 }
 
-// ── POSITION KAABA ON RIM ────────────────────────────────────
-function positionKaabaOnRim(){
-  const kaaba = document.getElementById('kaaba-rim');
-  const face = kaaba?.parentElement;
-  if(!kaaba || !face) return;
-  const r = 41; // % from center
-  const rad = (_qibla - 90) * Math.PI / 180;
-  const x = 50 + r * Math.cos(rad);
-  const y = 50 + r * Math.sin(rad);
-  kaaba.style.left = x + '%';
-  kaaba.style.top = y + '%';
-  // Rotate to face center
-  kaaba.style.transform = `rotate(${_qibla + 180}deg)`;
-}
-
-// ── COMPASS ──────────────────────────────────────────────────
-let _rawHeading=null,_smoothH=0;
-
-function startCompass(){
-  if(_compassActive) return;
-  _compassActive=true;
-
-  // Detect iOS vs Android and use correct source
-  const isIOS=/iPhone|iPad|iPod/i.test(navigator.userAgent);
-
-  if(isIOS){
-    // iOS: use deviceorientation with webkitCompassHeading
-    window.addEventListener('deviceorientation', function(e){
-      if(typeof e.webkitCompassHeading==='number' && !isNaN(e.webkitCompassHeading)){
-        updateHeading(e.webkitCompassHeading);
-      }
-    }, true);
-  } else {
-    // Android: use deviceorientationabsolute
-    window.addEventListener('deviceorientationabsolute', function(e){
-      if(typeof e.alpha==='number' && e.alpha!==null){
-        updateHeading((360-e.alpha+360)%360);
-      }
-    }, true);
-    // Fallback if absolute doesn't fire
-    setTimeout(()=>{
-      if(_rawHeading===null){
-        window.addEventListener('deviceorientation', function(e){
-          if(typeof e.alpha==='number'){
-            updateHeading((360-e.alpha+360)%360);
-          }
-        }, true);
-      }
-    }, 1000);
-  }
-}
-
-function updateHeading(h){
-  // Smooth with shortest path
-  if(_rawHeading===null){_rawHeading=h;_smoothH=h;}
-  let d=h-_rawHeading;
-  if(d>180)d-=360;if(d<-180)d+=360;
-  _rawHeading=h;
-  _smoothH=(_smoothH+d*0.25+360)%360;
-
-  // Needle angle = qibla - device heading
-  // When device faces Makkah, needle points up (0deg = North on compass)
-  const needleAngle=(_qibla-_smoothH+360)%360;
-
-  const needle=document.getElementById('needle-wrap');
-  if(needle) needle.style.transform=`rotate(${needleAngle}deg)`;
-
-  // Diff for guidance
-  let diff=needleAngle;
-  if(diff>180) diff-=360; // signed
-
-  const aligned=Math.abs(diff)<5;
-  const guide=document.getElementById('turn-guide');
-  const msg=document.getElementById('aligned-msg');
-  const glow=document.getElementById('align-glow');
-
-  if(guide){
-    if(aligned) guide.textContent='';
-    else if(diff>0) guide.textContent='Turn Right >>>';
-    else guide.textContent='<<< Turn Left';
-  }
-  if(msg) msg.classList.toggle('visible',aligned);
-  if(glow) glow.classList.toggle('active',aligned);
-  const kaabaRim=document.getElementById('kaaba-rim');
-  if(kaabaRim) kaabaRim.classList.toggle('aligned',aligned);
-  if(aligned && navigator.vibrate) navigator.vibrate([50,30,50]);
-}
-
-// ── FLOW ─────────────────────────────────────────────────────
+// ── FLOW ──────────────────────────────────────────────────────
 async function startFlow(){
-  document.getElementById('card-body').innerHTML=`<div class="spinner-wrap"><div class="spinner"></div><div class="spinner-text">Getting your location...</div></div>`;
+  document.getElementById('card-body').innerHTML='<div class="spinner-wrap"><div class="spinner"></div><div class="spinner-text">Getting your location...</div></div>';
   try{
-    const pos=await new Promise((res,rej)=>navigator.geolocation.getCurrentPosition(res,rej,{timeout:8000,enableHighAccuracy:true}));
+    const pos=await new Promise((res,rej)=>
+      navigator.geolocation.getCurrentPosition(res,rej,{timeout:8000,enableHighAccuracy:true})
+    );
     const lat=pos.coords.latitude,lng=pos.coords.longitude;
     _qibla=calcQibla(lat,lng);
     _dist=calcDist(lat,lng);
     _cityName=await getCity(lat,lng);
-
-    // iOS needs compass permission
-    if(/iPhone|iPad|iPod/i.test(navigator.userAgent) &&
-       typeof DeviceOrientationEvent!=='undefined' &&
-       typeof DeviceOrientationEvent.requestPermission==='function'){
-      document.getElementById('card-body').innerHTML=`
-        <div class="state-screen">
-          <div class="state-icon">🧭</div>
-          <div class="state-title">Enable Compass</div>
-          <div class="state-sub">Tap below to allow compass access.</div>
-          <button class="state-btn" onclick="requestCompass()">Enable Compass</button>
-        </div>`;
-    } else {
-      renderCompass();
-    }
+    renderCompass();
   }catch(err){
     document.getElementById('card-body').innerHTML=`
       <div class="state-screen">
@@ -432,22 +341,6 @@ async function startFlow(){
         <button class="state-btn" onclick="startFlow()">Try Again</button>
       </div>`;
   }
-}
-
-async function requestCompass(){
-  try{
-    const p=await DeviceOrientationEvent.requestPermission();
-    if(p==='granted') renderCompass();
-    else{
-      document.getElementById('card-body').innerHTML=`
-        <div class="state-screen">
-          <div class="state-icon">🧭</div>
-          <div class="state-title">Compass Denied</div>
-          <div class="state-sub">Please allow compass in browser settings and reload.</div>
-          <button class="state-btn" onclick="location.reload()">Reload</button>
-        </div>`;
-    }
-  }catch(e){renderCompass();}
 }
 </script>
 </body>
