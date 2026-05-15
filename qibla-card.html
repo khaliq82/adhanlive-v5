@@ -78,11 +78,16 @@ html,body{
   flex-shrink:0;
 }
 
-/* Arrow SVG — on top of bezel, outside dial */
-.arrow-svg{
-  position:absolute;inset:-8px;
+/* Turn arrows */
+.turn-arrow{
+  position:absolute;
+  top:50%;transform:translateY(-50%);
   z-index:20;pointer-events:none;
+  animation:arrowPulse 0.7s ease-in-out infinite;
 }
+#turn-arrow-right{right:-48px;}
+#turn-arrow-left{left:-48px;}
+@keyframes arrowPulse{0%,100%{opacity:0.6;}50%{opacity:1;}}
 
 /* Metallic bezel */
 .compass-bezel{
@@ -276,72 +281,14 @@ function getCity(lat,lng){
 
 let _qibla=0,_heading=0,_dist=0,_cityName='',_compassActive=false;
 
-// ── DRAW GUIDANCE ARROW ON SVG ────────────────────────────────
-function drawGuidanceArrow(diff){
-  const svg=document.getElementById('guide-svg');
-  if(!svg) return;
-
-  // diff: degrees to turn (signed: + = right, - = left)
-  // Clear previous
-  svg.innerHTML='';
-
+// ── SHOW TURN ARROWS ─────────────────────────────────────────
+function showTurnArrow(diff){
+  const right=document.getElementById('turn-arrow-right');
+  const left=document.getElementById('turn-arrow-left');
+  if(!right||!left) return;
   const aligned=Math.abs(diff)<5;
-  if(aligned) return;
-
-  const size=svg.viewBox.baseVal.width; // 306
-  const cx=size/2, cy=size/2;
-  const r=size/2-6; // radius just outside bezel
-
-  // Arc sweep — proportional to how far off (max 180deg of arc)
-  const maxArc=150;
-  const arcDeg=Math.min(Math.abs(diff),maxArc);
-  const turnRight=diff>0;
-
-  // Arrow arc: starts at top (12 o'clock = -90deg in SVG)
-  // Goes clockwise (right) or counter-clockwise (left)
-  const startAngle=-90; // top
-  const endAngle=startAngle+(turnRight?arcDeg:-arcDeg);
-
-  const start=polarToXY(cx,cy,r,startAngle);
-  const end=polarToXY(cx,cy,r,endAngle);
-  const largeArc=arcDeg>180?1:0;
-  const sweep=turnRight?1:0;
-
-  // Arc path
-  const path=document.createElementNS('http://www.w3.org/2000/svg','path');
-  const d=`M ${start.x} ${start.y} A ${r} ${r} 0 ${largeArc} ${sweep} ${end.x} ${end.y}`;
-  path.setAttribute('d',d);
-  path.setAttribute('fill','none');
-  path.setAttribute('stroke','rgba(0,212,255,0.8)');
-  path.setAttribute('stroke-width','3');
-  path.setAttribute('stroke-linecap','round');
-  svg.appendChild(path);
-
-  // Arrowhead at end
-  const arrowAngle=(endAngle+(turnRight?90:-90))*D;
-  const ax=end.x+9*Math.cos(arrowAngle);
-  const ay=end.y+9*Math.sin(arrowAngle);
-  const bx=end.x+9*Math.cos(arrowAngle+2.4);
-  const by=end.y+9*Math.sin(arrowAngle+2.4);
-  const arrow=document.createElementNS('http://www.w3.org/2000/svg','polyline');
-  arrow.setAttribute('points',`${bx},${by} ${end.x},${end.y} ${ax},${ay}`);
-  arrow.setAttribute('fill','none');
-  arrow.setAttribute('stroke','rgba(0,212,255,0.95)');
-  arrow.setAttribute('stroke-width','3');
-  arrow.setAttribute('stroke-linecap','round');
-  arrow.setAttribute('stroke-linejoin','round');
-  svg.appendChild(arrow);
-
-  // Pulse dot at start
-  const dot=document.createElementNS('http://www.w3.org/2000/svg','circle');
-  dot.setAttribute('cx',start.x);dot.setAttribute('cy',start.y);
-  dot.setAttribute('r','4');dot.setAttribute('fill','rgba(0,212,255,0.6)');
-  svg.appendChild(dot);
-}
-
-function polarToXY(cx,cy,r,angleDeg){
-  const rad=angleDeg*D;
-  return{x:cx+r*Math.cos(rad),y:cy+r*Math.sin(rad)};
+  right.style.display=(!aligned&&diff>0)?'block':'none';
+  left.style.display=(!aligned&&diff<=0)?'block':'none';
 }
 
 // ── RENDER COMPASS ────────────────────────────────────────────
@@ -362,8 +309,19 @@ function renderCompass(){
       <div class="city-label">Qibla from <span>${_cityName}</span></div>
 
       <div class="compass-outer-wrap">
-        <!-- Guidance arrow SVG (outside bezel, fixed) -->
-        <svg class="arrow-svg" id="guide-svg" viewBox="0 0 306 306" xmlns="http://www.w3.org/2000/svg"></svg>
+        <!-- Turn arrow indicators - fixed on bezel -->
+        <div class="turn-arrow" id="turn-arrow-right" style="display:none;">
+          <svg viewBox="0 0 40 40" width="40" height="40">
+            <path d="M8,20 A14,14 0 0,1 32,20" fill="none" stroke="#00d4ff" stroke-width="3" stroke-linecap="round"/>
+            <polyline points="26,13 32,20 24,23" fill="none" stroke="#00d4ff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <div class="turn-arrow" id="turn-arrow-left" style="display:none;">
+          <svg viewBox="0 0 40 40" width="40" height="40">
+            <path d="M32,20 A14,14 0 0,0 8,20" fill="none" stroke="#00d4ff" stroke-width="3" stroke-linecap="round"/>
+            <polyline points="14,13 8,20 16,23" fill="none" stroke="#00d4ff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
 
         <div class="compass-bezel"></div>
 
@@ -383,9 +341,7 @@ function renderCompass(){
       <div class="aligned-msg" id="aligned-msg">✅ You are facing Makkah &nbsp; الله أكبر</div>
 
       <div class="stats-bar">
-        <div class="stat-item"><div class="stat-val">${bearing}°</div><div class="stat-lbl">Bearing</div></div>
-        <div class="stat-item"><div class="stat-val">${dir}</div><div class="stat-lbl">Direction</div></div>
-        <div class="stat-item"><div class="stat-val">${_dist.toLocaleString()}</div><div class="stat-lbl">km to Makkah</div></div>
+        <div class="stat-item"><div class="stat-val">${_dist.toLocaleString()} km</div><div class="stat-lbl">Distance to Makkah</div></div>
       </div>
     </div>
   `;
@@ -397,8 +353,15 @@ function renderCompass(){
 function startCompass(){
   if(_compassActive) return;
   _compassActive=true;
-  window.addEventListener('deviceorientationabsolute',onOrientation,true);
-  window.addEventListener('deviceorientation',onOrientation,true);
+  // Try absolute first (Android), fall back to regular (iOS uses webkitCompassHeading)
+  let usingAbsolute=false;
+  window.addEventListener('deviceorientationabsolute',(e)=>{
+    usingAbsolute=true;
+    onOrientation(e);
+  },true);
+  window.addEventListener('deviceorientation',(e)=>{
+    if(!usingAbsolute) onOrientation(e);
+  },true);
 }
 
 let _lastHeading=0,_smoothHeading=0;
@@ -424,8 +387,8 @@ function onOrientation(e){
 
   const aligned=Math.abs(diff)<5;
 
-  // Update guidance arrow
-  drawGuidanceArrow(diff);
+  // Update turn arrows
+  showTurnArrow(diff);
 
   // Aligned state
   const glow=document.getElementById('align-glow');
