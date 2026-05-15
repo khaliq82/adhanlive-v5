@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Qibla Finder — AdhanLive</title>
+<meta name="description" content="Find the Qibla direction from anywhere. Powered by AdhanLive.">
+<meta property="og:title" content="Qibla Finder — AdhanLive">
+<meta property="og:image" content="https://www.adhanlive.com/preview.jpg">
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --bg:#000;--border:rgba(255,255,255,0.08);
+  --gold:#00d4ff;--kaaba:#c4a24a;--text:#fff;
+  --text2:rgba(255,255,255,0.55);--text3:rgba(255,255,255,0.25);
+}
+html,body{
+  height:100dvh;background:#111;color:var(--text);
+  font-family:'Geist',sans-serif;
+  display:flex;justify-content:center;align-items:flex-start;
+  overflow:hidden;
+}
+.card-wrap{
+  width:100%;max-width:480px;height:100dvh;
+  background:var(--bg);display:flex;flex-direction:column;
+  overflow:hidden;
+}
+
+/* ── HEADER ── */
+.card-header{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:14px 20px;border-bottom:1px solid var(--border);
+  flex-shrink:0;
+}
+.logo{display:flex;align-items:center;gap:8px;text-decoration:none;}
+.logo-dot{width:7px;height:7px;border-radius:50%;background:var(--gold);}
+.logo-text{font-size:13px;font-weight:800;color:#fff;letter-spacing:-0.02em;}
+.logo-text span{color:var(--gold);}
+.hijri-date{font-size:9px;color:rgba(0,212,255,0.6);letter-spacing:0.04em;}
+
+/* ── BODY ── */
+.card-body{
+  flex:1;display:flex;flex-direction:column;align-items:center;
+  padding:14px 20px 70px;overflow-y:auto;min-height:0;gap:12px;
+}
+
+/* ── SEARCH ── */
+.search-row{display:flex;gap:8px;width:100%;}
+.city-input{
+  flex:1;min-width:0;background:rgba(255,255,255,0.05);
+  border:1px solid var(--border);border-radius:8px;
+  padding:0 14px;height:42px;color:#fff;font-size:13px;
+  font-family:'Geist',sans-serif;outline:none;transition:border-color 0.2s;
+}
+.city-input:focus{border-color:rgba(0,212,255,0.4);}
+.city-input::placeholder{color:var(--text3);}
+.search-btn{
+  background:var(--gold);color:#000;border:none;border-radius:8px;
+  padding:0 18px;height:42px;font-size:12px;font-weight:700;
+  font-family:'Geist',sans-serif;cursor:pointer;white-space:nowrap;
+  letter-spacing:0.04em;flex-shrink:0;
+}
+
+/* ── CITY INFO ── */
+.city-info{text-align:center;line-height:1.4;}
+.city-name{font-size:18px;font-weight:800;letter-spacing:-0.02em;}
+.city-sub{font-size:10px;color:var(--text3);margin-top:2px;letter-spacing:0.04em;}
+
+/* ── COMPASS WRAP ── */
+.compass-outer-wrap{
+  position:relative;
+  width:min(300px,82vw);height:min(300px,82vw);
+  flex-shrink:0;
+}
+
+/* Metallic bezel — fixed, does not rotate */
+.compass-bezel{
+  position:absolute;inset:0;border-radius:50%;
+  background:conic-gradient(
+    from 0deg,
+    #1a1a1a 0deg,#4a4a4a 15deg,#2a2a2a 30deg,
+    #5a5a5a 45deg,#2a2a2a 60deg,#4a4a4a 75deg,
+    #1a1a1a 90deg,#4a4a4a 105deg,#2a2a2a 120deg,
+    #5a5a5a 135deg,#2a2a2a 150deg,#4a4a4a 165deg,
+    #1a1a1a 180deg,#4a4a4a 195deg,#2a2a2a 210deg,
+    #5a5a5a 225deg,#2a2a2a 240deg,#4a4a4a 255deg,
+    #1a1a1a 270deg,#4a4a4a 285deg,#2a2a2a 300deg,
+    #5a5a5a 315deg,#2a2a2a 330deg,#4a4a4a 345deg,
+    #1a1a1a 360deg
+  );
+  box-shadow:
+    0 8px 40px rgba(0,0,0,0.9),
+    inset 0 1px 0 rgba(255,255,255,0.15),
+    inset 0 -1px 0 rgba(0,0,0,0.6);
+}
+
+/* Rotating dial — this rotates with device */
+.compass-dial{
+  position:absolute;inset:12px;border-radius:50%;
+  background:radial-gradient(ellipse at 35% 30%,#12122a 0%,#080818 55%,#030310 100%);
+  box-shadow:inset 0 4px 16px rgba(0,0,0,0.9),0 0 0 1px rgba(0,212,255,0.06);
+  transition:transform 0.2s cubic-bezier(0.25,0.46,0.45,0.94);
+  overflow:visible;
+}
+
+/* Degree tick marks on dial edge */
+.compass-dial::after{
+  content:'';position:absolute;inset:0;border-radius:50%;
+  background:repeating-conic-gradient(
+    rgba(255,255,255,0.07) 0deg 1deg,
+    transparent 1deg 6deg
+  );
+  mask:radial-gradient(circle,transparent 86%,black 87%,black 92%,transparent 93%);
+  -webkit-mask:radial-gradient(circle,transparent 86%,black 87%,black 92%,transparent 93%);
+}
+
+/* Crosshair */
+.compass-dial::before{
+  content:'';position:absolute;inset:0;
+  background:
+    linear-gradient(to bottom,transparent calc(50% - 0.5px),rgba(255,255,255,0.04) calc(50% - 0.5px),rgba(255,255,255,0.04) calc(50% + 0.5px),transparent calc(50% + 0.5px)),
+    linear-gradient(to right,transparent calc(50% - 0.5px),rgba(255,255,255,0.04) calc(50% - 0.5px),rgba(255,255,255,0.04) calc(50% + 0.5px),transparent calc(50% + 0.5px));
+}
+
+/* Cardinal letters ON the dial (they rotate with it) */
+.dial-n,.dial-s,.dial-e,.dial-w{
+  position:absolute;font-size:11px;font-weight:800;letter-spacing:0.06em;pointer-events:none;
+}
+.dial-n{top:8px;left:50%;transform:translateX(-50%);color:rgba(255,70,70,0.9);}
+.dial-s{bottom:8px;left:50%;transform:translateX(-50%);color:rgba(255,255,255,0.35);}
+.dial-e{right:8px;top:50%;transform:translateY(-50%);color:rgba(255,255,255,0.35);}
+.dial-w{left:8px;top:50%;transform:translateY(-50%);color:rgba(255,255,255,0.35);}
+
+/* Kaaba on dial rim — positioned at Qibla angle */
+.kaaba-marker{
+  position:absolute;
+  width:28px;height:28px;
+  top:50%;left:50%;
+  transform-origin:0 0;
+  display:flex;align-items:center;justify-content:center;
+  font-size:20px;
+  filter:drop-shadow(0 0 6px rgba(196,162,74,0.6));
+  transition:filter 0.3s;
+  z-index:5;
+}
+.kaaba-marker.aligned{
+  filter:drop-shadow(0 0 16px rgba(196,162,74,1)) drop-shadow(0 0 32px rgba(255,200,50,0.8));
+  animation:kaabaGlow 1s ease-in-out infinite;
+}
+@keyframes kaabaGlow{
+  0%,100%{filter:drop-shadow(0 0 8px rgba(196,162,74,0.8)) drop-shadow(0 0 20px rgba(255,200,50,0.5));}
+  50%{filter:drop-shadow(0 0 24px rgba(196,162,74,1)) drop-shadow(0 0 48px rgba(255,220,80,0.9));}
+}
+
+/* Fixed North needle — always points up */
+.north-needle{
+  position:absolute;
+  top:50%;left:50%;
+  width:4px;
+  height:42%;
+  transform:translateX(-50%) translateY(-96%);
+  transform-origin:50% 100%;
+  background:linear-gradient(to bottom,rgba(255,70,70,0.9),rgba(255,70,70,0.3));
+  clip-path:polygon(50% 0%,100% 100%,50% 85%,0% 100%);
+  z-index:6;
+  border-radius:2px;
+}
+
+/* Fixed alignment marker at top */
+.top-marker{
+  position:absolute;top:14px;left:50%;transform:translateX(-50%);
+  width:3px;height:12px;
+  background:rgba(0,212,255,0.7);
+  border-radius:2px;
+  z-index:7;
+  box-shadow:0 0 6px rgba(0,212,255,0.5);
+}
+
+/* Center jewel */
+.compass-center{
+  position:absolute;width:12px;height:12px;border-radius:50%;
+  top:50%;left:50%;transform:translate(-50%,-50%);
+  background:radial-gradient(circle,#fff 0%,#aaa 60%,#666 100%);
+  box-shadow:0 0 8px rgba(255,255,255,0.6);
+  z-index:8;
+}
+
+/* Alignment ring glow */
+.align-glow{
+  position:absolute;inset:0;border-radius:50%;
+  background:radial-gradient(circle,rgba(196,162,74,0.15) 0%,transparent 65%);
+  opacity:0;transition:opacity 0.4s;pointer-events:none;z-index:1;
+}
+.align-glow.active{opacity:1;animation:glowRing 1.2s ease-in-out infinite;}
+@keyframes glowRing{0%,100%{opacity:0.4;}50%{opacity:1;}}
+
+/* ── GUIDANCE ── */
+.guidance{
+  text-align:center;width:100%;
+  padding:12px 16px;border-radius:10px;
+  background:rgba(255,255,255,0.03);
+  border:1px solid var(--border);
+  min-height:56px;display:flex;align-items:center;justify-content:center;
+  flex-direction:column;gap:4px;
+}
+.guidance-arrow{font-size:22px;line-height:1;}
+.guidance-text{font-size:13px;font-weight:600;letter-spacing:0.02em;color:var(--text2);}
+.guidance-deg{font-size:10px;color:var(--text3);letter-spacing:0.06em;}
+.guidance.facing{
+  border-color:rgba(196,162,74,0.4);
+  background:rgba(196,162,74,0.06);
+}
+.guidance.facing .guidance-text{color:#e8c84a;}
+
+/* ── STATS ── */
+.stats-bar{
+  display:flex;width:100%;
+  border:1px solid var(--border);border-radius:10px;overflow:hidden;
+}
+.stat-item{flex:1;padding:10px 6px;text-align:center;border-right:1px solid var(--border);}
+.stat-item:last-child{border-right:none;}
+.stat-val{font-size:15px;font-weight:800;color:var(--gold);font-variant-numeric:tabular-nums;line-height:1;}
+.stat-lbl{font-size:8px;letter-spacing:0.08em;text-transform:uppercase;color:var(--text3);margin-top:3px;}
+
+/* ── ENABLE BTN ── */
+.enable-btn{
+  display:flex;align-items:center;justify-content:center;gap:8px;
+  padding:12px 20px;border-radius:10px;width:100%;
+  background:rgba(0,212,255,0.08);border:1px solid rgba(0,212,255,0.25);
+  color:var(--gold);font-size:12px;font-weight:600;
+  font-family:'Geist',sans-serif;cursor:pointer;letter-spacing:0.04em;
+}
+.enable-btn:hover{background:rgba(0,212,255,0.15);}
+
+/* ── STATE MSG ── */
+.state-msg{text-align:center;padding:20px;color:var(--text3);font-size:13px;line-height:1.6;}
+.spinner{width:20px;height:20px;border:2px solid rgba(0,212,255,0.2);border-top-color:var(--gold);border-radius:50%;animation:spin 0.8s linear infinite;margin:0 auto 12px;}
+@keyframes spin{to{transform:rotate(360deg);}}
+
+/* ── FOOTER ── */
+.card-footer{
+  display:flex;align-items:center;justify-content:center;gap:8px;
+  padding:12px 20px;background:rgba(0,0,0,0.95);
+  border-top:1px solid rgba(0,212,255,0.3);text-decoration:none;
+  position:fixed;bottom:0;left:0;right:0;max-width:480px;margin:0 auto;
+  box-shadow:0 -4px 20px rgba(0,0,0,0.8);z-index:100;
+}
+.footer-text{font-size:12px;color:rgba(255,255,255,0.5);}
+.footer-text span{color:var(--gold);font-weight:700;font-size:13px;}
+.footer-arrow{font-size:13px;color:var(--gold);font-weight:700;}
+</style>
+</head>
+<body>
+<div class="card-wrap">
+
+<div class="card-header">
+  <a class="logo" href="https://www.adhanlive.com">
+    <div class="logo-dot"></div>
+    <div class="logo-text">Adhan<span>Live</span></div>
+  </a>
+  <div class="hijri-date" id="hijri-date">Qibla Finder</div>
+</div>
+
+<div class="card-body">
+  <div class="search-row">
+    <input class="city-input" id="city-input" type="text" placeholder="Enter your city..." autocomplete="off">
+    <button class="search-btn" onclick="searchCity()">Find Qibla</button>
+  </div>
+  <div id="qibla-content" style="width:100%;display:flex;flex-direction:column;align-items:center;gap:12px;">
+    <div class="state-msg">Enter your city to find the Qibla direction.</div>
+  </div>
+</div>
+
+<a class="card-footer" href="https://www.adhanlive.com">
+  <span style="font-size:14px;">🌍</span>
+  <span class="footer-text">Powered by <span>AdhanLive.com</span></span>
+  <span class="footer-arrow">→</span>
+</a>
+
+</div>
+<script>
+const KAABA_LAT=21.4225,KAABA_LNG=39.8262,D=Math.PI/180;
+
+// Hijri
+function toHijri(date){
+  const jd=Math.floor((date.getTime()/86400000)+2440587.5);
+  let l=jd-1948440+10632;
+  const n=Math.floor((l-1)/10631);l=l-10631*n+354;
+  const j=Math.floor((10985-l)/5316)*Math.floor((50*l)/17719)+Math.floor(l/5670)*Math.floor((43*l)/15238);
+  l=l-Math.floor((30-j)/15)*Math.floor((17719*j)/50)-Math.floor(j/16)*Math.floor((15238*j)/43)+29;
+  const mo=Math.floor((24*l)/709),day=l-Math.floor((709*mo)/24),yr=30*n+j-30;
+  const hm=["Muharram","Safar","Rabi ul-Awwal","Rabi ul-Thani","Jumadal Awwal","Jumadal Thani","Rajab","Sha'ban","Ramadan","Shawwal","Dhul Qa'dah","Dhul Hijjah"];
+  return `${day} ${hm[mo-1]} ${yr} AH`;
+}
+document.getElementById('hijri-date').textContent=toHijri(new Date());
+
+// Qibla bearing
+function calcQibla(lat,lng){
+  const y=Math.sin((KAABA_LNG-lng)*D)*Math.cos(KAABA_LAT*D);
+  const x=Math.cos(lat*D)*Math.sin(KAABA_LAT*D)-Math.sin(lat*D)*Math.cos(KAABA_LAT*D)*Math.cos((KAABA_LNG-lng)*D);
+  return((Math.atan2(y,x)/D)+360)%360;
+}
+// Distance
+function calcDist(lat,lng){
+  const R=6371,dLat=(KAABA_LAT-lat)*D,dLng=(KAABA_LNG-lng)*D;
+  const a=Math.sin(dLat/2)**2+Math.cos(lat*D)*Math.cos(KAABA_LAT*D)*Math.sin(dLng/2)**2;
+  return Math.round(R*2*Math.asin(Math.sqrt(a)));
+}
+
+let _qibla=0,_compassActive=false,_cityName='',_cityCountry='';
+
+async function geocodeCity(city){
+  const r=await fetch(`https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(city)}&format=json&limit=1`,{headers:{'Accept-Language':'en'}});
+  const d=await r.json();
+  if(!d||!d.length) return null;
+  const p=d[0].display_name.split(',');
+  return{lat:parseFloat(d[0].lat),lng:parseFloat(d[0].lon),name:p[0].trim(),country:p[p.length-1].trim()};
+}
+
+async function searchCity(){
+  const city=document.getElementById('city-input').value.trim();
+  if(!city) return;
+  document.getElementById('qibla-content').innerHTML=`<div class="state-msg"><div class="spinner"></div>Finding Qibla for ${city}...</div>`;
+  try{
+    const geo=await geocodeCity(city);
+    if(!geo){document.getElementById('qibla-content').innerHTML=`<div class="state-msg">City not found. Try again.</div>`;return;}
+    _cityName=geo.name;_cityCountry=geo.country;
+    _qibla=calcQibla(geo.lat,geo.lng);
+    const dist=calcDist(geo.lat,geo.lng);
+    const bearing=Math.round(_qibla);
+    const dirs=['N','NE','E','SE','S','SW','W','NW'];
+    const dir=dirs[Math.round(bearing/45)%8];
+    renderCompass(bearing,dist,dir);
+  }catch(e){
+    document.getElementById('qibla-content').innerHTML=`<div class="state-msg">Something went wrong. Try again.</div>`;
+  }
+}
+
+function getKaabaPosition(qiblaDeg, radiusPct){
+  // Place kaaba on the dial rim at the qibla angle
+  // angle 0 = top (North), clockwise
+  const rad = (qiblaDeg - 90) * D; // -90 to start from top
+  const r = radiusPct; // % of dial radius
+  const x = 50 + r * Math.cos(rad);
+  const y = 50 + r * Math.sin(rad);
+  return {x, y};
+}
+
+function renderCompass(bearing, dist, dir){
+  const isIOS=/iPhone|iPad|iPod/i.test(navigator.userAgent);
+  const needsPerm=isIOS&&typeof DeviceOrientationEvent!=='undefined'&&typeof DeviceOrientationEvent.requestPermission==='function';
+
+  // Kaaba on rim at bearing angle (static initial position)
+  const pos = getKaabaPosition(bearing, 38);
+
+  document.getElementById('qibla-content').innerHTML=`
+    <div class="city-info">
+      <div class="city-name">${_cityName}</div>
+      <div class="city-sub">${_cityCountry}</div>
+    </div>
+
+    <div class="compass-outer-wrap">
+      <div class="compass-bezel"></div>
+      <!-- Rotating dial -->
+      <div class="compass-dial" id="compass-dial">
+        <div class="dial-n">N</div>
+        <div class="dial-s">S</div>
+        <div class="dial-e">E</div>
+        <div class="dial-w">W</div>
+        <!-- Kaaba on dial rim at Qibla bearing -->
+        <div class="kaaba-marker" id="kaaba-marker"
+          style="transform:translate(calc(${pos.x}% - 14px), calc(${pos.y}% - 14px));">
+          🕋
+        </div>
+        <div class="align-glow" id="align-glow"></div>
+      </div>
+      <!-- Fixed elements (don't rotate) -->
+      <div class="top-marker"></div>
+      <div class="north-needle"></div>
+      <div class="compass-center"></div>
+    </div>
+
+    <div class="guidance" id="guidance">
+      <div class="guidance-arrow" id="guidance-arrow">🧭</div>
+      <div class="guidance-text" id="guidance-text">
+        ${needsPerm ? 'Tap below to enable live compass' : 'Rotate your phone to face Makkah'}
+      </div>
+      <div class="guidance-deg" id="guidance-deg">Qibla: ${bearing}° ${dir}</div>
+    </div>
+
+    <div class="stats-bar">
+      <div class="stat-item"><div class="stat-val">${bearing}°</div><div class="stat-lbl">Bearing</div></div>
+      <div class="stat-item"><div class="stat-val">${dir}</div><div class="stat-lbl">Direction</div></div>
+      <div class="stat-item"><div class="stat-val">${dist.toLocaleString()}</div><div class="stat-lbl">km to Makkah</div></div>
+    </div>
+
+    ${needsPerm?`<button class="enable-btn" id="enable-btn" onclick="enableCompass()">🧭 Enable Live Compass</button>`:''}
+  `;
+
+  if(!needsPerm) startCompass();
+}
+
+async function enableCompass(){
+  try{
+    const p=await DeviceOrientationEvent.requestPermission();
+    if(p==='granted'){document.getElementById('enable-btn')?.remove();startCompass();}
+    else{document.getElementById('guidance-text').textContent='Permission denied. Showing static direction.';}
+  }catch(e){startCompass();}
+}
+
+function startCompass(){
+  if(_compassActive) return;
+  _compassActive=true;
+  window.addEventListener('deviceorientationabsolute',onOrientation,true);
+  window.addEventListener('deviceorientation',onOrientation,true);
+}
+
+function onOrientation(e){
+  let heading=0;
+  if(e.webkitCompassHeading!==undefined) heading=e.webkitCompassHeading;
+  else if(e.alpha!==null) heading=(360-e.alpha)%360;
+
+  // Rotate dial opposite to heading (dial rotates like a real compass)
+  const dial=document.getElementById('compass-dial');
+  if(dial) dial.style.transform=`rotate(${-heading}deg)`;
+
+  // Guidance: how far off from Qibla
+  const diff=((_qibla-heading)+360)%360;
+  const arrow=document.getElementById('guidance-arrow');
+  const text=document.getElementById('guidance-text');
+  const deg=document.getElementById('guidance-deg');
+  const guidance=document.getElementById('guidance');
+  const glow=document.getElementById('align-glow');
+  const kaaba=document.getElementById('kaaba-marker');
+
+  const aligned=diff<5||diff>355;
+  const turnDeg=diff<=180?Math.round(diff):Math.round(360-diff);
+
+  if(aligned){
+    if(arrow) arrow.textContent='✅';
+    if(text){text.textContent='You are facing Makkah';text.style.color='#e8c84a';}
+    if(deg) deg.textContent='الله أكبر';
+    if(guidance) guidance.className='guidance facing';
+    if(glow) glow.classList.add('active');
+    if(kaaba) kaaba.classList.add('aligned');
+  } else {
+    const turnRight=diff>0&&diff<=180;
+    if(arrow) arrow.textContent=turnRight?'↻':'↺';
+    if(text){text.textContent=turnRight?`Turn Right ${turnDeg}°`:`Turn Left ${turnDeg}°`;text.style.color='';}
+    if(deg) deg.textContent=`Qibla: ${Math.round(_qibla)}°`;
+    if(guidance) guidance.className='guidance';
+    if(glow) glow.classList.remove('active');
+    if(kaaba) kaaba.classList.remove('aligned');
+  }
+}
+
+document.getElementById('city-input').addEventListener('keydown',e=>{if(e.key==='Enter')searchCity();});
+const params=new URLSearchParams(window.location.search);
+if(params.get('city')){document.getElementById('city-input').value=params.get('city');searchCity();}
+</script>
+</body>
+</html>
