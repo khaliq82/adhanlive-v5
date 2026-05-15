@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Compass Test</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:#000;color:#fff;font-family:monospace;display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;gap:20px;padding:20px;}
+.big{font-size:72px;font-weight:800;color:#00d4ff;font-variant-numeric:tabular-nums;}
+.label{font-size:12px;color:rgba(255,255,255,0.4);letter-spacing:0.1em;text-transform:uppercase;}
+.btn{padding:16px 32px;background:#00d4ff;color:#000;border:none;border-radius:10px;font-size:16px;font-weight:700;cursor:pointer;font-family:monospace;}
+.log{font-size:11px;color:rgba(255,255,255,0.4);text-align:center;line-height:1.8;max-width:320px;}
+.status{font-size:13px;color:#00d4ff;}
+</style>
+</head>
+<body>
+
+<div class="label">Compass Heading</div>
+<div class="big" id="heading">---</div>
+<div class="label" id="source">Waiting...</div>
+
+<button class="btn" onclick="requestAndStart()">Enable Compass</button>
+
+<div class="log" id="log">Tap the button above</div>
+<div class="status" id="status"></div>
+
+<script>
+let eventCount = 0;
+
+function log(msg){
+  document.getElementById('log').textContent = msg;
+}
+function status(msg){
+  document.getElementById('status').textContent = msg;
+}
+
+async function requestAndStart(){
+  log('Requesting permission...');
+  
+  // Step 1: Request permission (iOS 13+)
+  if(typeof DeviceOrientationEvent !== 'undefined' && 
+     typeof DeviceOrientationEvent.requestPermission === 'function'){
+    try{
+      const perm = await DeviceOrientationEvent.requestPermission();
+      log('Permission result: ' + perm);
+      if(perm === 'granted'){
+        startListening();
+      } else {
+        log('Permission denied. Go to Settings > Safari > Motion & Orientation Access');
+      }
+    } catch(err){
+      log('Permission error: ' + err.message);
+      startListening(); // try anyway
+    }
+  } else {
+    log('No permission needed (Android or old iOS)');
+    startListening();
+  }
+}
+
+function startListening(){
+  log('Listening for orientation events...');
+  
+  // Try deviceorientationabsolute first
+  window.addEventListener('deviceorientationabsolute', function(e){
+    eventCount++;
+    document.getElementById('source').textContent = 'Source: deviceorientationabsolute #' + eventCount;
+    
+    if(typeof e.webkitCompassHeading === 'number'){
+      document.getElementById('heading').textContent = Math.round(e.webkitCompassHeading) + '°';
+      status('webkitCompassHeading: ' + e.webkitCompassHeading.toFixed(1));
+    } else if(e.alpha !== null){
+      const h = (360 - e.alpha + 360) % 360;
+      document.getElementById('heading').textContent = Math.round(h) + '°';
+      status('alpha converted: ' + h.toFixed(1));
+    }
+  }, true);
+
+  // Also listen to deviceorientation
+  window.addEventListener('deviceorientation', function(e){
+    eventCount++;
+    document.getElementById('source').textContent = 'Source: deviceorientation #' + eventCount;
+    
+    if(typeof e.webkitCompassHeading === 'number' && !isNaN(e.webkitCompassHeading)){
+      document.getElementById('heading').textContent = Math.round(e.webkitCompassHeading) + '°';
+      status('webkitCompassHeading: ' + e.webkitCompassHeading.toFixed(1));
+    } else {
+      status('alpha: ' + e.alpha + ' | absolute: ' + e.absolute);
+    }
+  }, true);
+
+  // Check after 3 seconds if events are firing
+  setTimeout(()=>{
+    if(eventCount === 0){
+      log('No events received after 3s. Try: Settings > Safari > Motion & Orientation Access = ON');
+    }
+  }, 3000);
+}
+</script>
+</body>
+</html>
