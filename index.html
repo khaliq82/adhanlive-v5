@@ -164,8 +164,12 @@ nav{
 #globe-canvas.home-mode{
   filter:brightness(0.9);
 }
-#globe-canvas.home-mode{filter:brightness(0.55);}
+#globe-canvas.home-mode{filter:brightness(0.9);}
 #globe-canvas.map-mode{filter:brightness(1.1);pointer-events:auto;}
+
+@media(max-width:768px){
+  #globe-canvas.home-mode{filter:brightness(0.85);}
+}
 
 /* ── HOME OVERLAY ── */
 #home-overlay{
@@ -889,12 +893,14 @@ footer{
   #panel-left,#panel-right{display:none !important;}
   #zoom-hint{display:none !important;}
 
-  /* Globe canvas on mobile - square for perfect round globe */
+  /* Globe canvas on mobile */
   #globe-canvas{
-    pointer-events:auto;
-    height:auto !important;
+    pointer-events:none; /* no touch on hero */
+    height:calc(100vh - 56px) !important;
     width:100vw !important;
   }
+  /* Enable touch only in map mode */
+  body.map-active #globe-canvas{pointer-events:auto !important;}
   body.map-active #mobile-stats{display:block;}
   body.map-active #mobile-globe-card{display:block !important;}
   body.map-active #mobile-globe-card{display:block !important;}
