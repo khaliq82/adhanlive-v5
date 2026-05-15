@@ -337,13 +337,13 @@ async function searchCity(){
 }
 
 function getKaabaPosition(qiblaDeg){
-  // Place kaaba on the dial rim (82% from center)
-  // 0° = North = top, clockwise
   const rad = (qiblaDeg - 90) * D;
-  const r = 40; // % from center (50% = edge)
-  const x = 50 + r * Math.cos(rad); // % from left
-  const y = 50 + r * Math.sin(rad); // % from top
-  return {x, y};
+  const r = 40;
+  const x = 50 + r * Math.cos(rad);
+  const y = 50 + r * Math.sin(rad);
+  // Rotate icon to face center — icon needs to point inward
+  const rotation = qiblaDeg + 180; // face center
+  return {x, y, rotation};
 }
 
 function renderCompass(bearing, dist, dir){
@@ -369,7 +369,7 @@ function renderCompass(bearing, dist, dir){
         <div class="dial-w">W</div>
         <!-- Kaaba on dial rim at Qibla bearing -->
         <div class="kaaba-marker" id="kaaba-marker"
-          style="left:${pos.x}%;top:${pos.y}%;">
+          style="left:${pos.x}%;top:${pos.y}%;transform:rotate(${pos.rotation}deg);">
           🕋
         </div>
         <div class="align-glow" id="align-glow"></div>
