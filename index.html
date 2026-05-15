@@ -260,14 +260,7 @@ nav{
   transition:color 0.2s;
 }
 .home-cta-secondary:hover{color:rgba(255,255,255,0.6);}
-.home-logo{
-  font-family:'Geist',sans-serif;font-weight:800;
-  font-size:clamp(42px,7vw,90px);
-  letter-spacing:-0.04em;line-height:1;margin-top:30px;color:var(--text);
-  margin-bottom:12px;
-  opacity:0;animation:fadeUp 1.4s ease 0.3s forwards;
-}
-.home-logo span{color:var(--gold);text-shadow:0 0 60px rgba(0,212,255,0.3);}
+
 .home-tagline{
   font-family:'Cormorant Garamond',serif;font-style:italic;font-weight:300;
   font-size:clamp(16px,2.5vw,24px);color:var(--text2);letter-spacing:0.08em;
@@ -853,7 +846,6 @@ footer{
     background:linear-gradient(to bottom, rgba(0,0,0,0.80) 0%, rgba(0,0,0,0.60) 30%, rgba(0,0,0,0.20) 60%, rgba(0,0,0,0.0) 100%);
     overflow-y:auto;
   }
-  .home-logo{font-size:clamp(42px,14vw,72px);}
   .home-tagline{font-size:clamp(14px,4vw,18px);margin-bottom:20px;}
   .home-divider{height:28px;margin:16px auto;}
   .home-s1{margin-bottom:20px;}
@@ -917,7 +909,6 @@ footer{
 
   /* Home overlay */
   #home-overlay{padding:24px 20px;}
-  .home-logo{font-size:clamp(42px,14vw,72px);}
   .home-tagline{font-size:clamp(14px,4vw,18px);}
   .home-s1-l1{font-size:clamp(14px,4vw,20px);}
   .home-s1-l2{font-size:clamp(18px,5vw,26px);}
@@ -1224,7 +1215,6 @@ footer{
 
 <!-- HOME OVERLAY -->
 <div id="home-overlay">
-  <div class="home-logo">Adhan<span>Live</span></div>
 
   <div class="home-divider"></div>
   <div class="home-s1">
@@ -2466,7 +2456,7 @@ function updateRightPanel(activeMosques){
       const rmap=regions_live[dp]||{};
       const topR=Object.entries(rmap).sort((a,b)=>b[1]-a[1])[0];
       const pN=dp.toUpperCase();
-      window._liveNowText=`<strong style="color:var(--cyan);font-size:15px">${pN}</strong> sweeping across ${topR?topR[0]:'the world'} · <strong style="color:var(--cyan)">${total_live.toLocaleString()}</strong> mosques calling worldwide`;
+      window._liveNowText=`<strong style="color:var(--cyan);font-size:15px">${pN}</strong> sweeping across ${topR?topR[0]:'the world'}`;
     }
   }
 
