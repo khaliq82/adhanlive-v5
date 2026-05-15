@@ -151,12 +151,25 @@ html,body{
   clip-path:polygon(50% 100%,100% 0%,50% 15%,0% 0%);
   background:linear-gradient(to top,#111 0%,#444 100%);
 }
-/* Kaaba on needle tip */
-.needle-kaaba{
-  position:absolute;top:-22px;left:50%;transform:translateX(-50%);
-  font-size:16px;line-height:1;
-  filter:drop-shadow(0 0 5px rgba(196,162,74,0.9));
+
+/* Kaaba on rim */
+.kaaba-rim{
+  position:absolute;
+  width:24px;height:24px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:16px;
+  z-index:6;
+  margin-left:-12px;margin-top:-12px;
+  transition:filter 0.3s;
 }
+.kaaba-rim.aligned{
+  animation:kaabaGlow 0.8s ease-in-out infinite;
+}
+@keyframes kaabaGlow{
+  0%,100%{filter:drop-shadow(0 0 8px rgba(196,162,74,0.9));}
+  50%{filter:drop-shadow(0 0 20px rgba(255,220,50,1));}
+}
+
 /* Center jewel */
 .compass-center{
   position:absolute;width:12px;height:12px;border-radius:50%;
@@ -269,15 +282,16 @@ function renderCompass(){
   document.getElementById('card-body').innerHTML=`
     <div class="compass-scene">
       <div class="city-label">Qibla from <span>${_cityName}</span></div>
-      <div class="compass-wrap">
+      <div class="compass-wrap" id="compass-wrap">
         <div class="compass-bezel"></div>
         <div class="compass-face">
           <div class="face-n">N</div><div class="face-s">S</div>
           <div class="face-e">E</div><div class="face-w">W</div>
           <div class="align-glow" id="align-glow"></div>
+          <!-- Kaaba on rim — positioned by JS after render -->
+          <div class="kaaba-rim" id="kaaba-rim">🕋</div>
           <div class="needle-wrap" id="needle-wrap">
             <div class="needle">
-              <div class="needle-kaaba">🕋</div>
               <div class="needle-north"></div>
               <div class="needle-south"></div>
             </div>
@@ -288,11 +302,28 @@ function renderCompass(){
       <div class="turn-guide" id="turn-guide"></div>
       <div class="aligned-msg" id="aligned-msg">✅ You are facing Makkah &nbsp; الله أكبر</div>
       <div class="distance-box">
-        <div class="distance-val">${_dist.toLocaleString()} km</div>
+        <div class="distance-val"><span style="color:#00d4ff;font-weight:800;">${_dist.toLocaleString()} km</span></div>
         <div class="distance-lbl">Distance to Makkah</div>
       </div>
     </div>`;
   startCompass();
+  // Position Kaaba on rim at Qibla bearing
+  positionKaabaOnRim();
+}
+
+// ── POSITION KAABA ON RIM ────────────────────────────────────
+function positionKaabaOnRim(){
+  const kaaba = document.getElementById('kaaba-rim');
+  const face = kaaba?.parentElement;
+  if(!kaaba || !face) return;
+  const r = 41; // % from center
+  const rad = (_qibla - 90) * Math.PI / 180;
+  const x = 50 + r * Math.cos(rad);
+  const y = 50 + r * Math.sin(rad);
+  kaaba.style.left = x + '%';
+  kaaba.style.top = y + '%';
+  // Rotate to face center
+  kaaba.style.transform = `rotate(${_qibla + 180}deg)`;
 }
 
 // ── COMPASS ──────────────────────────────────────────────────
@@ -363,6 +394,8 @@ function updateHeading(h){
   }
   if(msg) msg.classList.toggle('visible',aligned);
   if(glow) glow.classList.toggle('active',aligned);
+  const kaabaRim=document.getElementById('kaaba-rim');
+  if(kaabaRim) kaabaRim.classList.toggle('aligned',aligned);
   if(aligned && navigator.vibrate) navigator.vibrate([50,30,50]);
 }
 
