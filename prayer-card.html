@@ -336,12 +336,14 @@ function calcPrayerTimes(lat,lng,date,method,tzOffset,asrMethod){
 
   if(!fajrH || !ishaH){
     if(maghribLocal){
-      // Night duration = from maghrib to next sunrise (add 24h to sunrise)
-      const nightDuration = (sunriseLocal + 24) - maghribLocal;
-      // Middle of night method: Isha = maghrib + 1/2 night, Fajr = sunrise - 1/2 night
-      const halfNight = nightDuration / 2;
-      ishaFinal  = {time:toTime(maghribLocal + halfNight), mins:toMins(maghribLocal + halfNight)};
-      fajrFinal  = {time:toTime(sunriseLocal - halfNight), mins:toMins(sunriseLocal - halfNight)};
+      // Night = Maghrib to next day Sunrise
+      // Sunrise next day = sunriseLocal + 24
+      const nextSunrise = sunriseLocal + 24;
+      const nightDuration = nextSunrise - maghribLocal;
+      // One seventh of night method for Fajr and Isha
+      const seventhNight = nightDuration / 7;
+      ishaFinal  = {time:toTime(maghribLocal + seventhNight), mins:toMins(maghribLocal + seventhNight)};
+      fajrFinal  = {time:toTime(nextSunrise - seventhNight), mins:toMins(nextSunrise - seventhNight)};
     }
   } else {
     fajrFinal  = {time:toTime(transit-fajrH/15),   mins:toMins(transit-fajrH/15)};
