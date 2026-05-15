@@ -78,16 +78,14 @@ html,body{
   flex-shrink:0;
 }
 
-/* Turn arrows */
-.turn-arrow{
-  position:absolute;
-  top:50%;transform:translateY(-50%);
-  z-index:20;pointer-events:none;
-  animation:arrowPulse 0.7s ease-in-out infinite;
+/* Turn guidance text */
+.turn-guide{
+  font-size:18px;font-weight:700;color:#fff;
+  letter-spacing:0.06em;text-align:center;
+  animation:guidePulse 0.8s ease-in-out infinite;
+  min-height:28px;
 }
-#turn-arrow-right{right:-48px;}
-#turn-arrow-left{left:-48px;}
-@keyframes arrowPulse{0%,100%{opacity:0.6;}50%{opacity:1;}}
+@keyframes guidePulse{0%,100%{opacity:0.5;}50%{opacity:1;}}
 
 /* Metallic bezel */
 .compass-bezel{
@@ -191,10 +189,9 @@ html,body{
   display:flex;width:100%;
   border:1px solid var(--border);border-radius:10px;overflow:hidden;
 }
-.stat-item{flex:1;padding:10px 6px;text-align:center;border-right:1px solid var(--border);}
-.stat-item:last-child{border-right:none;}
-.stat-val{font-size:15px;font-weight:800;color:var(--gold);font-variant-numeric:tabular-nums;line-height:1;}
-.stat-lbl{font-size:8px;letter-spacing:0.08em;text-transform:uppercase;color:var(--text3);margin-top:3px;}
+.stat-item{flex:1;padding:12px 8px;text-align:center;}
+.stat-val{font-size:20px;font-weight:800;color:#fff;font-variant-numeric:tabular-nums;line-height:1;}
+.stat-lbl{font-size:10px;letter-spacing:0.06em;text-transform:uppercase;color:rgba(255,255,255,0.4);margin-top:4px;}
 
 /* ── ALIGNED MESSAGE ── */
 .aligned-msg{
@@ -279,16 +276,23 @@ function getCity(lat,lng){
     }).catch(()=>'Your Location');
 }
 
-let _qibla=0,_heading=0,_dist=0,_cityName='',_compassActive=false;
+let _qibla=0,_dist=0,_cityName='';
 
-// ── SHOW TURN ARROWS ─────────────────────────────────────────
+// ── SHOW TURN GUIDANCE ───────────────────────────────────────
 function showTurnArrow(diff){
-  const right=document.getElementById('turn-arrow-right');
-  const left=document.getElementById('turn-arrow-left');
-  if(!right||!left) return;
+  const guide=document.getElementById('turn-guide');
+  if(!guide) return;
   const aligned=Math.abs(diff)<5;
-  right.style.display=(!aligned&&diff>0)?'block':'none';
-  left.style.display=(!aligned&&diff<=0)?'block':'none';
+  if(aligned){
+    guide.style.display='none';
+    guide.textContent='';
+  } else if(diff>0){
+    guide.style.display='block';
+    guide.textContent='Turn Right >>>';
+  } else {
+    guide.style.display='block';
+    guide.textContent='<<< Turn Left';
+  }
 }
 
 // ── RENDER COMPASS ────────────────────────────────────────────
@@ -309,19 +313,7 @@ function renderCompass(){
       <div class="city-label">Qibla from <span>${_cityName}</span></div>
 
       <div class="compass-outer-wrap">
-        <!-- Turn arrow indicators - fixed on bezel -->
-        <div class="turn-arrow" id="turn-arrow-right" style="display:none;">
-          <svg viewBox="0 0 40 40" width="40" height="40">
-            <path d="M8,20 A14,14 0 0,1 32,20" fill="none" stroke="#00d4ff" stroke-width="3" stroke-linecap="round"/>
-            <polyline points="26,13 32,20 24,23" fill="none" stroke="#00d4ff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
-        </div>
-        <div class="turn-arrow" id="turn-arrow-left" style="display:none;">
-          <svg viewBox="0 0 40 40" width="40" height="40">
-            <path d="M32,20 A14,14 0 0,0 8,20" fill="none" stroke="#00d4ff" stroke-width="3" stroke-linecap="round"/>
-            <polyline points="14,13 8,20 16,23" fill="none" stroke="#00d4ff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
-        </div>
+
 
         <div class="compass-bezel"></div>
 
@@ -338,6 +330,9 @@ function renderCompass(){
         <div class="compass-center"></div>
       </div>
 
+      <!-- Turn guidance -->
+      <div class="turn-guide" id="turn-guide" style="display:none;"></div>
+
       <div class="aligned-msg" id="aligned-msg">✅ You are facing Makkah &nbsp; الله أكبر</div>
 
       <div class="stats-bar">
@@ -350,33 +345,34 @@ function renderCompass(){
 }
 
 // ── COMPASS ───────────────────────────────────────────────────
+let _compassActive=false,_smoothHeading=0,_lastRaw=null;
+
 function startCompass(){
   if(_compassActive) return;
   _compassActive=true;
-  // Try absolute first (Android), fall back to regular (iOS uses webkitCompassHeading)
-  let usingAbsolute=false;
-  window.addEventListener('deviceorientationabsolute',(e)=>{
-    usingAbsolute=true;
-    onOrientation(e);
-  },true);
-  window.addEventListener('deviceorientation',(e)=>{
-    if(!usingAbsolute) onOrientation(e);
-  },true);
+  window.addEventListener('deviceorientationabsolute', onOrientation, true);
+  window.addEventListener('deviceorientation', onOrientation, true);
 }
 
-let _lastHeading=0,_smoothHeading=0;
 function onOrientation(e){
-  let h=0;
-  if(e.webkitCompassHeading!==undefined) h=e.webkitCompassHeading;
-  else if(e.alpha!==null) h=(360-e.alpha)%360;
+  // Get heading from whichever source is available
+  let h=null;
+  if(typeof e.webkitCompassHeading==='number' && !isNaN(e.webkitCompassHeading)){
+    h=e.webkitCompassHeading; // iOS
+  } else if(e.absolute && typeof e.alpha==='number'){
+    h=(360-e.alpha+360)%360; // Android absolute
+  } else if(typeof e.alpha==='number'){
+    h=(360-e.alpha+360)%360; // fallback
+  }
+  if(h===null) return;
 
-  // Smooth heading to avoid jitter
-  let delta=h-_lastHeading;
+  // Smooth with shortest-path interpolation
+  if(_lastRaw===null) _lastRaw=h;
+  let delta=h-_lastRaw;
   if(delta>180) delta-=360;
   if(delta<-180) delta+=360;
-  _smoothHeading+=delta*0.25;
-  _smoothHeading=(_smoothHeading+360)%360;
-  _lastHeading=h;
+  _lastRaw=h;
+  _smoothHeading=(_smoothHeading+delta*0.3+360)%360;
 
   const dial=document.getElementById('compass-dial');
   if(dial) dial.style.transform=`rotate(${-_smoothHeading}deg)`;
