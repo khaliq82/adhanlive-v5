@@ -195,6 +195,13 @@ html,body{
 }
 .aligned-msg.visible{opacity:1;}
 
+/* ── BEARING INFO ── */
+.bearing-info{
+  text-align:center;font-size:12px;color:rgba(255,255,255,0.4);
+  line-height:1.7;padding:0 10px;
+}
+.bearing-info strong{color:rgba(255,255,255,0.8);}
+
 /* ── DISTANCE ── */
 .distance-box{
   text-align:center;
@@ -277,10 +284,13 @@ async function getCity(lat,lng){
   }catch(e){return 'Your Location';}
 }
 
-let _qibla=0,_dist=0,_cityName='',_smoothH=0,_lastH=null;
+let _qibla=0,_dist=0,_cityName='';
 
-// ── RENDER COMPASS ────────────────────────────────────────────
 function renderCompass(){
+  const bearing=Math.round(_qibla);
+  const dirs=['N','NE','E','SE','S','SW','W','NW'];
+  const dir=dirs[Math.round(bearing/45)%8];
+
   document.getElementById('card-body').innerHTML=`
     <div class="compass-scene">
       <div class="city-label">Qibla from <span>${_cityName}</span></div>
@@ -290,7 +300,7 @@ function renderCompass(){
           <div class="face-n">N</div><div class="face-s">S</div>
           <div class="face-e">E</div><div class="face-w">W</div>
           <div class="kaaba-rim" id="kaaba-rim">🕋</div>
-          <div class="needle-wrap" id="needle-wrap">
+          <div class="needle-wrap" id="needle-wrap" style="transform:rotate(${bearing}deg)">
             <div class="needle">
               <div class="needle-north"></div>
               <div class="needle-south"></div>
@@ -299,15 +309,16 @@ function renderCompass(){
           <div class="compass-center"></div>
         </div>
       </div>
-      <div class="turn-guide" id="turn-guide">&nbsp;</div>
-      <div class="aligned-msg" id="aligned-msg">✅ You are facing Makkah &nbsp; الله أكبر</div>
+      <div class="bearing-info">
+        The golden needle points toward Makkah from North.<br>
+        Use your phone's compass to face <strong>${bearing}° ${dir}</strong>.
+      </div>
       <div class="distance-box">
         <div class="distance-val"><span style="color:#00d4ff;font-weight:800;">${_dist.toLocaleString()} km</span></div>
         <div class="distance-lbl">Distance to Makkah</div>
       </div>
     </div>`;
 
-  // Place Kaaba on rim at Qibla bearing
   requestAnimationFrame(()=>{
     const k=document.getElementById('kaaba-rim');
     if(!k) return;
@@ -316,78 +327,19 @@ function renderCompass(){
     k.style.top=(50+r*Math.sin(rad))+'%';
     k.style.transform=`rotate(${_qibla+180}deg)`;
   });
-
-  // Start compass — ONLY deviceorientation + webkitCompassHeading (confirmed working on iPhone 12)
-  window.addEventListener('deviceorientation', onOrientation, true);
 }
 
-// ── COMPASS HANDLER ───────────────────────────────────────────
-function onOrientation(e){
-  // Use ONLY webkitCompassHeading — confirmed working on iPhone 12 Safari
-  if(typeof e.webkitCompassHeading !== 'number' || isNaN(e.webkitCompassHeading)) return;
-  
-  const h = e.webkitCompassHeading;
-  
-  // Smooth with shortest-path interpolation
-  if(_lastH === null){ _lastH=h; _smoothH=h; }
-  let delta = h - _lastH;
-  if(delta > 180) delta -= 360;
-  if(delta < -180) delta += 360;
-  _lastH = h;
-  _smoothH = (_smoothH + delta * 0.3 + 360) % 360;
-
-  // Needle points to Qibla: rotate by (qibla - heading)
-  const needleAngle = (_qibla - _smoothH + 360) % 360;
-  const needle = document.getElementById('needle-wrap');
-  if(needle) needle.style.transform = `rotate(${needleAngle}deg)`;
-
-  // Turn guidance
-  let diff = needleAngle;
-  if(diff > 180) diff -= 360; // signed: + = turn right, - = turn left
-
-  const aligned = Math.abs(diff) < 5;
-  const guide = document.getElementById('turn-guide');
-  const msg = document.getElementById('aligned-msg');
-  const kaaba = document.getElementById('kaaba-rim');
-
-  if(guide){
-    if(aligned) guide.textContent = '';
-    else if(diff > 0) guide.textContent = 'Turn Right >>>';
-    else guide.textContent = '<<< Turn Left';
-  }
-  if(msg) msg.classList.toggle('visible', aligned);
-  if(kaaba) kaaba.classList.toggle('aligned', aligned);
-  if(aligned && navigator.vibrate) navigator.vibrate([50,30,50]);
-}
-
-// ── FLOW ──────────────────────────────────────────────────────
 async function startFlow(){
   document.getElementById('card-body').innerHTML='<div class="spinner-wrap"><div class="spinner"></div><div class="spinner-text">Getting your location...</div></div>';
-  
   try{
-    // Get location
-    const pos = await new Promise((res,rej)=>
+    const pos=await new Promise((res,rej)=>
       navigator.geolocation.getCurrentPosition(res,rej,{timeout:10000,enableHighAccuracy:true})
     );
-    const lat=pos.coords.latitude, lng=pos.coords.longitude;
-    _qibla = calcQibla(lat,lng);
-    _dist = calcDist(lat,lng);
-    _cityName = await getCity(lat,lng);
-
-    // Request compass permission (iOS 13+)
-    if(typeof DeviceOrientationEvent !== 'undefined' &&
-       typeof DeviceOrientationEvent.requestPermission === 'function'){
-      document.getElementById('card-body').innerHTML=`
-        <div class="state-screen">
-          <div class="state-icon">🧭</div>
-          <div class="state-title">Enable Compass</div>
-          <div class="state-sub">Tap to allow compass access for live Qibla direction.</div>
-          <button class="state-btn" onclick="enableCompass()">Enable Compass</button>
-        </div>`;
-    } else {
-      renderCompass();
-    }
-  } catch(err){
+    _qibla=calcQibla(pos.coords.latitude,pos.coords.longitude);
+    _dist=calcDist(pos.coords.latitude,pos.coords.longitude);
+    _cityName=await getCity(pos.coords.latitude,pos.coords.longitude);
+    renderCompass();
+  }catch(err){
     document.getElementById('card-body').innerHTML=`
       <div class="state-screen">
         <div class="state-icon">📍</div>
@@ -396,22 +348,6 @@ async function startFlow(){
         <button class="state-btn" onclick="startFlow()">Try Again</button>
       </div>`;
   }
-}
-
-async function enableCompass(){
-  try{
-    const p = await DeviceOrientationEvent.requestPermission();
-    if(p === 'granted') renderCompass();
-    else{
-      document.getElementById('card-body').innerHTML=`
-        <div class="state-screen">
-          <div class="state-icon">🧭</div>
-          <div class="state-title">Compass Denied</div>
-          <div class="state-sub">Go to Settings > Safari > Motion & Orientation Access = ON, then reload.</div>
-          <button class="state-btn" onclick="location.reload()">Reload</button>
-        </div>`;
-    }
-  } catch(e){ renderCompass(); }
 }
 </script>
 </body>
