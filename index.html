@@ -2140,31 +2140,92 @@ let _prayerCache = null; // {fajr, dhuhr, asr, maghrib, isha} per mosque index
 function precalcPrayerTimes(){
   if(!allMosques.length) return;
   const date = new Date();
+  const dateStr = date.toISOString();
+
+  // Build worker code as blob — runs completely off main thread
+  const workerCode = `
+const METHODS={
+  MWL:{fajr:-18,isha:{angle:-17},asr:1},ISNA:{fajr:-15,isha:{angle:-15},asr:1},
+  Egypt:{fajr:-19.5,isha:{angle:-17.5},asr:1},Makkah:{fajr:-18.5,isha:{mins:90},asr:1},
+  Karachi:{fajr:-18,isha:{angle:-18},asr:1},KarachiH:{fajr:-18,isha:{angle:-18},asr:2},
+  Tehran:{fajr:-17.7,isha:{angle:-14},asr:1},Jafari:{fajr:-16,isha:{angle:-14},asr:1},
+  Diyanet:{fajr:-18,isha:{angle:-17},asr:1},Gulf:{fajr:-19.5,isha:{mins:90},asr:1},
+  Singapore:{fajr:-20,isha:{angle:-18},asr:1},France:{fajr:-12,isha:{angle:-12},asr:1},
+  Russia:{fajr:-16,isha:{angle:-15},asr:1},
+};
+const COUNTRY_METHOD={
+  'Saudi Arabia':'Makkah','Yemen':'Makkah','Kuwait':'Gulf','UAE':'Gulf','Qatar':'Gulf','Bahrain':'Gulf','Oman':'Gulf',
+  'Egypt':'Egypt','Libya':'Egypt','Sudan':'Egypt','Somalia':'Egypt','Pakistan':'Karachi','Afghanistan':'Karachi',
+  'Bangladesh':'KarachiH','India':'Karachi','Nepal':'KarachiH','Sri Lanka':'KarachiH',
+  'Malaysia':'MWL','Indonesia':'MWL','Turkey':'Diyanet','Iran':'Tehran','Singapore':'Singapore',
+  'France':'France','Russia':'Russia','Ukraine':'Russia','United States':'ISNA','USA':'ISNA','Canada':'ISNA',
+};
+function getMethod(c){return METHODS[COUNTRY_METHOD[c]||'MWL'];}
+function jd(y,m,d){if(m<=2){y--;m+=12}const A=Math.floor(y/100),B=2-A+Math.floor(A/4);return Math.floor(365.25*(y+4716))+Math.floor(30.6001*(m+1))+d+B-1524.5;}
+function sunPos(jdn){const D=jdn-2451545,g=Math.PI/180*(357.529+0.98560028*D),q=280.459+0.98564736*D,L=Math.PI/180*(q+1.915*Math.sin(g)+0.02*Math.sin(2*g)),e=Math.PI/180*(23.439-3.6e-7*D),RA=180/Math.PI*Math.atan2(Math.cos(e)*Math.sin(L),Math.cos(L))/15,dec=180/Math.PI*Math.asin(Math.sin(e)*Math.sin(L));return{dec,eqt:q/15-((RA%24)+24)%24};}
+function calcPrayers(lat,lon,tz,date,country){
+  const M=getMethod(country||'');
+  const jdn=jd(date.getUTCFullYear(),date.getUTCMonth()+1,date.getUTCDate());
+  const{dec,eqt}=sunPos(jdn);
+  const lr=lat*Math.PI/180,dr=dec*Math.PI/180;
+  const noon=12-eqt+(tz-lon/15);
+  function ha(angle){const c=(Math.sin(angle*Math.PI/180)-Math.sin(lr)*Math.sin(dr))/(Math.cos(lr)*Math.cos(dr));return(c<-1||c>1)?NaN:180/Math.PI*Math.acos(c)/15;}
+  const asrAngle=Math.atan(1/(M.asr+Math.tan(Math.abs((lat-dec)*Math.PI/180))))*180/Math.PI;
+  const fajr=noon-ha(M.fajr),dhuhr=noon+0.017,asr=noon+ha(asrAngle),maghrib=noon+ha(-0.833);
+  const isha=M.isha.mins?maghrib+M.isha.mins/60:noon+ha(M.isha.angle);
+  return{fajr,dhuhr,asr,maghrib,isha};
+}
+self.onmessage=function(e){
+  const{mosques,dateStr}=e.data;
+  const date=new Date(dateStr);
+  const prayers=['fajr','dhuhr','asr','maghrib','isha'];
+  const cache=new Float32Array(mosques.length*5);
+  mosques.forEach((m,i)=>{
+    const times=calcPrayers(m.lat,m.lon,m.tz,date,m.country);
+    prayers.forEach((p,j)=>{cache[i*5+j]=isNaN(times[p])?-1:((times[p]%24)+24)%24;});
+  });
+  self.postMessage({cache:cache.buffer},[cache.buffer]);
+};`;
+
+  const blob = new Blob([workerCode], {type:'application/javascript'});
+  const url = URL.createObjectURL(blob);
+  const worker = new Worker(url);
+
+  // Send mosque data to worker — runs completely off main thread
+  const mosqueData = allMosques.map(m=>({lat:m.lat,lon:m.lon,tz:m.tz,country:m.country}));
+  worker.postMessage({mosques:mosqueData, dateStr});
+
+  worker.onmessage = function(e){
+    _prayerCache = new Float32Array(e.data.cache);
+    console.log('Prayer times pre-calculated for', allMosques.length, 'mosques');
+    URL.revokeObjectURL(url);
+    worker.terminate();
+  };
+
+  worker.onerror = function(err){
+    console.warn('Worker failed, falling back to chunked:', err);
+    URL.revokeObjectURL(url);
+    worker.terminate();
+    // Fallback to chunked setTimeout if worker fails
+    _precalcChunked(date);
+  };
+}
+
+function _precalcChunked(date){
   const cache = new Float32Array(allMosques.length * 5);
   const prayers = ['fajr','dhuhr','asr','maghrib','isha'];
-  const CHUNK = 5000; // process 5000 mosques per frame
   let loaded = 0;
-
   function processChunk(){
-    const end = Math.min(loaded + CHUNK, allMosques.length);
+    const end = Math.min(loaded + 3000, allMosques.length);
     for(let i = loaded; i < end; i++){
       const times = calcPrayers(allMosques[i].lat, allMosques[i].lon, allMosques[i].tz, date, allMosques[i].country);
-      prayers.forEach((p, j) => {
-        cache[i*5+j] = isNaN(times[p]) ? -1 : ((times[p]%24)+24)%24;
-      });
+      prayers.forEach((p, j) => { cache[i*5+j] = isNaN(times[p]) ? -1 : ((times[p]%24)+24)%24; });
     }
     loaded = end;
-    if(loaded < allMosques.length){
-      // Yield to browser between chunks — keeps globe smooth
-      setTimeout(processChunk, 0);
-    } else {
-      _prayerCache = cache;
-      console.log('Prayer times pre-calculated for', allMosques.length, 'mosques');
-    }
+    if(loaded < allMosques.length) setTimeout(processChunk, 16);
+    else _prayerCache = cache;
   }
-
-  // Start after a short delay so globe gets first few frames to render
-  setTimeout(processChunk, 500);
+  setTimeout(processChunk, 100);
 }
 
 function getActivePrayerFast(mosqueIdx, localH){
