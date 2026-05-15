@@ -2477,9 +2477,7 @@ function updateRightPanel(activeMosques){
 
 // ── HIJRI DATE CONVERTER ─────────────────────────────────────
 function toHijri(date){
-  // Add 1 day correction for known offset
-  const d = new Date(date.getTime() + 86400000);
-  const jd = Math.floor((d.getTime() / 86400000) + 2440587.5);
+  const jd = Math.floor((date.getTime() / 86400000) + 2440587.5);
   let l = jd - 1948440 + 10632;
   const n = Math.floor((l-1)/10631);
   l = l - 10631*n + 354;
